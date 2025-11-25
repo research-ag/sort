@@ -1,4 +1,4 @@
-import Sort "../src";
+import RadixSort "../src";
 import Nat32 "mo:core/Nat32";
 import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
@@ -20,7 +20,7 @@ func testRadixSort(n : Nat, mod : Nat32) {
 
   let b = VarArray.clone(a);
 
-  Sort.radixSort<(Nat32, Nat)>(a, func(x, y) = x);
+  RadixSort.sortInPlace<(Nat32, Nat)>(a, func(x, y) = x);
   VarArray.sortInPlace(b, func(x, y) = Nat32.compare(x.0, y.0));
 
   for (i in Nat.range(0, n)) {
@@ -38,3 +38,5 @@ for (n in ns.vals()) {
     testRadixSort(n, mod);
   };
 };
+
+assert RadixSort.sort<Nat32>([3, 4, 5, 1, 2], func x = x) == [1, 2, 3, 4, 5];

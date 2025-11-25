@@ -2,7 +2,7 @@ import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
 import Nat "mo:core/Nat";
 import Nat64 "mo:core/Nat64";
-import Runtime "mo:core/Runtime";
+import Array "mo:core/Array";
 
 module {
   func mergeSortInternal(array : [var Nat64]) : [var Nat64] {
@@ -146,28 +146,33 @@ module {
     };
   };
 
-  public func radixSort<T>(array : [var T], key : T -> Nat32) {
-    let n = array.size();
-
-    if (n > 2 ** 32) Runtime.trap("Maximum size is 2 ** 32");
-
-    var coded = VarArray.tabulate<Nat64>(
+  func sortInternal<T>(n : Nat, key : T -> Nat32, get : Nat -> T) : [var Nat64] {
+    let coded = VarArray.tabulate<Nat64>(
       n,
       func(i) {
-        let value = Nat64.fromNat32(key(array[i]));
+        let value = Nat64.fromNat32(key(get(i)));
         let index = Nat64.fromNat(i);
         (value << 32) ^ index;
       },
     );
 
-    coded := if (n < 2 ** 8) {
+    if (n < 2 ** 8) {
       mergeSortInternal(coded);
     } else if (n < 2 ** 16) {
       radixSortInternal(coded, 8);
     } else {
       radixSortInternal(coded, 16);
     };
+  };
 
+  public func sort<T>(array : [T], key : T -> Nat32) : [T] {
+    let coded = sortInternal(array.size(), key, func i = array[i]);
+    let MASK32 : Nat64 = (1 << 32) - 1;
+    Array.tabulate<T>(array.size(), func i = array[Nat64.toNat(coded[i] & MASK32)]);
+  };
+
+  public func sortInPlace<T>(array : [var T], key : T -> Nat32) {
+    let coded = sortInternal(array.size(), key, func i = array[i]);
     gatherInternal(array, coded);
   };
 };
