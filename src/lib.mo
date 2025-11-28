@@ -70,21 +70,22 @@ module {
 
     let high = VarArray.repeat<Nat>(0, n);
     let low = VarArray.repeat<Nat>(0, n);
+//    var indices = VarArray.tabulate<Nat32>(n, func i = Nat32.fromNat(i));
+    var indices = VarArray.repeat<Nat32>(0, n);
     do {
-      var i : Nat32 = 0;
-      while (i < nn) {
-        let ii = Nat32.toNat(i);
-        let k = key(array[ii]);
-        low[ii] := Nat32.toNat(k & MASK);
-        high[ii] := Nat32.toNat(k >> 16); // RADIX_BITS
-        i +%= 1;
+      var ii : Nat32 = 0;
+      while (ii < nn) {
+        let i = Nat32.toNat(ii);
+        indices[i] := ii;
+        let k = key(array[i]);
+        low[i] := Nat32.toNat(k & MASK);
+        high[i] := Nat32.toNat(k >> 16); // RADIX_BITS
+        ii +%= 1;
       };
     };
-//    let high = Array.tabulate<Nat16>(n, func i = Nat16.fromNat32(key(array[i]) >> 16));
-//    let low = Array.tabulate<Nat16>(n, func i = Nat16.fromNat32(key(array[i]) & MASK));
+
     let allDigits = [low, high];
     let counts = VarArray.repeat<Nat32>(0, 2 ** 16);
-    var indices = VarArray.tabulate<Nat32>(n, func i = Nat32.fromNat(i));
     var output = VarArray.repeat<Nat32>(0, n);
     for (step in Nat.range(0, 2)) {
       if (step == 1) {
