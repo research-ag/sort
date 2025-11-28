@@ -107,7 +107,6 @@ module {
       };
 
       i := 0;
-//      let max = RR - 1;
       var sum : Nat32 = 0;
       while (i < RR) {
         let ii = Nat32.toNat(i);

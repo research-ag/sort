@@ -5,9 +5,9 @@ import Nat "mo:core/Nat";
 import Nat64 "mo:core/Nat64";
 import Nat32 "mo:core/Nat32";
 import Text "mo:core/Text";
-import VarArray "mo:core/VarArray";
 import Prim "mo:prim";
 import Sort "../src";
+import Zhus "mo:zhus/sort";
 
 module {
   public func init() : Bench.Bench {
@@ -19,6 +19,7 @@ module {
     let rows = [
       "Sort.sort",
       "Sort.radixSort16",
+      "Zhus",
     ];
     let cols = [
       "1000",
@@ -36,8 +37,8 @@ module {
     let sourceArrays : [[Nat32]] = Array.tabulate(
       5,
       func(j) = Array.tabulate<Nat32>(
-        [1000, 10000, 16000, 100000, 1000000][j],
-        func(i) = Nat32.fromIntWrap(Nat64.toNat(rng.nat64() % 1000000)),
+        [1_000, 10_000, 16_000, 100_000, 1_000_000][j],
+        func(i) = Nat32.fromIntWrap(Nat64.toNat(rng.nat64() % 1_000_000)),
       ),
     );
 
@@ -53,6 +54,10 @@ module {
           };
           case (1) {
             func() = ignore Sort.radixSort16<Nat32>(sourceArrays[col], func i = i);
+          };
+          case (2) {
+            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
+            func() = Zhus.sortNat32<Nat32>(varSource, func i = i);
           };
           case (_) Prim.trap("Row not implemented");
         };
