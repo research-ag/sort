@@ -3,7 +3,6 @@ import Nat32 "mo:core/Nat32";
 import Nat "mo:core/Nat";
 import Nat64 "mo:core/Nat64";
 import Array "mo:core/Array";
-import Nat16 "mo:core/Nat16";
 
 module {
   func mergeSortInternal(array : [var Nat64]) : [var Nat64] {
@@ -70,13 +69,17 @@ module {
 
     let high = VarArray.repeat<Nat>(0, n);
     let low = VarArray.repeat<Nat>(0, n);
-//    var indices = VarArray.tabulate<Nat32>(n, func i = Nat32.fromNat(i));
-    var indices = VarArray.repeat<Nat32>(0, n);
+    let allDigits = [low, high];
+    var indices = VarArray.repeat<Nat>(0, n);
+    var output = VarArray.repeat<Nat>(0, n);
+    let counts = VarArray.repeat<Nat32>(0, 2 ** 16);
+
+    // initialize low and high arrays
     do {
       var ii : Nat32 = 0;
       while (ii < nn) {
         let i = Nat32.toNat(ii);
-        indices[i] := ii;
+        indices[i] := i;
         let k = key(array[i]);
         low[i] := Nat32.toNat(k & MASK);
         high[i] := Nat32.toNat(k >> 16); // RADIX_BITS
@@ -84,9 +87,7 @@ module {
       };
     };
 
-    let allDigits = [low, high];
-    let counts = VarArray.repeat<Nat32>(0, 2 ** 16);
-    var output = VarArray.repeat<Nat32>(0, n);
+    // perform radix steps
     for (step in Nat.range(0, 2)) {
       if (step == 1) {
         var i = 0;
@@ -118,15 +119,16 @@ module {
 
       if (step == 0) {
         while (i < nn) {
-          let digit = digits[Nat32.toNat(i)];
-          output[Nat32.toNat(counts[digit])] := i;
+          let ii = Nat32.toNat(i);
+          let digit = digits[ii];
+          output[Nat32.toNat(counts[digit])] := ii;
           counts[digit] +%= 1;
           i +%= 1;
         };
       } else {
         while (i < nn) {
           let index = indices[Nat32.toNat(i)];
-          let digit = digits[Nat32.toNat(index)];
+          let digit = digits[index];
           output[Nat32.toNat(counts[digit])] := index;
           counts[digit] +%= 1;
           i +%= 1;
@@ -138,7 +140,7 @@ module {
       output := t;
     };
 
-    Array.tabulate<T>(n, func i = array[Nat32.toNat(indices[i])]);
+    Array.tabulate<T>(n, func i = array[indices[i]]);
   };
 
   func radixSortInternal(array : [var Nat64], RADIX_BITS : Nat64) : [var Nat64] {
