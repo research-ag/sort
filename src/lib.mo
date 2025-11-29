@@ -122,6 +122,72 @@ module {
     Array.tabulate<T>(n, func i = array[output[i]]);
   };
 
+  public func radixSort16InPlace<T>(array : [var T], key : T -> Nat32) {
+    if (array.size() == 0) return;
+
+    let RADIX_BITS = 16;
+    let RADIX = 2 ** RADIX_BITS;
+    let RR = Nat32.fromNat(RADIX);
+    let MASK = RR -% 1;
+
+    let n = array.size();
+
+    let scratch = VarArray.repeat<T>(array[0], n);
+
+//    let indices = VarArray.repeat<Nat>(0, n);
+//    let output = VarArray.repeat<Nat>(0, n);
+    let counts = VarArray.repeat<Nat32>(0, RADIX);
+
+    // perform radix steps
+    for (step in [0, 1].vals()) {
+      // reset counts
+      if (step == 1) {
+        for (i in counts.keys()) counts[i] := 0;
+      };
+
+      // read in the digits and count
+      if (step == 0) {
+        // read low
+        for (x in array.vals()) {
+          let digit = Nat32.toNat(key(x) & MASK);
+          counts[digit] +%= 1;
+        };
+      } else {
+        // read high
+        for (x in array.vals()) {
+          let digit = Nat32.toNat(key(x) >> 16);
+          counts[digit] +%= 1;
+        };
+      };
+
+      // convert counts to positions
+      var sum : Nat32 = 0;
+      for (i in counts.keys()) {
+        let t = counts[i];
+        counts[i] := sum;
+        sum +%= t;
+      };
+
+      // move to indices and output
+      if (step == 0) {
+        for (x in array.vals()) {
+          let digit = Nat32.toNat(key(x) & MASK);
+          let pos = counts[digit];
+          scratch[Nat32.toNat(pos)] := x;
+          counts[digit] := pos +% 1;
+        };
+      } else {
+        for (x in scratch.vals()) {
+          let digit = Nat32.toNat(key(x) >> 16);
+          let pos = counts[digit];
+          array[Nat32.toNat(pos)] := x;
+          counts[digit] := pos +% 1;
+        };
+      };
+    };
+
+  };
+
   func radixSortInternal(array : [var Nat64], RADIX_BITS : Nat64) : [var Nat64] {
     let n = array.size();
     var a = array;

@@ -17,8 +17,9 @@ module {
     bench.description("Nat64 bit operations.");
 
     let rows = [
-      "Sort.sort",
-      "Sort.radixSort16",
+      "sort",
+      "radixSort16",
+      "radixSort16InPlace",
       "Zhus",
     ];
     let cols = [
@@ -56,6 +57,10 @@ module {
             func() = ignore Sort.radixSort16<Nat32>(sourceArrays[col], func i = i);
           };
           case (2) {
+            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
+            func() = Sort.radixSort16InPlace<Nat32>(varSource, func i = i);
+          };
+          case (3) {
             let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
             func() = Zhus.sortNat32<Nat32>(varSource, func i = i);
           };

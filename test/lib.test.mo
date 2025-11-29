@@ -46,6 +46,10 @@ func testRadixSortArray(n : Nat, mod : Nat32) {
   );
 
   assert RadixSort.radixSort16<(Nat32, Nat)>(a, func(x, y) = x) == Array.sort(a, func(x, y) = Nat32.compare(x.0, y.0));
+
+  let b = Array.toVarArray<(Nat32, Nat)>(a);
+  RadixSort.radixSort16InPlace<(Nat32, Nat)>(b, func(x, y) = x);
+  assert Array.fromVarArray(b) == Array.sort(a, func(x, y) = Nat32.compare(x.0, y.0));
 };
 
 let ns = [1, 2, 3, 4, 10, 100, 100, 100_000];
