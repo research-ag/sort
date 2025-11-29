@@ -76,14 +76,14 @@ module {
 
     // initialize low and high arrays
     do {
-      var ii : Nat32 = 0;
-      while (ii < nn) {
+      var ii : Nat32 = nn;
+      while (ii > 0) {
+        ii -%= 1;
         let i = Nat32.toNat(ii);
         indices[i] := i;
         let k = key(array[i]);
         low[i] := Nat32.toNat(k & MASK);
         high[i] := Nat32.toNat(k >> 16); // RADIX_BITS
-        ii +%= 1;
       };
     };
 

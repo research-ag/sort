@@ -24,7 +24,7 @@ module {
     let cols = [
       "1000",
       "10000",
-      "16000",
+      "12000",
       "100000",
       "1000000",
     ];
@@ -37,7 +37,7 @@ module {
     let sourceArrays : [[Nat32]] = Array.tabulate(
       5,
       func(j) = Array.tabulate<Nat32>(
-        [1_000, 10_000, 16_000, 100_000, 1_000_000][j],
+        [1_000, 10_000, 12_000, 100_000, 1_000_000][j],
         func(i) = Nat32.fromIntWrap(Nat64.toNat(rng.nat64() % 1_000_000)),
       ),
     );
