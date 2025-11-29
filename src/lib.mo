@@ -68,28 +68,14 @@ module {
     let n = array.size();
     let nn = Nat32.fromNat(n);
 
-    let high = VarArray.repeat<Nat>(0, n);
-    let low = VarArray.repeat<Nat>(0, n);
-    let allDigits = [low, high];
-    var indices = VarArray.repeat<Nat>(0, n);
+    let digits = VarArray.repeat<Nat>(0, n);
+    var indices = VarArray.tabulate<Nat>(n, func i = i);
     var output = VarArray.repeat<Nat>(0, n);
     let counts = VarArray.repeat<Nat32>(0, 2 ** 16);
 
-    // initialize low and high arrays
-    do {
-      var ii : Nat32 = nn;
-      while (ii > 0) {
-        ii -%= 1;
-        let i = Nat32.toNat(ii);
-        indices[i] := i;
-        let k = key(array[i]);
-        low[i] := Nat32.toNat(k & MASK);
-        high[i] := Nat32.toNat(k >> 16); // RADIX_BITS
-      };
-    };
-
     // perform radix steps
-    for (step in [0,1].vals()) {
+    for (step in [0, 1].vals()) {
+      // reset counts
       if (step == 1) {
         var i = RR;
         while (i > 0) {
@@ -98,14 +84,30 @@ module {
         };
       };
 
-      let digits = allDigits[step];
-      var i : Nat32 = nn;
-      while (i > 0) {
-        i -%= 1;
-        counts[digits[Nat32.toNat(i)]] +%= 1;
+      // read in the digits and count
+      if (step == 0) {
+        // read low
+        var ii : Nat32 = nn;
+        while (ii > 0) {
+          ii -%= 1;
+          let i = Nat32.toNat(ii);
+          let digit = Nat32.toNat(key(array[i]) & MASK);
+          digits[i] := digit; 
+          counts[digit] +%= 1;
+        };
+      } else {
+        // read high
+        var ii : Nat32 = nn;
+        while (ii > 0) {
+          ii -%= 1;
+          let i = Nat32.toNat(ii);
+          let digit = Nat32.toNat(key(array[i]) >> 16);
+          digits[i] := digit; 
+          counts[digit] +%= 1;
+        };
       };
 
-      i := 0;
+      var i : Nat32 = 0;
       var sum : Nat32 = 0;
       while (i < RR) {
         let ii = Nat32.toNat(i);
