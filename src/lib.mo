@@ -60,55 +60,141 @@ module {
     a;
   };
 
-  func mergeSort<T>(array : [var T], scratch : [var T], key : T -> Nat32, from : Nat32, to : Nat32, n : Nat32) {
-    let original = scratch;
-    let output = array;
+  func sort<T>(array : [var T], scratch : [var T], key : T -> Nat32, from : Nat32, to : Nat32) {
+    let n = to -% from;
+    // n should be >= 2
+    if (n <= 4) {
+      if (n == 2) {
+        let i1 = Nat32.toNat(from);
+        let i2 = Nat32.toNat(from +% 1);
+        let item1 = array[i1];
+        let item2 = array[i2];
 
-    var currSize : Nat32 = 1;
-
-    while (currSize < n) {
-      var leftStart : Nat32 = from;
-
-      while (leftStart < to) {
-        let mid = Nat32.min(leftStart + currSize, to);
-        let rightEnd = Nat32.min(leftStart + 2 * currSize, to);
-
-        var left = leftStart;
-        var right = mid;
-        var nextSorted = leftStart;
-        while (left < mid and right < rightEnd) {
-          let leftElement = original[Nat32.toNat(left)];
-          let rightElement = original[Nat32.toNat(right)];
-          output[Nat32.toNat(nextSorted)] := if (key(leftElement) <= key(rightElement)) {
-            left += 1;
-            leftElement;
-          } else {
-            right += 1;
-            rightElement;
-          };
-
-          nextSorted += 1;
+        if (key(item1) > key(item2)) {
+          array[i1] := item2;
+          array[i2] := item1;
         };
-        while (left < mid) {
-          output[Nat32.toNat(nextSorted)] := original[Nat32.toNat(left)];
-          nextSorted +%= 1;
-          left +%= 1;
-        };
-        while (right < rightEnd) {
-          output[Nat32.toNat(nextSorted)] := original[Nat32.toNat(right)];
-          nextSorted +%= 1;
-          right +%= 1;
+      } else if (n == 3) {
+        let i1 = Nat32.toNat(from);
+        let i2 = Nat32.toNat(from +% 1);
+        let i3 = Nat32.toNat(from +% 2);
+        var item1 = array[i1];
+        var item2 = array[i2];
+        var item3 = array[i3];
+
+        if (key(item1) > key(item2)) {
+          let t = item1;
+
+          item1 := item2;
+          item2 := t;
         };
 
-        leftStart += 2 * currSize;
+        if (key(item1) > key(item3)) {
+          let t = item1;
+
+          item1 := item3;
+          item3 := t;
+        };
+
+        if (key(item2) > key(item3)) {
+          let t = item2;
+
+          item2 := item3;
+          item3 := t;
+        };
+
+        array[i1] := item1;
+        array[i2] := item2;
+        array[i3] := item3;
+      } else {
+        let i1 = Nat32.toNat(from);
+        let i2 = Nat32.toNat(from +% 1);
+        let i3 = Nat32.toNat(from +% 2);
+        let i4 = Nat32.toNat(from +% 3);
+        var item1 = array[i1];
+        var item2 = array[i2];
+        var item3 = array[i3];
+        var item4 = array[i4];
+
+        if (key(item1) > key(item2)) {
+          let t = item1;
+
+          item1 := item2;
+          item2 := t;
+        };
+
+        if (key(item3) > key(item4)) {
+          let t = item3;
+
+          item3 := item4;
+          item4 := t;
+        };
+
+        if (key(item1) > key(item3)) {
+          let t = item1;
+
+          item1 := item3;
+          item3 := t;
+        };
+
+        if (key(item2) > key(item4)) {
+          let t = item2;
+
+          item2 := item4;
+          item4 := t;
+        };
+
+        if (key(item2) > key(item3)) {
+          let t = item2;
+
+          item2 := item3;
+          item3 := t;
+        };
+
+        array[i1] := item1;
+        array[i2] := item2;
+        array[i3] := item3;
+        array[i4] := item4;
       };
+      return;
+    };
 
-      currSize *= 2;
+    let mid = from +% (n >> 1);
 
-      for (i in Nat32.range(from, to)) {
-        let ii = Nat32.toNat(i);
-        original[ii] := output[ii];
+    sort(array, scratch, key, from, mid);
+    sort(array, scratch, key, mid, to);
+
+    var i = from;
+    var j = mid;
+    var k = from;
+    while (i < mid and j < to) {
+      let left = array[Nat32.toNat i];
+      let right = array[Nat32.toNat j];
+      scratch[Nat32.toNat k] := if (key(left) <= key(right)) {
+        i +%= 1;
+        left;
+      } else {
+        j +%= 1;
+        right;
       };
+      k +%= 1;
+    };
+    while (i < mid) {
+      scratch[Nat32.toNat k] := array[Nat32.toNat i];
+      i +%= 1;
+      k +%= 1;
+    };
+    while (j < to) {
+      scratch[Nat32.toNat k] := array[Nat32.toNat j];
+      j +%= 1;
+      k +%= 1;
+    };
+
+    var l = from;
+    while (l < to) {
+      let ll = Nat32.toNat l;
+      array[ll] := scratch[ll];
+      l +%= 1;
     };
   };
 
@@ -146,7 +232,7 @@ module {
     var prev : Nat32 = 0;
     for (count in counts.vals()) {
       let length = count -% prev;
-      mergeSort(array, scratch, key, prev, count, length);
+      if (length >= 2) sort(scratch, array, key, prev, count);
       prev := count;
     };
 
@@ -309,9 +395,9 @@ module {
       var sum = 0;
       i := 0;
       while (i < RADIX) {
-        let temp = counts[i];
+        let t = counts[i];
         counts[i] := sum;
-        sum += temp;
+        sum += t;
         i += 1;
       };
 
@@ -388,7 +474,7 @@ module {
     };
   };
 
-  public func sort<T>(array : [T], key : T -> Nat32) : [T] {
+  public func sort_old<T>(array : [T], key : T -> Nat32) : [T] {
     let coded = sortInternal(array.size(), key, func i = array[i]);
     let MASK32 : Nat64 = (1 << 32) - 1;
     Array.tabulate<T>(array.size(), func i = array[Nat64.toNat(coded[i] & MASK32)]);

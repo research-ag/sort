@@ -16,7 +16,7 @@ func testRadixSort(n : Nat, mod : Nat32) {
     n,
     func(i) {
       seed := seed *% A +% C;
-      (seed % mod, i);
+      (seed, i);
     },
   );
 
@@ -28,9 +28,9 @@ func testRadixSort(n : Nat, mod : Nat32) {
   for (i in Nat.range(0, n)) {
     if (a[i] != b[i]) {
 
-      for (j in Nat.range(0, n)) {
-        Debug.print(debug_show (Nat32.explode(a[j].0), Nat32.explode(b[j].0)));
-      };
+      // for (j in Nat.range(0, n)) {
+      //   Debug.print(debug_show (Nat32.explode(a[j].0), Nat32.explode(b[j].0)));
+      // };
 
       Runtime.trap("n = " # debug_show n # " mod = " # debug_show mod # " mismatch in index = " # debug_show i);
     };
