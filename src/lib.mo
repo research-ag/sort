@@ -68,7 +68,6 @@ module {
         let i2 = Nat32.toNat(from +% 1);
         let item1 = array[i1];
         let item2 = array[i2];
-
         if (key(item1) > key(item2)) {
           array[i1] := item2;
           array[i2] := item1;
@@ -80,28 +79,21 @@ module {
         var item1 = array[i1];
         var item2 = array[i2];
         var item3 = array[i3];
-
         if (key(item1) > key(item2)) {
           let t = item1;
-
           item1 := item2;
           item2 := t;
         };
-
         if (key(item1) > key(item3)) {
           let t = item1;
-
           item1 := item3;
           item3 := t;
         };
-
         if (key(item2) > key(item3)) {
           let t = item2;
-
           item2 := item3;
           item3 := t;
         };
-
         array[i1] := item1;
         array[i2] := item2;
         array[i3] := item3;
@@ -114,42 +106,31 @@ module {
         var item2 = array[i2];
         var item3 = array[i3];
         var item4 = array[i4];
-
         if (key(item1) > key(item2)) {
           let t = item1;
-
           item1 := item2;
           item2 := t;
         };
-
         if (key(item3) > key(item4)) {
           let t = item3;
-
           item3 := item4;
           item4 := t;
         };
-
         if (key(item1) > key(item3)) {
           let t = item1;
-
           item1 := item3;
           item3 := t;
         };
-
         if (key(item2) > key(item4)) {
           let t = item2;
-
           item2 := item4;
           item4 := t;
         };
-
         if (key(item2) > key(item3)) {
           let t = item2;
-
           item2 := item3;
           item3 := t;
         };
-
         array[i1] := item1;
         array[i2] := item2;
         array[i3] := item3;
@@ -194,6 +175,495 @@ module {
       let ll = Nat32.toNat l;
       array[ll] := scratch[ll];
       l +%= 1;
+    };
+  };
+
+  public func sortSmallUnsatble<T>(arr : [var T], from : Nat, to : Nat, key : T -> Nat32) {
+    let len = to - from : Nat;
+    // len should be in the interval [2, 8]
+
+    switch (len) {
+      case (2) {
+        var v0 = arr[from];
+        var v1 = arr[from + 1];
+
+        if (key(v0) > key(v1)) { let t = v0; v0 := v1; v1 := t };
+
+        arr[from] := v0;
+        arr[from + 1] := v1;
+      };
+      case (3) {
+        var v0 = arr[from];
+        var v1 = arr[from + 1];
+        var v2 = arr[from + 2];
+
+        if (key(v0) > key(v1)) { let t = v0; v0 := v1; v1 := t }; // (0,1)
+        if (key(v1) > key(v2)) { let t = v1; v1 := v2; v2 := t }; // (1,2)
+        if (key(v0) > key(v1)) { let t = v0; v0 := v1; v1 := t }; // (0,1) - Correct for N=3 bubble/network overlap
+
+        arr[from] := v0;
+        arr[from + 1] := v1;
+        arr[from + 2] := v2;
+      };
+      case (4) {
+        var v0 = arr[from];
+        var v1 = arr[from + 1];
+        var v2 = arr[from + 2];
+        var v3 = arr[from + 3];
+
+        if (key(v0) > key(v1)) { let t = v0; v0 := v1; v1 := t }; // (0,1)
+        if (key(v2) > key(v3)) { let t = v2; v2 := v3; v3 := t }; // (2,3)
+        if (key(v0) > key(v2)) { let t = v0; v0 := v2; v2 := t }; // (0,2)
+        if (key(v1) > key(v3)) { let t = v1; v1 := v3; v3 := t }; // (1,3)
+        if (key(v1) > key(v2)) { let t = v1; v1 := v2; v2 := t }; // (1,2)
+
+        arr[from] := v0;
+        arr[from + 1] := v1;
+        arr[from + 2] := v2;
+        arr[from + 3] := v3;
+      };
+      case (5) {
+        var v0 = arr[from];
+        var v1 = arr[from + 1];
+        var v2 = arr[from + 2];
+        var v3 = arr[from + 3];
+        var v4 = arr[from + 4];
+
+        if (key(v0) > key(v1)) { let t = v0; v0 := v1; v1 := t }; // (0,1)
+        if (key(v3) > key(v4)) { let t = v3; v3 := v4; v4 := t }; // (3,4)
+        if (key(v2) > key(v4)) { let t = v2; v2 := v4; v4 := t }; // (2,4)
+        if (key(v2) > key(v3)) { let t = v2; v2 := v3; v3 := t }; // (2,3)
+        if (key(v0) > key(v3)) { let t = v0; v0 := v3; v3 := t }; // (0,3)
+        if (key(v0) > key(v2)) { let t = v0; v0 := v2; v2 := t }; // (0,2)
+        if (key(v1) > key(v4)) { let t = v1; v1 := v4; v4 := t }; // (1,4)
+        if (key(v1) > key(v3)) { let t = v1; v1 := v3; v3 := t }; // (1,3)
+        if (key(v1) > key(v2)) { let t = v1; v1 := v2; v2 := t }; // (1,2)
+
+        arr[from] := v0;
+        arr[from + 1] := v1;
+        arr[from + 2] := v2;
+        arr[from + 3] := v3;
+        arr[from + 4] := v4;
+      };
+      case (6) {
+        // 1. Load from Array to Stack
+        var v0 = arr[from];
+        var v1 = arr[from + 1];
+        var v2 = arr[from + 2];
+        var v3 = arr[from + 3];
+        var v4 = arr[from + 4];
+        var v5 = arr[from + 5];
+
+        // 2. Sort on Stack (12 Comparisons optimal network)
+
+        // Stage 1
+        if (key(v0) > key(v1)) { let t = v0; v0 := v1; v1 := t };
+        if (key(v2) > key(v3)) { let t = v2; v2 := v3; v3 := t };
+        if (key(v4) > key(v5)) { let t = v4; v4 := v5; v5 := t };
+
+        // Stage 2
+        if (key(v0) > key(v2)) { let t = v0; v0 := v2; v2 := t };
+        if (key(v3) > key(v5)) { let t = v3; v3 := v5; v5 := t };
+
+        // Stage 3
+        if (key(v1) > key(v4)) { let t = v1; v1 := v4; v4 := t };
+
+        // Stage 4
+        if (key(v0) > key(v1)) { let t = v0; v0 := v1; v1 := t };
+        if (key(v2) > key(v3)) { let t = v2; v2 := v3; v3 := t };
+        if (key(v4) > key(v5)) { let t = v4; v4 := v5; v5 := t };
+
+        // Stage 5
+        if (key(v1) > key(v2)) { let t = v1; v1 := v2; v2 := t };
+        if (key(v3) > key(v4)) { let t = v3; v3 := v4; v4 := t };
+
+        // Stage 6
+        if (key(v2) > key(v3)) { let t = v2; v2 := v3; v3 := t };
+
+        // 3. Store back to Array
+        arr[from] := v0;
+        arr[from + 1] := v1;
+        arr[from + 2] := v2;
+        arr[from + 3] := v3;
+        arr[from + 4] := v4;
+        arr[from + 5] := v5;
+      };
+      case (7) {
+        // 1. CACHE ON STACK (Scalar Replacement)
+        var t0 = arr[from];
+        var k0 = key(t0);
+        var t1 = arr[from + 1];
+        var k1 = key(t1);
+        var t2 = arr[from + 2];
+        var k2 = key(t2);
+        var t3 = arr[from + 3];
+        var k3 = key(t3);
+        var t4 = arr[from + 4];
+        var k4 = key(t4);
+        var t5 = arr[from + 5];
+        var k5 = key(t5);
+        var t6 = arr[from + 6];
+        var k6 = key(t6);
+
+        // 2. SORT MANUALLY (Optimal 16 comparisons)
+
+        // Phase 1: Sort indices 0..3 (Standard 5-comparator network)
+        if (k0 > k1) {
+          let v = t0;
+          t0 := t1;
+          t1 := v;
+          let k = k0;
+          k0 := k1;
+          k1 := k;
+        };
+        if (k2 > k3) {
+          let v = t2;
+          t2 := t3;
+          t3 := v;
+          let k = k2;
+          k2 := k3;
+          k3 := k;
+        };
+        if (k0 > k2) {
+          let v = t0;
+          t0 := t2;
+          t2 := v;
+          let k = k0;
+          k0 := k2;
+          k2 := k;
+        };
+        if (k1 > k3) {
+          let v = t1;
+          t1 := t3;
+          t3 := v;
+          let k = k1;
+          k1 := k3;
+          k3 := k;
+        };
+        if (k1 > k2) {
+          let v = t1;
+          t1 := t2;
+          t2 := v;
+          let k = k1;
+          k1 := k2;
+          k2 := k;
+        };
+
+        // Phase 2: Sort indices 4..6 (Standard 3-comparator network)
+        if (k4 > k5) {
+          let v = t4;
+          t4 := t5;
+          t5 := v;
+          let k = k4;
+          k4 := k5;
+          k5 := k;
+        };
+        if (k4 > k6) {
+          let v = t4;
+          t4 := t6;
+          t6 := v;
+          let k = k4;
+          k4 := k6;
+          k6 := k;
+        };
+        if (k5 > k6) {
+          let v = t5;
+          t5 := t6;
+          t6 := v;
+          let k = k5;
+          k5 := k6;
+          k6 := k;
+        };
+
+        // Phase 3: Merge 0..3 with 4..6
+        if (k0 > k4) {
+          let v = t0;
+          t0 := t4;
+          t4 := v;
+          let k = k0;
+          k0 := k4;
+          k4 := k;
+        };
+        if (k1 > k5) {
+          let v = t1;
+          t1 := t5;
+          t5 := v;
+          let k = k1;
+          k1 := k5;
+          k5 := k;
+        };
+        if (k2 > k6) {
+          let v = t2;
+          t2 := t6;
+          t6 := v;
+          let k = k2;
+          k2 := k6;
+          k6 := k;
+        };
+
+        if (k2 > k4) {
+          let v = t2;
+          t2 := t4;
+          t4 := v;
+          let k = k2;
+          k2 := k4;
+          k4 := k;
+        };
+        if (k3 > k5) {
+          let v = t3;
+          t3 := t5;
+          t5 := v;
+          let k = k3;
+          k3 := k5;
+          k5 := k;
+        };
+
+        if (k1 > k2) {
+          let v = t1;
+          t1 := t2;
+          t2 := v;
+          let k = k1;
+          k1 := k2;
+          k2 := k;
+        };
+        if (k3 > k4) {
+          let v = t3;
+          t3 := t4;
+          t4 := v;
+          let k = k3;
+          k3 := k4;
+          k4 := k;
+        };
+        if (k5 > k6) {
+          let v = t5;
+          t5 := t6;
+          t6 := v;
+          let k = k5;
+          k5 := k6;
+          k6 := k;
+        };
+
+        // 3. WRITE BACK TO HEAP
+        arr[from] := t0;
+        arr[from + 1] := t1;
+        arr[from + 2] := t2;
+        arr[from + 3] := t3;
+        arr[from + 4] := t4;
+        arr[from + 5] := t5;
+        arr[from + 6] := t6;
+      };
+      case (_) {
+        // 1. CACHE ON STACK
+        var t0 = arr[from];
+        var k0 = key(t0);
+        var t1 = arr[from + 1];
+        var k1 = key(t1);
+        var t2 = arr[from + 2];
+        var k2 = key(t2);
+        var t3 = arr[from + 3];
+        var k3 = key(t3);
+        var t4 = arr[from + 4];
+        var k4 = key(t4);
+        var t5 = arr[from + 5];
+        var k5 = key(t5);
+        var t6 = arr[from + 6];
+        var k6 = key(t6);
+        var t7 = arr[from + 7];
+        var k7 = key(t7);
+
+        // 2. SORT MANUALLY (Hardcoded Swaps)
+        // Stage 1
+        if (k0 > k1) {
+          let v = t0;
+          t0 := t1;
+          t1 := v;
+          let k = k0;
+          k0 := k1;
+          k1 := k;
+        };
+        if (k2 > k3) {
+          let v = t2;
+          t2 := t3;
+          t3 := v;
+          let k = k2;
+          k2 := k3;
+          k3 := k;
+        };
+        if (k4 > k5) {
+          let v = t4;
+          t4 := t5;
+          t5 := v;
+          let k = k4;
+          k4 := k5;
+          k5 := k;
+        };
+        if (k6 > k7) {
+          let v = t6;
+          t6 := t7;
+          t7 := v;
+          let k = k6;
+          k6 := k7;
+          k7 := k;
+        };
+
+        // Stage 2
+        if (k0 > k2) {
+          let v = t0;
+          t0 := t2;
+          t2 := v;
+          let k = k0;
+          k0 := k2;
+          k2 := k;
+        };
+        if (k1 > k3) {
+          let v = t1;
+          t1 := t3;
+          t3 := v;
+          let k = k1;
+          k1 := k3;
+          k3 := k;
+        };
+        if (k4 > k6) {
+          let v = t4;
+          t4 := t6;
+          t6 := v;
+          let k = k4;
+          k4 := k6;
+          k6 := k;
+        };
+        if (k5 > k7) {
+          let v = t5;
+          t5 := t7;
+          t7 := v;
+          let k = k5;
+          k5 := k7;
+          k7 := k;
+        };
+
+        // Stage 3
+        if (k1 > k2) {
+          let v = t1;
+          t1 := t2;
+          t2 := v;
+          let k = k1;
+          k1 := k2;
+          k2 := k;
+        };
+        if (k5 > k6) {
+          let v = t5;
+          t5 := t6;
+          t6 := v;
+          let k = k5;
+          k5 := k6;
+          k6 := k;
+        };
+        if (k0 > k4) {
+          let v = t0;
+          t0 := t4;
+          t4 := v;
+          let k = k0;
+          k0 := k4;
+          k4 := k;
+        };
+        if (k3 > k7) {
+          let v = t3;
+          t3 := t7;
+          t7 := v;
+          let k = k3;
+          k3 := k7;
+          k7 := k;
+        };
+
+        // Stage 4
+        if (k1 > k5) {
+          let v = t1;
+          t1 := t5;
+          t5 := v;
+          let k = k1;
+          k1 := k5;
+          k5 := k;
+        };
+        if (k2 > k6) {
+          let v = t2;
+          t2 := t6;
+          t6 := v;
+          let k = k2;
+          k2 := k6;
+          k6 := k;
+        };
+
+        // Stage 5
+        if (k1 > k4) {
+          let v = t1;
+          t1 := t4;
+          t4 := v;
+          let k = k1;
+          k1 := k4;
+          k4 := k;
+        };
+        if (k3 > k6) {
+          let v = t3;
+          t3 := t6;
+          t6 := v;
+          let k = k3;
+          k3 := k6;
+          k6 := k;
+        };
+
+        // Stage 6
+        if (k2 > k4) {
+          let v = t2;
+          t2 := t4;
+          t4 := v;
+          let k = k2;
+          k2 := k4;
+          k4 := k;
+        };
+        if (k3 > k5) {
+          let v = t3;
+          t3 := t5;
+          t5 := v;
+          let k = k3;
+          k3 := k5;
+          k5 := k;
+        };
+
+        // Stage 7
+        if (k1 > k2) {
+          let v = t1;
+          t1 := t2;
+          t2 := v;
+          let k = k1;
+          k1 := k2;
+          k2 := k;
+        };
+        if (k3 > k4) {
+          let v = t3;
+          t3 := t4;
+          t4 := v;
+          let k = k3;
+          k3 := k4;
+          k4 := k;
+        };
+        if (k5 > k6) {
+          let v = t5;
+          t5 := t6;
+          t6 := v;
+          let k = k5;
+          k5 := k6;
+          k6 := k;
+        };
+
+        // 3. WRITE BACK TO HEAP
+        arr[from] := t0;
+        arr[from + 1] := t1;
+        arr[from + 2] := t2;
+        arr[from + 3] := t3;
+        arr[from + 4] := t4;
+        arr[from + 5] := t5;
+        arr[from + 6] := t6;
+        arr[from + 7] := t7;
+      };
     };
   };
 
