@@ -3,6 +3,7 @@ import Nat32 "mo:core/Nat32";
 import Nat64 "mo:core/Nat64";
 import { min } "mo:core/Nat";
 import Array "mo:core/Array";
+import Runtime "mo:core/Runtime";
 
 module {
   func mergeSortInternal(array : [var Nat64]) : [var Nat64] {
@@ -61,81 +62,8 @@ module {
 
   func sort<T>(array : [var T], scratch : [var T], key : T -> Nat32, from : Nat32, to : Nat32) {
     let n = to -% from;
-    // n should be >= 2
-    if (n <= 4) {
-      if (n == 2) {
-        let i1 = Nat32.toNat(from);
-        let i2 = Nat32.toNat(from +% 1);
-        let item1 = array[i1];
-        let item2 = array[i2];
-        if (key(item1) > key(item2)) {
-          array[i1] := item2;
-          array[i2] := item1;
-        };
-      } else if (n == 3) {
-        let i1 = Nat32.toNat(from);
-        let i2 = Nat32.toNat(from +% 1);
-        let i3 = Nat32.toNat(from +% 2);
-        var item1 = array[i1];
-        var item2 = array[i2];
-        var item3 = array[i3];
-        if (key(item1) > key(item2)) {
-          let t = item1;
-          item1 := item2;
-          item2 := t;
-        };
-        if (key(item1) > key(item3)) {
-          let t = item1;
-          item1 := item3;
-          item3 := t;
-        };
-        if (key(item2) > key(item3)) {
-          let t = item2;
-          item2 := item3;
-          item3 := t;
-        };
-        array[i1] := item1;
-        array[i2] := item2;
-        array[i3] := item3;
-      } else {
-        let i1 = Nat32.toNat(from);
-        let i2 = Nat32.toNat(from +% 1);
-        let i3 = Nat32.toNat(from +% 2);
-        let i4 = Nat32.toNat(from +% 3);
-        var item1 = array[i1];
-        var item2 = array[i2];
-        var item3 = array[i3];
-        var item4 = array[i4];
-        if (key(item1) > key(item2)) {
-          let t = item1;
-          item1 := item2;
-          item2 := t;
-        };
-        if (key(item3) > key(item4)) {
-          let t = item3;
-          item3 := item4;
-          item4 := t;
-        };
-        if (key(item1) > key(item3)) {
-          let t = item1;
-          item1 := item3;
-          item3 := t;
-        };
-        if (key(item2) > key(item4)) {
-          let t = item2;
-          item2 := item4;
-          item4 := t;
-        };
-        if (key(item2) > key(item3)) {
-          let t = item2;
-          item2 := item3;
-          item3 := t;
-        };
-        array[i1] := item1;
-        array[i2] := item2;
-        array[i3] := item3;
-        array[i4] := item4;
-      };
+    if (n <= 8) {
+      sortSmallUnstable(array, from, n, key);
       return;
     };
 
@@ -178,10 +106,8 @@ module {
     };
   };
 
-  public func sortSmallUnstable<T>(arr : [var T], from : Nat, to : Nat, key : T -> Nat32) {
-    let len = to - from : Nat;
-    // len should be in the interval [2, 8]
-
+  public func sortSmallUnstable<T>(arr : [var T], from32 : Nat32, len : Nat32, key : T -> Nat32) {
+    let from = Nat32.toNat(from32);
     switch (len) {
       case (2) {
         var v0 = arr[from];
@@ -194,11 +120,11 @@ module {
       };
       case (3) {
         var t0 = arr[from];
-        var k0 = key(t0);
+        var k0 = key(t0) << 2;
         var t1 = arr[from + 1];
-        var k1 = key(t1);
+        var k1 = (key(t1) << 2) ^ 1;
         var t2 = arr[from + 2];
-        var k2 = key(t2);
+        var k2 = (key(t2) << 2) ^ 2;
 
         if (k0 > k1) {
           let v = t0;
@@ -231,13 +157,13 @@ module {
       };
       case (4) {
         var t0 = arr[from];
-        var k0 = key(t0);
+        var k0 = key(t0) << 2;
         var t1 = arr[from + 1];
-        var k1 = key(t1);
+        var k1 = (key(t1) << 2) ^ 1;
         var t2 = arr[from + 2];
-        var k2 = key(t2);
+        var k2 = (key(t2) << 2) ^ 2;
         var t3 = arr[from + 3];
-        var k3 = key(t3);
+        var k3 = (key(t3) << 2) ^ 3;
 
         if (k0 > k1) {
           let v = t0;
@@ -287,15 +213,15 @@ module {
       };
       case (5) {
         var t0 = arr[from];
-        var k0 = key(t0);
+        var k0 = key(t0) << 3;
         var t1 = arr[from + 1];
-        var k1 = key(t1);
+        var k1 = (key(t1) << 3) ^ 1;
         var t2 = arr[from + 2];
-        var k2 = key(t2);
+        var k2 = (key(t2) << 3) ^ 2;
         var t3 = arr[from + 3];
-        var k3 = key(t3);
+        var k3 = (key(t3) << 3) ^ 3;
         var t4 = arr[from + 4];
-        var k4 = key(t4);
+        var k4 = (key(t4) << 3) ^ 4;
 
         if (k0 > k1) {
           let v = t0;
@@ -377,23 +303,19 @@ module {
         arr[from + 4] := t4;
       };
       case (6) {
-        // 1. CACHE ON STACK (values + keys)
         var t0 = arr[from];
-        var k0 = key(t0);
+        var k0 = key(t0) << 3;
         var t1 = arr[from + 1];
-        var k1 = key(t1);
+        var k1 = (key(t1) << 3) ^ 1;
         var t2 = arr[from + 2];
-        var k2 = key(t2);
+        var k2 = (key(t2) << 3) ^ 2;
         var t3 = arr[from + 3];
-        var k3 = key(t3);
+        var k3 = (key(t3) << 3) ^ 3;
         var t4 = arr[from + 4];
-        var k4 = key(t4);
+        var k4 = (key(t4) << 3) ^ 4;
         var t5 = arr[from + 5];
-        var k5 = key(t5);
+        var k5 = (key(t5) << 3) ^ 5;
 
-        // 2. Sort on Stack (12 Comparisons optimal network)
-
-        // Stage 1
         if (k0 > k1) {
           let v = t0;
           t0 := t1;
@@ -418,8 +340,6 @@ module {
           k4 := k5;
           k5 := k;
         };
-
-        // Stage 2
         if (k0 > k2) {
           let v = t0;
           t0 := t2;
@@ -436,8 +356,6 @@ module {
           k3 := k5;
           k5 := k;
         };
-
-        // Stage 3
         if (k1 > k4) {
           let v = t1;
           t1 := t4;
@@ -446,8 +364,6 @@ module {
           k1 := k4;
           k4 := k;
         };
-
-        // Stage 4
         if (k0 > k1) {
           let v = t0;
           t0 := t1;
@@ -472,8 +388,6 @@ module {
           k4 := k5;
           k5 := k;
         };
-
-        // Stage 5
         if (k1 > k2) {
           let v = t1;
           t1 := t2;
@@ -490,8 +404,6 @@ module {
           k3 := k4;
           k4 := k;
         };
-
-        // Stage 6
         if (k2 > k3) {
           let v = t2;
           t2 := t3;
@@ -501,7 +413,6 @@ module {
           k3 := k;
         };
 
-        // 3. WRITE BACK TO HEAP
         arr[from] := t0;
         arr[from + 1] := t1;
         arr[from + 2] := t2;
@@ -510,25 +421,21 @@ module {
         arr[from + 5] := t5;
       };
       case (7) {
-        // 1. CACHE ON STACK (Scalar Replacement)
         var t0 = arr[from];
-        var k0 = key(t0);
+        var k0 = key(t0) << 3;
         var t1 = arr[from + 1];
-        var k1 = key(t1);
+        var k1 = (key(t1) << 3) ^ 1;
         var t2 = arr[from + 2];
-        var k2 = key(t2);
+        var k2 = (key(t2) << 3) ^ 2;
         var t3 = arr[from + 3];
-        var k3 = key(t3);
+        var k3 = (key(t3) << 3) ^ 3;
         var t4 = arr[from + 4];
-        var k4 = key(t4);
+        var k4 = (key(t4) << 3) ^ 4;
         var t5 = arr[from + 5];
-        var k5 = key(t5);
+        var k5 = (key(t5) << 3) ^ 5;
         var t6 = arr[from + 6];
-        var k6 = key(t6);
+        var k6 = (key(t6) << 3) ^ 6;
 
-        // 2. SORT MANUALLY (Optimal 16 comparisons)
-
-        // Phase 1: Sort indices 0..3 (Standard 5-comparator network)
         if (k0 > k1) {
           let v = t0;
           t0 := t1;
@@ -569,8 +476,6 @@ module {
           k1 := k2;
           k2 := k;
         };
-
-        // Phase 2: Sort indices 4..6 (Standard 3-comparator network)
         if (k4 > k5) {
           let v = t4;
           t4 := t5;
@@ -595,8 +500,6 @@ module {
           k5 := k6;
           k6 := k;
         };
-
-        // Phase 3: Merge 0..3 with 4..6
         if (k0 > k4) {
           let v = t0;
           t0 := t4;
@@ -621,7 +524,6 @@ module {
           k2 := k6;
           k6 := k;
         };
-
         if (k2 > k4) {
           let v = t2;
           t2 := t4;
@@ -638,7 +540,6 @@ module {
           k3 := k5;
           k5 := k;
         };
-
         if (k1 > k2) {
           let v = t1;
           t1 := t2;
@@ -664,7 +565,6 @@ module {
           k6 := k;
         };
 
-        // 3. WRITE BACK TO HEAP
         arr[from] := t0;
         arr[from + 1] := t1;
         arr[from + 2] := t2;
@@ -673,27 +573,24 @@ module {
         arr[from + 5] := t5;
         arr[from + 6] := t6;
       };
-      case (_) {
-        // 1. CACHE ON STACK
+      case (8) {
         var t0 = arr[from];
-        var k0 = key(t0);
+        var k0 = key(t0) << 3;
         var t1 = arr[from + 1];
-        var k1 = key(t1);
+        var k1 = (key(t1) << 3) ^ 1;
         var t2 = arr[from + 2];
-        var k2 = key(t2);
+        var k2 = (key(t2) << 3) ^ 2;
         var t3 = arr[from + 3];
-        var k3 = key(t3);
+        var k3 = (key(t3) << 3) ^ 3;
         var t4 = arr[from + 4];
-        var k4 = key(t4);
+        var k4 = (key(t4) << 3) ^ 4;
         var t5 = arr[from + 5];
-        var k5 = key(t5);
+        var k5 = (key(t5) << 3) ^ 5;
         var t6 = arr[from + 6];
-        var k6 = key(t6);
+        var k6 = (key(t6) << 3) ^ 6;
         var t7 = arr[from + 7];
-        var k7 = key(t7);
+        var k7 = (key(t7) << 3) ^ 7;
 
-        // 2. SORT MANUALLY (Hardcoded Swaps)
-        // Stage 1
         if (k0 > k1) {
           let v = t0;
           t0 := t1;
@@ -726,8 +623,6 @@ module {
           k6 := k7;
           k7 := k;
         };
-
-        // Stage 2
         if (k0 > k2) {
           let v = t0;
           t0 := t2;
@@ -760,8 +655,6 @@ module {
           k5 := k7;
           k7 := k;
         };
-
-        // Stage 3
         if (k1 > k2) {
           let v = t1;
           t1 := t2;
@@ -794,8 +687,6 @@ module {
           k3 := k7;
           k7 := k;
         };
-
-        // Stage 4
         if (k1 > k5) {
           let v = t1;
           t1 := t5;
@@ -812,8 +703,6 @@ module {
           k2 := k6;
           k6 := k;
         };
-
-        // Stage 5
         if (k1 > k4) {
           let v = t1;
           t1 := t4;
@@ -830,8 +719,6 @@ module {
           k3 := k6;
           k6 := k;
         };
-
-        // Stage 6
         if (k2 > k4) {
           let v = t2;
           t2 := t4;
@@ -848,8 +735,6 @@ module {
           k3 := k5;
           k5 := k;
         };
-
-        // Stage 7
         if (k1 > k2) {
           let v = t1;
           t1 := t2;
@@ -875,7 +760,6 @@ module {
           k6 := k;
         };
 
-        // 3. WRITE BACK TO HEAP
         arr[from] := t0;
         arr[from + 1] := t1;
         arr[from + 2] := t2;
@@ -885,6 +769,7 @@ module {
         arr[from + 6] := t6;
         arr[from + 7] := t7;
       };
+      case (_) Runtime.trap("Can not happen");
     };
   };
 
@@ -917,7 +802,10 @@ module {
 
     var prev : Nat32 = 0;
     for (count in counts.vals()) {
-      if (count -% prev >= 2) sort(scratch, array, key, prev, count);
+      let n = count -% prev;
+      if (n >= 2) {
+        if (n <= 8) sortSmallUnstable(scratch, prev, n, key) else sort(scratch, array, key, prev, count);
+      };
       prev := count;
     };
 
