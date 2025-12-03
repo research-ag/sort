@@ -162,39 +162,35 @@ module {
       };
     };
 
-    if (bits == 0) {
-      for (i in array.keys()) array[i] := scratch[i];
-    } else {
-      var i = from;
-      while (i < to) {
-        let ii = Nat32.toNat(i);
-        array[ii] := scratch[ii];
-        i +%= 1;
-      };
-    };
-
     var prev : Nat32 = from;
     for (count in counts.vals()) {
       let len = count -% prev;
       switch (len) {
-        case (0 or 1) {};
+        case (0) {};
+        case (1) {
+          let from = Nat32.toNat(prev);
+          array[from] := scratch[from];
+        };
         case (2) {
           let from = Nat32.toNat(prev);
-          var v0 = array[from];
-          var v1 = array[from + 1];
+          var v0 = scratch[from];
+          var v1 = scratch[from + 1];
 
           if (key(v0) > key(v1)) {
             array[from] := v1;
             array[from + 1] := v0;
+          } else {
+            array[from] := v0;
+            array[from + 1] := v1;
           };
         };
         case (3) {
           let from = Nat32.toNat(prev);
-          var t0 = array[from];
+          var t0 = scratch[from];
           var k0 = key(t0);
-          var t1 = array[from + 1];
+          var t1 = scratch[from + 1];
           var k1 = key(t1);
-          var t2 = array[from + 2];
+          var t2 = scratch[from + 2];
           var k2 = key(t2);
 
           if (k0 > k1) {
@@ -228,13 +224,13 @@ module {
         };
         case (4) {
           let from = Nat32.toNat(prev);
-          var t0 = array[from];
+          var t0 = scratch[from];
           var k0 = key(t0) << 2;
-          var t1 = array[from + 1];
+          var t1 = scratch[from + 1];
           var k1 = (key(t1) << 2) ^ 1;
-          var t2 = array[from + 2];
+          var t2 = scratch[from + 2];
           var k2 = (key(t2) << 2) ^ 2;
-          var t3 = array[from + 3];
+          var t3 = scratch[from + 3];
           var k3 = (key(t3) << 2) ^ 3;
 
           if (k0 > k1) {
@@ -285,15 +281,15 @@ module {
         };
         case (5) {
           let from = Nat32.toNat(prev);
-          var t0 = array[from];
+          var t0 = scratch[from];
           var k0 = key(t0) << 3;
-          var t1 = array[from + 1];
+          var t1 = scratch[from + 1];
           var k1 = (key(t1) << 3) ^ 1;
-          var t2 = array[from + 2];
+          var t2 = scratch[from + 2];
           var k2 = (key(t2) << 3) ^ 2;
-          var t3 = array[from + 3];
+          var t3 = scratch[from + 3];
           var k3 = (key(t3) << 3) ^ 3;
-          var t4 = array[from + 4];
+          var t4 = scratch[from + 4];
           var k4 = (key(t4) << 3) ^ 4;
 
           if (k0 > k1) {
@@ -377,17 +373,17 @@ module {
         };
         case (6) {
           let from = Nat32.toNat(prev);
-          var t0 = array[from];
+          var t0 = scratch[from];
           var k0 = key(t0) << 3;
-          var t1 = array[from + 1];
+          var t1 = scratch[from + 1];
           var k1 = (key(t1) << 3) ^ 1;
-          var t2 = array[from + 2];
+          var t2 = scratch[from + 2];
           var k2 = (key(t2) << 3) ^ 2;
-          var t3 = array[from + 3];
+          var t3 = scratch[from + 3];
           var k3 = (key(t3) << 3) ^ 3;
-          var t4 = array[from + 4];
+          var t4 = scratch[from + 4];
           var k4 = (key(t4) << 3) ^ 4;
-          var t5 = array[from + 5];
+          var t5 = scratch[from + 5];
           var k5 = (key(t5) << 3) ^ 5;
 
           if (k0 > k1) {
@@ -496,19 +492,19 @@ module {
         };
         case (7) {
           let from = Nat32.toNat(prev);
-          var t0 = array[from];
+          var t0 = scratch[from];
           var k0 = key(t0) << 3;
-          var t1 = array[from + 1];
+          var t1 = scratch[from + 1];
           var k1 = (key(t1) << 3) ^ 1;
-          var t2 = array[from + 2];
+          var t2 = scratch[from + 2];
           var k2 = (key(t2) << 3) ^ 2;
-          var t3 = array[from + 3];
+          var t3 = scratch[from + 3];
           var k3 = (key(t3) << 3) ^ 3;
-          var t4 = array[from + 4];
+          var t4 = scratch[from + 4];
           var k4 = (key(t4) << 3) ^ 4;
-          var t5 = array[from + 5];
+          var t5 = scratch[from + 5];
           var k5 = (key(t5) << 3) ^ 5;
-          var t6 = array[from + 6];
+          var t6 = scratch[from + 6];
           var k6 = (key(t6) << 3) ^ 6;
 
           if (k0 > k1) {
@@ -650,21 +646,21 @@ module {
         };
         case (8) {
           let from = Nat32.toNat(prev);
-          var t0 = array[from];
+          var t0 = scratch[from];
           var k0 = key(t0) << 3;
-          var t1 = array[from + 1];
+          var t1 = scratch[from + 1];
           var k1 = (key(t1) << 3) ^ 1;
-          var t2 = array[from + 2];
+          var t2 = scratch[from + 2];
           var k2 = (key(t2) << 3) ^ 2;
-          var t3 = array[from + 3];
+          var t3 = scratch[from + 3];
           var k3 = (key(t3) << 3) ^ 3;
-          var t4 = array[from + 4];
+          var t4 = scratch[from + 4];
           var k4 = (key(t4) << 3) ^ 4;
-          var t5 = array[from + 5];
+          var t5 = scratch[from + 5];
           var k5 = (key(t5) << 3) ^ 5;
-          var t6 = array[from + 6];
+          var t6 = scratch[from + 6];
           var k6 = (key(t6) << 3) ^ 6;
-          var t7 = array[from + 7];
+          var t7 = scratch[from + 7];
           var k7 = (key(t7) << 3) ^ 7;
 
           if (k0 > k1) {
@@ -845,7 +841,15 @@ module {
           array[from + 6] := t6;
           array[from + 7] := t7;
         };
-        case (_) bucketSortRecursive(array, scratch, key, prev, count, bits + BITS_ADD);
+        case (_) {
+          bucketSortRecursive(scratch, array, key, prev, count, bits + BITS_ADD);
+          var i = prev;
+          while (i < count) {
+            let ii = Nat32.toNat(i);
+            array[ii] := scratch[ii];
+            i +%= 1;
+          };
+        };
       };
       prev := count;
     };
