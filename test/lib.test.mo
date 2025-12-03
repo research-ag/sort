@@ -4,8 +4,6 @@ import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
 import VarArray "mo:core/VarArray";
 import Array "mo:core/Array";
-import Debug "mo:core/Debug";
-import Int "mo:core/Int";
 
 func testRadixSort(n : Nat, mod : Nat32) {
   let A : Nat32 = 1664525;
@@ -23,7 +21,7 @@ func testRadixSort(n : Nat, mod : Nat32) {
 
   let b = VarArray.clone(a);
 
-  RadixSort.bucketSort<(Nat32, Nat)>(a, func(x, y) = x);
+  RadixSort.bucketSort<(Nat32, Nat)>(a, func(x, y) = x, null);
   VarArray.sortInPlace(b, func(x, y) = Nat32.compare(x.0, y.0));
 
   for (i in Nat.range(0, n)) {

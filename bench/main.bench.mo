@@ -39,7 +39,7 @@ module {
       5,
       func(j) = Array.tabulate<Nat32>(
         [1_000, 10_000, 12_000, 100_000, 1_000_000][j],
-        func(i) = Nat32.fromIntWrap(Nat64.toNat(rng.nat64() % (2 ** 32))),
+        func(i) = Nat32.fromIntWrap(Nat64.toNat(rng.nat64() % 1_000_000)),
       ),
     );
 
@@ -52,7 +52,7 @@ module {
         switch (row) {
           case (0) {
             let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
-            func() = Sort.bucketSort<Nat32>(varSource, func i = i);
+            func() = Sort.bucketSort<Nat32>(varSource, func i = i, ?1_000_000);
           };
           case (1) {
             func() = ignore Sort.radixSort16<Nat32>(sourceArrays[col], func i = i);
