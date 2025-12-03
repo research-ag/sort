@@ -453,6 +453,8 @@ module {
     ];
     let cols = [
       "8",
+      "worst",
+      "best",
     ];
 
     bench.rows(rows);
@@ -463,12 +465,32 @@ module {
     let a : [var Nat32] = VarArray.tabulate(8000, func(i) = Nat64.toNat32(rng.nat64() % (2 ** 29)));
     let b = VarArray.clone(a);
 
+    let worst = VarArray.tabulate<Nat32>(8000, func i = Nat32.fromNat(8000 - i));
+    let worstClone = VarArray.clone(worst);
+
+    let best = VarArray.tabulate<Nat32>(8000, func i = Nat32.fromNat(i));
+    let bestClone = VarArray.clone(best);
+
     bench.runner(
       func(row, col) {
-        if (row == "insertion") {
-          for (i in Nat.range(0, 1000)) insertionSortSmall(a, a, func i = i, i * 8);
+        if (col == "8") {
+          if (row == "insertion") {
+            for (i in Nat.range(0, 1000)) insertionSortSmall(a, a, func i = i, i * 8);
+          } else {
+            for (i in Nat.range(0, 1000)) batcherSortSmall(b, b, func i = i, i * 8);
+          };
+        } else if (col == "worst") {
+          if (row == "insertion") {
+            for (i in Nat.range(0, 1000)) insertionSortSmall(worst, worst, func i = i, i * 8);
+          } else {
+            for (i in Nat.range(0, 1000)) batcherSortSmall(worstClone, worstClone, func i = i, i * 8);
+          };
         } else {
-          for (i in Nat.range(0, 1000)) batcherSortSmall(b, b, func i = i, i * 8);
+          if (row == "insertion") {
+            for (i in Nat.range(0, 1000)) insertionSortSmall(best, best, func i = i, i * 8);
+          } else {
+            for (i in Nat.range(0, 1000)) batcherSortSmall(bestClone, bestClone, func i = i, i * 8);
+          };
         };
       }
     );
