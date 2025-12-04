@@ -5,13 +5,13 @@ import Runtime "mo:core/Runtime";
 import VarArray "mo:core/VarArray";
 import Random "mo:core/Random";
 
-func testRadixSort(n : Nat, mod : Nat64) {
+func testRadixSort(n : Nat, mod : Nat64, sort : [var (Nat32, Nat)] -> ()) {
   let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
 
   let a = VarArray.tabulate<(Nat32, Nat)>(n, func(i) = (Nat32.fromNat64(rng.nat64Range(0, mod)), i));
   let b = VarArray.clone(a);
 
-  RadixSort.bucketSort(a, func(x, y) = x, null);
+  sort(a);
   VarArray.sortInPlace(b, func(x, y) = Nat32.compare(x.0, y.0));
 
   for (i in Nat.range(0, n)) {
@@ -41,6 +41,7 @@ let mods : [Nat64] = [
 
 for (n in ns.vals()) {
   for (mod in mods.vals()) {
-    testRadixSort(n, mod);
+    testRadixSort(n, mod, func a = RadixSort.bucketSort(a, func(x, y) = x, null));
+    testRadixSort(n, mod, func a = RadixSort.radixSort(a, func(x, y) = x));
   };
 };

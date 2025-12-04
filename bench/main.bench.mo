@@ -25,6 +25,7 @@ module {
       "VarArray"
     ];
     let cols = [
+      "100",
       "1000",
       "10000",
       "12000",
@@ -38,9 +39,9 @@ module {
     let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
 
     let sourceArrays : [[Nat32]] = Array.tabulate(
-      5,
+      6,
       func(j) = Array.tabulate<Nat32>(
-        [1_000, 10_000, 12_000, 100_000, 1_000_000][j],
+        [100, 1_000, 10_000, 12_000, 100_000, 1_000_000][j],
         func(i) = Nat64.toNat32(rng.nat64() % 1_000_000),
       ),
     );

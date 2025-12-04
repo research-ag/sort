@@ -661,28 +661,26 @@ module {
     let n = array.size();
     if (n <= 1) return;
 
-    let RADIX_BITS = 16;
-    let RADIX = 2 ** RADIX_BITS;
-    let MASK = Nat32.fromNat(RADIX) -% 1;
+    let NBITS = 31 - Nat32.bitcountLeadingZero(Nat32.fromNat(n));
+    let STEPS = (32 + NBITS - 1) / NBITS;
+    let RADIX_BITS = (32 + STEPS - 1) / STEPS;
+    let RADIX = 1 << RADIX_BITS;
+    let MASK = RADIX -% 1;
 
     let buffer = VarArray.repeat<T>(array[0], n);
-    let counts = VarArray.repeat<Nat32>(0, RADIX);
+    let counts = VarArray.repeat<Nat32>(0, Nat32.toNat(RADIX));
 
-    for (step in [0, 1].vals()) {
-      if (step == 1) {
-        for (i in counts.keys()) counts[i] := 0;
-      };
+    for (step in Nat32.range(0, STEPS)) {
+      if (step > 0) for (i in counts.keys()) counts[i] := 0;
+
+      let SHIFT = step * RADIX_BITS;
 
       if (step == 0) {
-        for (x in array.vals()) {
-          let digit = Nat32.toNat(key(x) & MASK);
-          counts[digit] +%= 1;
-        };
+        for (x in array.vals()) counts[Nat32.toNat(key(x) & MASK)] +%= 1;
+      } else if (step < (STEPS - 1 : Nat32)) {
+        for (x in array.vals()) counts[Nat32.toNat((key(x) >> SHIFT) & MASK)] +%= 1;
       } else {
-        for (x in array.vals()) {
-          let digit = Nat32.toNat(key(x) >> 16);
-          counts[digit] +%= 1;
-        };
+        for (x in array.vals()) counts[Nat32.toNat(key(x) >> SHIFT)] +%= 1;
       };
 
       var sum : Nat32 = 0;
@@ -692,21 +690,32 @@ module {
         sum +%= t;
       };
 
+      let (from, to) = if (step % 2 == 0) (array, buffer) else (buffer, array);
+
       if (step == 0) {
-        for (x in array.vals()) {
+        for (x in from.vals()) {
           let digit = Nat32.toNat(key(x) & MASK);
           let pos = counts[digit];
-          buffer[Nat32.toNat(pos)] := x;
+          to[Nat32.toNat(pos)] := x;
+          counts[digit] := pos +% 1;
+        };
+      } else if (step < (STEPS - 1 : Nat32)) {
+        for (x in from.vals()) {
+          let digit = Nat32.toNat((key(x) >> SHIFT) & MASK);
+          let pos = counts[digit];
+          to[Nat32.toNat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       } else {
-        for (x in buffer.vals()) {
-          let digit = Nat32.toNat(key(x) >> 16);
+        for (x in from.vals()) {
+          let digit = Nat32.toNat(key(x) >> SHIFT);
           let pos = counts[digit];
-          array[Nat32.toNat(pos)] := x;
+          to[Nat32.toNat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       };
     };
+
+    if (STEPS % 2 != 0) for (i in array.keys()) array[i] := buffer[i];
   };
 };
