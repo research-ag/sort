@@ -7,9 +7,12 @@ module {
     if (n <= 1) return;
 
     let buffer = VarArray.repeat(array[0], n);
-    let bits = switch (max) {
-      case (null) 0 : Nat32;
-      case (?x) Nat32.bitcountLeadingZero(x);
+    let bits : Nat32 = switch (max) {
+      case (null) 0;
+      case (?x) {
+        if (x == 0) return;
+        Nat32.bitcountLeadingZero(x);
+      };
     };
 
     bucketSortRecursive(array, buffer, key, 0 : Nat32, Nat32.fromNat(n), Nat32.fromNat(n), bits, false);
@@ -663,7 +666,10 @@ module {
 
     let bits : Nat32 = 32 - (switch (max) {
       case (null) 0;
-      case (?x) Nat32.bitcountLeadingZero(x);
+      case (?x) {
+        if (x == 0) return;
+        Nat32.bitcountLeadingZero(x);
+      };
     });
 
     let NBITS = 31 - Nat32.bitcountLeadingZero(Nat32.fromNat(n));
