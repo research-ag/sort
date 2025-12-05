@@ -837,8 +837,10 @@ module {
     let rows = [
       "merge",
       "bucket",
+      "radix",
     ];
     let cols = [
+      "5",
       "10",
       "20",
       "40",
@@ -856,7 +858,7 @@ module {
       func(row, col) {
         let n = Option.unwrap(Nat.fromText(col));
         let a : [var Nat32] = VarArray.tabulate<Nat32>(n, func(i) = Nat64.toNat32(rng.nat64() % (2 ** 32)));
-        if (row == "merge") mergeSort(a, func i = i) else Sort.bucketSort(a, func i = i, null);
+        if (row == "merge") mergeSort(a, func i = i) else if (row == "bucket") Sort.bucketSort(a, func i = i, null) else Sort.radixSort(a, func i = i, null);
       }
     );
 
