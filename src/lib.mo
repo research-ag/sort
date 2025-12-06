@@ -11,13 +11,13 @@ module {
   /// import RadixSort "mo:radix-sort";
   /// import Array "mo:core/Array";
   /// import VarArray "mo:core/VarArray";
-
+  ///
   /// // Example with a custom type
   /// type User = {
   ///   id : Nat32;
   ///   name : Text;
   /// };
-
+  ///
   /// let users : [var User] = [var
   ///   { id = 101; name = "Alice" },
   ///   { id = 22; name = "Bob" },
@@ -27,7 +27,7 @@ module {
   ///
   /// // Sort the users by their 'id' field
   /// RadixSort.bucketSort<User>(users, func(user) = user.id, null);
-
+  ///
   /// // The 'users' array is now sorted in-place
   /// Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
   /// ```
@@ -696,13 +696,13 @@ module {
   /// import RadixSort "mo:radix-sort";
   /// import Array "mo:core/Array";
   /// import VarArray "mo:core/VarArray";
-
+  ///
   /// // Example with a custom type
   /// type User = {
   ///   id : Nat32;
   ///   name : Text;
   /// };
-
+  ///
   /// let users : [var User] = [var
   ///   { id = 101; name = "Alice" },
   ///   { id = 22; name = "Bob" },
@@ -712,7 +712,7 @@ module {
   ///
   /// // Sort the users by their 'id' field
   /// RadixSort.radixSort<User>(users, func(user) = user.id, null);
-
+  ///
   /// // The 'users' array is now sorted in-place
   /// Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
   /// ```
