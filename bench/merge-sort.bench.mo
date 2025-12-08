@@ -5,7 +5,7 @@ import Nat64 "mo:core/Nat64";
 import Nat32 "mo:core/Nat32";
 import VarArray "mo:core/VarArray";
 import Option "mo:core/Option";
-import Sort "../src";
+import Sort "../src/SortNat32";
 
 module {
   func mergeSort<T>(array : [var T], key : T -> Nat32) {

@@ -1,4 +1,4 @@
-import RadixSort "../src";
+import RadixSort "../src/SortNat32";
 import Nat32 "mo:core/Nat32";
 import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
