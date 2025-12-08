@@ -46,7 +46,7 @@ module {
       };
     };
 
-    bucketSortRecursive(array, buffer, key, 0 : Nat32, Nat32.fromNat(n), Nat32.fromNat(n), bits, false);
+    bucketSortRecursive(array, buffer, key, 0 : Nat32, Nat32.fromNat(n), bits, false);
   };
 
   func bucketSortRecursive<T>(
@@ -55,7 +55,6 @@ module {
     key : T -> Nat32,
     from : Nat32,
     to : Nat32,
-    length : Nat32,
     bits : Nat32,
     odd : Bool,
   ) {
@@ -72,12 +71,14 @@ module {
     };
 
     let n = to - from;
+    let fullLength = n == Nat32.fromNat(array.size());
+
     let SHIFT = Nat32.bitcountLeadingZero(n) + 1;
     let BITS_ADD = 32 - SHIFT;
     let RADIX = Nat32.toNat(1 << BITS_ADD);
 
     let counts = VarArray.repeat<Nat32>(0, RADIX);
-    if (n == length) {
+    if (fullLength) {
       if (bits == 0) {
         for (x in array.vals()) counts[Nat32.toNat(key(x) >> SHIFT)] +%= 1;
       } else {
@@ -99,7 +100,7 @@ module {
       sum +%= t;
     };
 
-    if (n == length) {
+    if (fullLength) {
       if (bits == 0) {
         for (x in array.vals()) {
           let digit = Nat32.toNat(key(x) >> SHIFT);
@@ -685,7 +686,7 @@ module {
           dest[from + 6] := t6;
           dest[from + 7] := t7;
         };
-        case (_) bucketSortRecursive(buffer, array, key, newFrom, newTo, n, bits + BITS_ADD, not odd);
+        case (_) bucketSortRecursive(buffer, array, key, newFrom, newTo, bits + BITS_ADD, not odd);
       };
       newFrom := newTo;
     };
