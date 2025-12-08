@@ -6,6 +6,8 @@ import Nat32 "mo:core/Nat32";
 module {
   /// Sorts an array in place using bucket sort.
   ///
+  /// Max `n` value id `2 ** 32 - 1`.
+  ///
   /// Example:
   /// ```motoko
   /// import Sort "mo:sort/Nat32Key";
@@ -690,6 +692,8 @@ module {
   };
 
   /// Sorts an array in place using radix sort.
+  ///
+  /// Max `n` value id `2 ** 32 - 1`.
   ///
   /// Example:
   /// ```motoko
