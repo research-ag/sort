@@ -2,7 +2,7 @@
 
 A high-performance, radix sort and bucket sort implementations for Motoko.
 
-## What is Radix Sort?
+## What is Radix Sort and Bucket Sort?
 
 Radix sort is a non-comparative sorting algorithm that sorts integers by processing individual digits. It has a time complexity of `O(d * (n + b))`, where `d` is the number of digits, `n` is the number of elements, and `b` is the base of the number system. This makes it significantly faster than comparison-based sorting algorithms (like quicksort or mergesort) for sorting by `Nat32` keys (or other finite non-negative integer).
 
