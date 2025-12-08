@@ -1,4 +1,4 @@
-# radix-sort
+# sort
 
 A high-performance, radix sort and bucket sort implementations for Motoko.
 
@@ -11,7 +11,7 @@ Bucket sort version presented splits data into `2 ** m` buckets where `m` is max
 ## Install
 
 ```bash
-mops add radix-sort
+mops add sort
 ```
 
 ## Usage
@@ -19,7 +19,7 @@ mops add radix-sort
 The library provides two sorting functions: `radixSort` and `bucketSort`. For most use cases, `radixSort` is the recommended choice.
 
 ```motoko
-import RadixSort "mo:radix-sort/SortNat32";
+import RadixSort "mo:sort/SortNat32";
 import Array "mo:core/Array";
 import VarArray "mo:core/VarArray";
 

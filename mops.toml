@@ -1,5 +1,5 @@
 [package]
-name = "radix-sort"
+name = "sort"
 version = "1.0.0"
 description = "Radix sort"
 repository = ""
