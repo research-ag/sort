@@ -1,5 +1,6 @@
 import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
+import Option "mo:core/Option";
 
 /// This module provides implementations of radix sort and bucket sort for sorting arrays of elements.
 /// The sorts are based on a key function that maps elements to `Nat32` values.
@@ -28,12 +29,12 @@ module {
   /// ];
   ///
   /// // Sort the users by their 'id' field
-  /// Sort.bucketSort<User>(users, func(user) = user.id, null);
+  /// Sort.bucketSort<User>(users, func(user) = user.id, null, null);
   ///
   /// // The 'users' array is now sorted in-place
   /// Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
   /// ```
-  public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32) {
+  public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32, radixBits : ?(Nat32 -> Nat32)) {
     let n = array.size();
     if (n <= 1) return;
 
@@ -46,10 +47,13 @@ module {
       };
     };
 
-    bucketSortRecursive(array, buffer, key, 0 : Nat32, Nat32.fromNat(n), bits, false);
+    let f = Option.get(radixBits, func n = 31 - Nat32.bitcountLeadingZero(n));
+
+    bucketSortRecursive(f, array, buffer, key, 0 : Nat32, Nat32.fromNat(n), bits, false);
   };
 
   func bucketSortRecursive<T>(
+    radixBits : Nat32 -> Nat32,
     array : [var T],
     buffer : [var T],
     key : T -> Nat32,
@@ -73,8 +77,8 @@ module {
     let n = to - from;
     let fullLength = n == Nat32.fromNat(array.size());
 
-    let SHIFT = Nat32.bitcountLeadingZero(n) + 1;
-    let BITS_ADD = 32 - SHIFT;
+    let BITS_ADD = Nat32.min(radixBits(n), 32 - bits);
+    let SHIFT = 32 - BITS_ADD;
     let RADIX = Nat32.toNat(1 << BITS_ADD);
 
     let counts = VarArray.repeat<Nat32>(0, RADIX);
@@ -686,7 +690,7 @@ module {
           dest[from + 6] := t6;
           dest[from + 7] := t7;
         };
-        case (_) bucketSortRecursive(buffer, array, key, newFrom, newTo, bits + BITS_ADD, not odd);
+        case (_) bucketSortRecursive(radixBits, buffer, array, key, newFrom, newTo, bits + BITS_ADD, not odd);
       };
       newFrom := newTo;
     };
