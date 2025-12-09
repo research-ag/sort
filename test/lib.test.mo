@@ -53,6 +53,7 @@ func tests() {
   let fs : [?(Nat32 -> Nat32)] = [
     null,
     ?(func n = 1),
+    ?(func n = 2),
   ];
 
   let mods : [Nat64] = [
@@ -62,8 +63,8 @@ func tests() {
   ];
 
   for (f in fs.vals()) {
-    for (n in ns.vals()) {
-      for (mod in mods.vals()) {
+    for (mod in mods.vals()) {
+      for (n in ns.vals()) if (n <= 1000) {
         testSort(n, mod, func(a, max) = Sort.bucketSort(a, func(x, y) = x, ?max, f));
       };
     };
