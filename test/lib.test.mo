@@ -4,6 +4,7 @@ import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
 import VarArray "mo:core/VarArray";
 import Random "mo:core/Random";
+import BucketSortInternal "../src/private/bucketSortInternal";
 
 func testOnArray(array : [var (Nat32, Nat)], f : [var (Nat32, Nat)] -> ()) {
   let a = VarArray.clone(array);
@@ -50,10 +51,9 @@ func tests() {
     10_000,
   ];
 
-  let fs : [?(Nat32 -> Nat32)] = [
-    null,
-    ?(func n = 1),
-    ?(func n = 2),
+  let fs : [Nat32 -> Nat32] = [
+    func n = 1,
+    func n = 2,
   ];
 
   let mods : [Nat64] = [
@@ -65,7 +65,7 @@ func tests() {
   for (f in fs.vals()) {
     for (mod in mods.vals()) {
       for (n in ns.vals()) if (n <= 1000) {
-        testSort(n, mod, func(a, max) = Sort.bucketSort(a, func(x, y) = x, ?max, f));
+        testSort(n, mod, func(a, max) = BucketSortInternal.bucketSort(a, func(x, y) = x, ?max, f));
       };
     };
   };
@@ -73,6 +73,7 @@ func tests() {
   for (n in ns.vals()) {
     for (mod in mods.vals()) {
       testSort(n, mod, func(a, max) = Sort.radixSort(a, func(x, y) = x, ?max));
+      testSort(n, mod, func(a, max) = Sort.bucketSort(a, func(x, y) = x, ?max));
     };
   };
 
@@ -101,7 +102,7 @@ func tests() {
 
   for (a in arrays.vals()) {
     testOnArray(a, func a = Sort.radixSort(a, func x = x.0, null));
-    testOnArray(a, func a = Sort.bucketSort(a, func x = x.0, null, null));
+    testOnArray(a, func a = Sort.bucketSort(a, func x = x.0, null));
   };
 };
 
