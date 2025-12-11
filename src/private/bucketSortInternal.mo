@@ -104,31 +104,31 @@ module {
       if (newTo == newFrom) continue L;
       switch (newTo -% newFrom) {
         case (1) {
-          let from = Nat32.toNat(newFrom);
-          dest[from] := buffer[from];
+          let index0 = Nat32.toNat(newFrom);
+          dest[index0] := buffer[index0];
         };
         case (2) {
-          let from = Nat32.toNat(newFrom);
-          let fromPlus1 = Nat32.toNat(newFrom +% 1);
-          let t0 = buffer[from];
-          let t1 = buffer[fromPlus1];
+          let index0 = Nat32.toNat(newFrom);
+          let index1 = Nat32.toNat(newFrom +% 1);
+          let t0 = buffer[index0];
+          let t1 = buffer[index1];
           if (key(t1) < key(t0)) {
-            dest[from] := t1;
-            dest[fromPlus1] := t0;
+            dest[index0] := t1;
+            dest[index1] := t0;
           } else {
-            dest[from] := t0;
-            dest[fromPlus1] := t1;
+            dest[index0] := t0;
+            dest[index1] := t1;
           };
         };
         case (3) {
-          let from = Nat32.toNat(newFrom);
-          let fromPlus1 = Nat32.toNat(newFrom +% 1);
-          let fromPlus2 = Nat32.toNat(newFrom +% 2);
-          var t0 = buffer[from];
+          let index0 = Nat32.toNat(newFrom);
+          let index1 = Nat32.toNat(newFrom +% 1);
+          let index2 = Nat32.toNat(newFrom +% 2);
+          var t0 = buffer[index0];
           var k0 = key(t0);
-          var t1 = buffer[fromPlus1];
+          var t1 = buffer[index1];
           var k1 = key(t1);
-          let t2 = buffer[fromPlus2];
+          let t2 = buffer[index2];
           let k2 = key(t2);
 
           if (k1 < k0) {
@@ -142,32 +142,32 @@ module {
 
           if (k2 < k1) {
             if (k2 < k0) {
-              dest[from] := t2;
-              dest[fromPlus1] := t0;
-              dest[fromPlus2] := t1; 
+              dest[index0] := t2;
+              dest[index1] := t0;
+              dest[index2] := t1; 
             } else {
-              dest[from] := t0;
-              dest[fromPlus1] := t2;
-              dest[fromPlus2] := t1;
+              dest[index0] := t0;
+              dest[index1] := t2;
+              dest[index2] := t1;
             };
           } else {
-            dest[from] := t0;
-            dest[fromPlus1] := t1;
-            dest[fromPlus2] := t2;
+            dest[index0] := t0;
+            dest[index1] := t1;
+            dest[index2] := t2;
           };
         };
         case (4) {
-          let from = Nat32.toNat(newFrom);
-          let fromPlus1 = Nat32.toNat(newFrom +% 1);
-          let fromPlus2 = Nat32.toNat(newFrom +% 2);
-          let fromPlus3 = Nat32.toNat(newFrom +% 3);
-          var t0 = buffer[from];
+          let index0 = Nat32.toNat(newFrom);
+          let index1 = Nat32.toNat(newFrom +% 1);
+          let index2 = Nat32.toNat(newFrom +% 2);
+          let index3 = Nat32.toNat(newFrom +% 3);
+          var t0 = buffer[index0];
           var k0 = key(t0);
-          var t1 = buffer[fromPlus1];
+          var t1 = buffer[index1];
           var k1 = key(t1);
-          var t2 = buffer[fromPlus2];
+          var t2 = buffer[index2];
           var k2 = key(t2);
-          var t3 = buffer[fromPlus3];
+          var t3 = buffer[index3];
           var k3 = key(t3);
 
           if (k1 < k0) {
@@ -201,26 +201,26 @@ module {
             } else { t2 := tv };
           };
 
-          dest[from] := t0;
-          dest[from + 1] := t1;
-          dest[from + 2] := t2;
-          dest[from + 3] := t3;
+          dest[index0] := t0;
+          dest[index0 + 1] := t1;
+          dest[index0 + 2] := t2;
+          dest[index0 + 3] := t3;
         };
         case (5) {
-          let from = Nat32.toNat(newFrom);
-          let fromPlus1 = Nat32.toNat(newFrom +% 1);
-          let fromPlus2 = Nat32.toNat(newFrom +% 2);
-          let fromPlus3 = Nat32.toNat(newFrom +% 3);
-          let fromPlus4 = Nat32.toNat(newFrom +% 4);
-          var t0 = buffer[from];
+          let index0 = Nat32.toNat(newFrom);
+          let index1 = Nat32.toNat(newFrom +% 1);
+          let index2 = Nat32.toNat(newFrom +% 2);
+          let index3 = Nat32.toNat(newFrom +% 3);
+          let index4 = Nat32.toNat(newFrom +% 4);
+          var t0 = buffer[index0];
           var k0 = key(t0);
-          var t1 = buffer[fromPlus1];
+          var t1 = buffer[index1];
           var k1 = key(t1);
-          var t2 = buffer[fromPlus2];
+          var t2 = buffer[index2];
           var k2 = key(t2);
-          var t3 = buffer[fromPlus3];
+          var t3 = buffer[index3];
           var k3 = key(t3);
-          var t4 = buffer[fromPlus4];
+          var t4 = buffer[index4];
           var k4 = key(t4);
 
           if (k1 < k0) {
@@ -274,30 +274,30 @@ module {
             } else { t3 := tv; k3 := kv };
           };
 
-          dest[from] := t0;
-          dest[fromPlus1] := t1;
-          dest[fromPlus2] := t2;
-          dest[fromPlus3] := t3;
-          dest[fromPlus4] := t4;
+          dest[index0] := t0;
+          dest[index1] := t1;
+          dest[index2] := t2;
+          dest[index3] := t3;
+          dest[index4] := t4;
         };
         case (6) {
-          let from = Nat32.toNat(newFrom);
-          let fromPlus1 = Nat32.toNat(newFrom +% 1);
-          let fromPlus2 = Nat32.toNat(newFrom +% 2);
-          let fromPlus3 = Nat32.toNat(newFrom +% 3);
-          let fromPlus4 = Nat32.toNat(newFrom +% 4);
-          let fromPlus5 = Nat32.toNat(newFrom +% 5);
-          var t0 = buffer[from];
+          let index0 = Nat32.toNat(newFrom);
+          let index1 = Nat32.toNat(newFrom +% 1);
+          let index2 = Nat32.toNat(newFrom +% 2);
+          let index3 = Nat32.toNat(newFrom +% 3);
+          let index4 = Nat32.toNat(newFrom +% 4);
+          let index5 = Nat32.toNat(newFrom +% 5);
+          var t0 = buffer[index0];
           var k0 = key(t0);
-          var t1 = buffer[fromPlus1];
+          var t1 = buffer[index1];
           var k1 = key(t1);
-          var t2 = buffer[fromPlus2];
+          var t2 = buffer[index2];
           var k2 = key(t2);
-          var t3 = buffer[fromPlus3];
+          var t3 = buffer[index3];
           var k3 = key(t3);
-          var t4 = buffer[fromPlus4];
+          var t4 = buffer[index4];
           var k4 = key(t4);
-          var t5 = buffer[fromPlus5];
+          var t5 = buffer[index5];
           var k5 = key(t5);
 
           if (k1 < k0) {
@@ -373,34 +373,34 @@ module {
             } else { t4 := tv; k4 := kv };
           };
 
-          dest[from] := t0;
-          dest[fromPlus1] := t1;
-          dest[fromPlus2] := t2;
-          dest[fromPlus3] := t3;
-          dest[fromPlus4] := t4;
-          dest[fromPlus5] := t5;
+          dest[index0] := t0;
+          dest[index1] := t1;
+          dest[index2] := t2;
+          dest[index3] := t3;
+          dest[index4] := t4;
+          dest[index5] := t5;
         };
         case (7) {
-          let from = Nat32.toNat(newFrom);
-          let fromPlus1 = Nat32.toNat(newFrom +% 1);
-          let fromPlus2 = Nat32.toNat(newFrom +% 2);
-          let fromPlus3 = Nat32.toNat(newFrom +% 3);
-          let fromPlus4 = Nat32.toNat(newFrom +% 4);
-          let fromPlus5 = Nat32.toNat(newFrom +% 5);
-          let fromPlus6 = Nat32.toNat(newFrom +% 6);
-          var t0 = buffer[from];
+          let index0 = Nat32.toNat(newFrom);
+          let index1 = Nat32.toNat(newFrom +% 1);
+          let index2 = Nat32.toNat(newFrom +% 2);
+          let index3 = Nat32.toNat(newFrom +% 3);
+          let index4 = Nat32.toNat(newFrom +% 4);
+          let index5 = Nat32.toNat(newFrom +% 5);
+          let index6 = Nat32.toNat(newFrom +% 6);
+          var t0 = buffer[index0];
           var k0 = key(t0);
-          var t1 = buffer[fromPlus1];
+          var t1 = buffer[index1];
           var k1 = key(t1);
-          var t2 = buffer[fromPlus2];
+          var t2 = buffer[index2];
           var k2 = key(t2);
-          var t3 = buffer[fromPlus3];
+          var t3 = buffer[index3];
           var k3 = key(t3);
-          var t4 = buffer[fromPlus4];
+          var t4 = buffer[index4];
           var k4 = key(t4);
-          var t5 = buffer[fromPlus5];
+          var t5 = buffer[index5];
           var k5 = key(t5);
-          var t6 = buffer[fromPlus6];
+          var t6 = buffer[index6];
           var k6 = key(t6);
 
           if (k1 < k0) {
@@ -502,38 +502,38 @@ module {
             } else { t5 := tv; k5 := kv };
           };
 
-          dest[from] := t0;
-          dest[fromPlus1] := t1;
-          dest[fromPlus2] := t2;
-          dest[fromPlus3] := t3;
-          dest[fromPlus4] := t4;
-          dest[fromPlus5] := t5;
-          dest[fromPlus6] := t6;
+          dest[index0] := t0;
+          dest[index1] := t1;
+          dest[index2] := t2;
+          dest[index3] := t3;
+          dest[index4] := t4;
+          dest[index5] := t5;
+          dest[index6] := t6;
         };
         case (8) {
-          let from = Nat32.toNat(newFrom);
-          let fromPlus1 = Nat32.toNat(newFrom +% 1);
-          let fromPlus2 = Nat32.toNat(newFrom +% 2);
-          let fromPlus3 = Nat32.toNat(newFrom +% 3);
-          let fromPlus4 = Nat32.toNat(newFrom +% 4);
-          let fromPlus5 = Nat32.toNat(newFrom +% 5);
-          let fromPlus6 = Nat32.toNat(newFrom +% 6);
-          let fromPlus7 = Nat32.toNat(newFrom +% 7);
-          var t0 = buffer[from];
+          let index0 = Nat32.toNat(newFrom);
+          let index1 = Nat32.toNat(newFrom +% 1);
+          let index2 = Nat32.toNat(newFrom +% 2);
+          let index3 = Nat32.toNat(newFrom +% 3);
+          let index4 = Nat32.toNat(newFrom +% 4);
+          let index5 = Nat32.toNat(newFrom +% 5);
+          let index6 = Nat32.toNat(newFrom +% 6);
+          let index7 = Nat32.toNat(newFrom +% 7);
+          var t0 = buffer[index0];
           var k0 = key(t0);
-          var t1 = buffer[fromPlus1];
+          var t1 = buffer[index1];
           var k1 = key(t1);
-          var t2 = buffer[fromPlus2];
+          var t2 = buffer[index2];
           var k2 = key(t2);
-          var t3 = buffer[fromPlus3];
+          var t3 = buffer[index3];
           var k3 = key(t3);
-          var t4 = buffer[fromPlus4];
+          var t4 = buffer[index4];
           var k4 = key(t4);
-          var t5 = buffer[fromPlus5];
+          var t5 = buffer[index5];
           var k5 = key(t5);
-          var t6 = buffer[fromPlus6];
+          var t6 = buffer[index6];
           var k6 = key(t6);
-          var t7 = buffer[fromPlus7];
+          var t7 = buffer[index7];
           var k7 = key(t7);
 
           if (k1 < k0) {
@@ -665,14 +665,14 @@ module {
             } else { t6 := tv; k6 := kv };
           };
 
-          dest[from] := t0;
-          dest[fromPlus1] := t1;
-          dest[fromPlus2] := t2;
-          dest[fromPlus3] := t3;
-          dest[fromPlus4] := t4;
-          dest[fromPlus5] := t5;
-          dest[fromPlus6] := t6;
-          dest[fromPlus7] := t7;
+          dest[index0] := t0;
+          dest[index1] := t1;
+          dest[index2] := t2;
+          dest[index3] := t3;
+          dest[index4] := t4;
+          dest[index5] := t5;
+          dest[index6] := t6;
+          dest[index7] := t7;
         };
         case (_) bucketSortRecursive(radixBits, buffer, array, key, newFrom, newTo, bits + BITS_ADD, not odd);
       };
