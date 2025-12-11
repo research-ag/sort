@@ -100,7 +100,8 @@ module {
 
     var newFrom : Nat32 = from;
     let dest = if (not odd) array else buffer;
-    for (newTo in counts.vals()) {
+    label L for (newTo in counts.vals()) {
+      if (newTo == newFrom) continue L;
       switch (newTo -% newFrom) {
         case (1) {
           let from = Nat32.toNat(newFrom);
@@ -120,7 +121,6 @@ module {
           dest[from] := t0;
           dest[from + 1] := t1;
         };
-        case (0) {};
         case (3) {
           let from = Nat32.toNat(newFrom);
           var t0 = buffer[from];
