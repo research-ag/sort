@@ -128,8 +128,8 @@ module {
           var k0 = key(t0);
           var t1 = buffer[fromPlus1];
           var k1 = key(t1);
-          var t2 = buffer[fromPlus2];
-          var k2 = key(t2);
+          let t2 = buffer[fromPlus2];
+          let k2 = key(t2);
 
           if (k1 < k0) {
             let v = t1;
@@ -140,25 +140,21 @@ module {
             k0 := kk;
           };
 
-          var tv = t2;
-          var kv = k2;
-          if (kv < k1) {
-            t2 := t1;
-            k2 := k1;
-            if (kv < k0) {
-              t1 := t0;
-              k1 := k0;
-              t0 := tv;
-              k0 := kv;
+          if (k2 < k1) {
+            if (k2 < k0) {
+              dest[from] := t2;
+              dest[fromPlus1] := t0;
+              dest[fromPlus2] := t1; 
             } else {
-              t1 := tv;
-              k1 := kv;
+              dest[from] := t0;
+              dest[fromPlus1] := t2;
+              dest[fromPlus2] := t1;
             };
+          } else {
+            dest[from] := t0;
+            dest[fromPlus1] := t1;
+            dest[fromPlus2] := t2;
           };
-
-          dest[from] := t0;
-          dest[fromPlus1] := t1;
-          dest[fromPlus2] := t2;
         };
         case (4) {
           let from = Nat32.toNat(newFrom);
