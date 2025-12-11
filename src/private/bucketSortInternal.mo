@@ -109,17 +109,16 @@ module {
         };
         case (2) {
           let from = Nat32.toNat(newFrom);
-          var t0 = buffer[from];
-          var k0 = key(t0);
-          var t1 = buffer[from + 1];
-          var k1 = key(t1);
-          if (k1 < k0) {
-            let v = t1;
-            t1 := t0;
-            t0 := v;
+          let fromPlus1 = Nat32.toNat(newFrom +% 1);
+          let t0 = buffer[from];
+          let t1 = buffer[fromPlus1];
+          if (key(t1) < key(t0)) {
+            dest[from] := t1;
+            dest[fromPlus1] := t0;
+          } else {
+            dest[from] := t0;
+            dest[fromPlus1] := t1;
           };
-          dest[from] := t0;
-          dest[from + 1] := t1;
         };
         case (3) {
           let from = Nat32.toNat(newFrom);
