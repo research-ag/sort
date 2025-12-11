@@ -144,7 +144,7 @@ module {
             if (k2 < k0) {
               dest[index0] := t2;
               dest[index1] := t0;
-              dest[index2] := t1; 
+              dest[index2] := t1;
             } else {
               dest[index0] := t0;
               dest[index1] := t2;
@@ -259,19 +259,15 @@ module {
           kv := k4;
           if (kv < k3) {
             t4 := t3;
-            k4 := k3;
             if (kv < k2) {
               t3 := t2;
-              k3 := k2;
               if (kv < k1) {
                 t2 := t1;
-                k2 := k1;
-                if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
+                if (kv < k0) { t1 := t0; t0 := tv } else {
                   t1 := tv;
-                  k1 := kv;
                 };
-              } else { t2 := tv; k2 := kv };
-            } else { t3 := tv; k3 := kv };
+              } else { t2 := tv };
+            } else { t3 := tv };
           };
 
           dest[index0] := t0;
@@ -354,23 +350,18 @@ module {
           kv := k5;
           if (kv < k4) {
             t5 := t4;
-            k5 := k4;
             if (kv < k3) {
               t4 := t3;
-              k4 := k3;
               if (kv < k2) {
                 t3 := t2;
-                k3 := k2;
                 if (kv < k1) {
                   t2 := t1;
-                  k2 := k1;
-                  if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
+                  if (kv < k0) { t1 := t0; t0 := tv } else {
                     t1 := tv;
-                    k1 := kv;
                   };
-                } else { t2 := tv; k2 := kv };
-              } else { t3 := tv; k3 := kv };
-            } else { t4 := tv; k4 := kv };
+                } else { t2 := tv };
+              } else { t3 := tv };
+            } else { t4 := tv };
           };
 
           dest[index0] := t0;
@@ -479,27 +470,21 @@ module {
           kv := k6;
           if (kv < k5) {
             t6 := t5;
-            k6 := k5;
             if (kv < k4) {
               t5 := t4;
-              k5 := k4;
               if (kv < k3) {
                 t4 := t3;
-                k4 := k3;
                 if (kv < k2) {
                   t3 := t2;
-                  k3 := k2;
                   if (kv < k1) {
                     t2 := t1;
-                    k2 := k1;
-                    if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
+                    if (kv < k0) { t1 := t0; t0 := tv } else {
                       t1 := tv;
-                      k1 := kv;
                     };
-                  } else { t2 := tv; k2 := kv };
-                } else { t3 := tv; k3 := kv };
-              } else { t4 := tv; k4 := kv };
-            } else { t5 := tv; k5 := kv };
+                  } else { t2 := tv };
+                } else { t3 := tv };
+              } else { t4 := tv };
+            } else { t5 := tv };
           };
 
           dest[index0] := t0;
@@ -638,31 +623,24 @@ module {
           kv := k7;
           if (kv < k6) {
             t7 := t6;
-            k7 := k6;
             if (kv < k5) {
               t6 := t5;
-              k6 := k5;
               if (kv < k4) {
                 t5 := t4;
-                k5 := k4;
                 if (kv < k3) {
                   t4 := t3;
-                  k4 := k3;
                   if (kv < k2) {
                     t3 := t2;
-                    k3 := k2;
                     if (kv < k1) {
                       t2 := t1;
-                      k2 := k1;
-                      if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
+                      if (kv < k0) { t1 := t0; t0 := tv } else {
                         t1 := tv;
-                        k1 := kv;
                       };
-                    } else { t2 := tv; k2 := kv };
-                  } else { t3 := tv; k3 := kv };
-                } else { t4 := tv; k4 := kv };
-              } else { t5 := tv; k5 := kv };
-            } else { t6 := tv; k6 := kv };
+                    } else { t2 := tv };
+                  } else { t3 := tv };
+                } else { t4 := tv };
+              } else { t5 := tv };
+            } else { t6 := tv };
           };
 
           dest[index0] := t0;
