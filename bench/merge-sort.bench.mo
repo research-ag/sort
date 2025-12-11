@@ -782,52 +782,6 @@ module {
     };
   };
 
-  func sort<T>(array : [var T], buffer : [var T], key : T -> Nat32, from : Nat32, to : Nat32) {
-    let n = to -% from;
-    if (n <= 8) {
-      insertionSortSmall(array, array, key, Nat32.toNat(from), Nat32.toNat(to - from));
-      return;
-    };
-
-    let mid = from +% (n >> 1);
-
-    sort(array, buffer, key, from, mid);
-    sort(array, buffer, key, mid, to);
-
-    var i = from;
-    var j = mid;
-    var k = from;
-    while (i < mid and j < to) {
-      let left = array[Nat32.toNat i];
-      let right = array[Nat32.toNat j];
-      buffer[Nat32.toNat k] := if (key(left) <= key(right)) {
-        i +%= 1;
-        left;
-      } else {
-        j +%= 1;
-        right;
-      };
-      k +%= 1;
-    };
-    while (i < mid) {
-      buffer[Nat32.toNat k] := array[Nat32.toNat i];
-      i +%= 1;
-      k +%= 1;
-    };
-    while (j < to) {
-      buffer[Nat32.toNat k] := array[Nat32.toNat j];
-      j +%= 1;
-      k +%= 1;
-    };
-
-    var l = from;
-    while (l < to) {
-      let ll = Nat32.toNat l;
-      array[ll] := buffer[ll];
-      l +%= 1;
-    };
-  };
-
   public func init() : Bench.Bench {
     let bench = Bench.Bench();
 
@@ -854,11 +808,12 @@ module {
     bench.cols(cols);
 
     let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
+    let array : [var Nat32] = VarArray.tabulate<Nat32>(320, func(i) = Nat64.toNat32(rng.nat64() % (2 ** 32)));
 
     bench.runner(
       func(row, col) {
         let n = Option.unwrap(Nat.fromText(col));
-        let a : [var Nat32] = VarArray.tabulate<Nat32>(n, func(i) = Nat64.toNat32(rng.nat64() % (2 ** 32)));
+        let a = VarArray.sliceToVarArray(array, 0, n);
         if (row == "merge") {
           mergeSort(a, func i = i);
         } else if (row == "bucket") {
