@@ -206,9 +206,9 @@ module {
           };
 
           dest[from] := t0;
-          dest[from + 1] := t1;
-          dest[from + 2] := t2;
-          dest[from + 3] := t3;
+          dest[fromPlus1] := t1;
+          dest[fromPlus2] := t2;
+          dest[fromPlus3] := t3;
         };
         case (5) {
           let from = Nat32.toNat(newFrom);
