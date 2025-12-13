@@ -90,28 +90,45 @@ module {
       return;
     };
     let len1 = size / 2;
-    let len2 = size -% len1; 
+    let len2 = size -% len1;
     let dest = VarArray.repeat(buffer[0], nat(len1));
     insertionSortSmall(buffer, dest, key, 0, nat(len1));
     insertionSortSmall(buffer, buffer, key, nat(len1), nat(len2));
     var pos : Nat8 = 0;
     var i : Nat8 = 0; // in dest
     var j : Nat8 = len1; // in buffer
-    label L while (pos < size) {
-      if (i == len1) {
-        buffer[nat(pos)] := buffer[nat(j)];
-        j +%= 1;
-      } else if (j == size) {
-        buffer[nat(pos)] := dest[nat(i)];
+    var dest_i = dest[0]; // i
+    var buffer_j = buffer[nat(len1)]; // j
+    label L loop {
+      if (key(dest_i) <= key(buffer_j)) {
+        buffer[nat(pos)] := dest_i;
         i +%= 1;
-      } else if (key(dest[nat(i)]) <= key(buffer[nat(j)])) {
-        buffer[nat(pos)] := dest[nat(i)];
-        i +%= 1;
+        pos +%= 1;
+        if (i == len1) {
+          while (j < size) {
+            buffer[nat(pos)] := buffer[nat(j)];
+            j +%= 1;
+            pos +%= 1;
+          };
+          break L;
+        } else {
+          dest_i := dest[nat(i)];
+        };
       } else {
-        buffer[nat(pos)] := buffer[nat(j)];
+        buffer[nat(pos)] := buffer_j;
         j +%= 1;
-      }; 
-      pos +%= 1;
+        pos +%= 1;
+        if (j == size) {
+          while (i < len1) {
+            buffer[nat(pos)] := dest[nat(i)];
+            i +%= 1;
+            pos +%= 1;
+          };
+          break L;
+        } else {
+          buffer_j := buffer[nat(j)];
+        };
+      };
     };
   };
 
