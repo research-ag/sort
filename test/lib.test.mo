@@ -4,6 +4,8 @@ import Nat "mo:core/Nat";
 import Runtime "mo:core/Runtime";
 import VarArray "mo:core/VarArray";
 import Random "mo:core/Random";
+import Int "mo:core/Int";
+import Array "mo:core/Array";
 import BucketSortInternal "../src/private/bucketSortInternal";
 
 func testOnArray(array : [var (Nat32, Nat)], f : [var (Nat32, Nat)] -> ()) {
@@ -38,7 +40,94 @@ func testSort(n : Nat, mod : Nat64, sort : ([var (Nat32, Nat)], Nat32) -> ()) {
   };
 };
 
+func testMergeSort16(n : Nat) {
+  let dest = VarArray.repeat<(Nat32, Nat)>((0, 0), n);
+  testSort(
+    n,
+    2 ** 32,
+    func(buffer, _) {
+      BucketSortInternal.mergeSort16(
+        buffer,
+        dest,
+        func(x, _) = x,
+        0 : Nat32,
+        Nat32.fromNat(n),
+      );
+      for (i in buffer.keys()) {
+        buffer[i] := dest[i];
+      };
+    },
+  );
+};
+
+func next_permutation(p : [var Nat32]) : Bool {
+  let n = p.size();
+
+  func swap(i : Nat, j : Nat) {
+    let x = p[i];
+    p[i] := p[j];
+    p[j] := x;
+  };
+
+  func reverse(from : Nat, to : Nat) {
+    var a = from;
+    var b = to;
+    while (a < b) {
+      swap(a, b);
+      a += 1;
+      b -= 1;
+    };
+  };
+
+  var point : ?Nat = null;
+  var i : Int = n - 2;
+  label l while (i >= 0) {
+    if (p[Int.abs(i)] < p[Int.abs(i + 1)]) {
+      point := ?Int.abs(i);
+      break l;
+    };
+    i -= 1;
+  };
+  switch (point) {
+    case (null) {
+      return false;
+    };
+    case (?x) {
+      var i : Int = n - 1;
+      label l while (i > x) {
+        if (p[Int.abs(i)] > p[x]) {
+          break l;
+        };
+        i -= 1;
+      };
+      swap(Int.abs(i), x);
+      reverse(x + 1, n - 1);
+    };
+  };
+  true;
+};
+
+func testInsertionSortSmall(n : Nat) {
+  let p = VarArray.tabulate<Nat32>(n, func i = Nat32.fromNat(i));
+  let id = Array.tabulate<Nat32>(n, func i = Nat32.fromNat(i));
+  loop {
+    do {
+      let pp = VarArray.clone(p);
+      BucketSortInternal.insertionSortSmall(pp, pp, func x = x, 0 : Nat32, Nat32.fromNat(n));
+      if (Array.fromVarArray<Nat32>(pp) != id) Runtime.trap(debug_show pp);
+    };
+  } while (next_permutation(p));
+};
+
 func tests() {
+  for (n in Nat.range(2, 8)) {
+    testInsertionSortSmall(n);
+  };
+
+  for (n in Nat.range(9, 17)) {
+    testMergeSort16(n);
+  };
+
   let ns = [
     1,
     2,

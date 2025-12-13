@@ -5,6 +5,8 @@ import BucketSortInternal "private/bucketSortInternal";
 /// This module provides implementations of radix sort and bucket sort for sorting arrays of elements.
 /// The sorts are based on a key function that maps elements to `Nat32` values.
 module {
+  let nat = Nat32.toNat;
+
   /// Sorts an array in place using bucket sort.
   ///
   /// Max `n` value id `2 ** 32 - 1`.
@@ -95,7 +97,7 @@ module {
     let MASK = RADIX -% 1;
 
     let buffer = VarArray.repeat<T>(array[0], n);
-    let counts = VarArray.repeat<Nat32>(0, Nat32.toNat(RADIX));
+    let counts = VarArray.repeat<Nat32>(0, nat(RADIX));
 
     for (step in Nat32.range(0, STEPS)) {
       if (step > 0) for (i in counts.keys()) counts[i] := 0;
@@ -103,11 +105,11 @@ module {
       let SHIFT = step * RADIX_BITS;
 
       if (step == 0) {
-        for (x in array.vals()) counts[Nat32.toNat(key(x) & MASK)] +%= 1;
+        for (x in array.vals()) counts[nat(key(x) & MASK)] +%= 1;
       } else if (step < (STEPS - 1 : Nat32)) {
-        for (x in array.vals()) counts[Nat32.toNat((key(x) >> SHIFT) & MASK)] +%= 1;
+        for (x in array.vals()) counts[nat((key(x) >> SHIFT) & MASK)] +%= 1;
       } else {
-        for (x in array.vals()) counts[Nat32.toNat(key(x) >> SHIFT)] +%= 1;
+        for (x in array.vals()) counts[nat(key(x) >> SHIFT)] +%= 1;
       };
 
       var sum : Nat32 = 0;
@@ -121,23 +123,23 @@ module {
 
       if (step == 0) {
         for (x in from.vals()) {
-          let digit = Nat32.toNat(key(x) & MASK);
+          let digit = nat(key(x) & MASK);
           let pos = counts[digit];
-          to[Nat32.toNat(pos)] := x;
+          to[nat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       } else if (step < (STEPS - 1 : Nat32)) {
         for (x in from.vals()) {
-          let digit = Nat32.toNat((key(x) >> SHIFT) & MASK);
+          let digit = nat((key(x) >> SHIFT) & MASK);
           let pos = counts[digit];
-          to[Nat32.toNat(pos)] := x;
+          to[nat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       } else {
         for (x in from.vals()) {
-          let digit = Nat32.toNat(key(x) >> SHIFT);
+          let digit = nat(key(x) >> SHIFT);
           let pos = counts[digit];
-          to[Nat32.toNat(pos)] := x;
+          to[nat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       };
