@@ -2,6 +2,7 @@ import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
 import { insertionSortSmall } "./insertion";
 import { mergeSort16 } "./merge";
+import { copy } "./utils";
 
 module {
   let nat = Nat32.toNat;
@@ -25,15 +26,6 @@ module {
     };
 
     bucketSortRecursive(radixBits, array, buffer, key, 0 : Nat32, Nat32.fromNat(n), bits, false);
-  };
-
-  func copy<T>(source : [var T], dest : [var T], from : Nat32, to : Nat32) {
-    var i = from;
-    while (i < to) {
-      let ii = nat(i);
-      dest[ii] := source[ii];
-      i +%= 1;
-    };
   };
 
   func bucketSortRecursive<T>(
