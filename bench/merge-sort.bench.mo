@@ -41,15 +41,18 @@ module {
     bench.cols(cols);
 
     let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
-    let arrays : [[[var Nat32]]] = Array.tabulate(
+    let arrays : [[[[var Nat32]]]] = Array.tabulate(
       rows.size(),
-      func(_) = Array.tabulate(
+      func _ = Array.tabulate(
         cols.size(),
-        func(i) {
+        func i {
           let n = Option.unwrap(Nat.fromText(cols[i]));
-          VarArray.tabulate<Nat32>(
-            n,
-            func(_) = Nat64.toNat32(rng.nat64() >> 32),
+          Array.tabulate(
+            100,
+            func _ = VarArray.tabulate<Nat32>(
+              n,
+              func _ = Nat64.toNat32(rng.nat64() >> 32),
+            ),
           );
         },
       ),
@@ -58,24 +61,27 @@ module {
     bench.runner(
       func(row, col) {
         let ?ci = Array.indexOf<Text>(cols, Text.equal, col) else Prim.trap("Unknown column");
+        let buffer = VarArray.repeat<Nat32>(0, 16);
         switch (row) {
-          case ("merge") Internals.mergeSort(arrays[0][ci], func i = i);
+          case ("merge") for (a in arrays[0][ci].vals()) Internals.mergeSort(a, func i = i);
           case ("merge16") {
-            let n = arrays[1][ci].size();
-            if (8 < n and n <= 16) {
-              let buffer = VarArray.repeat<Nat32>(0, n);
+            let input = arrays[1][ci]; 
+            let n = input[0].size();
+            if (8 < n and n <= 16) { 
+              for (a in input.vals())
               Internals.mergeSort16<Nat32>(
-                arrays[1][ci],
+                a,
                 buffer,
                 func i = i,
                 0 : Nat32,
-                Nat32.fromNat(arrays[1][ci].size()),
+                Nat32.fromNat(n),
               );
             };
           };
-          case ("bucket") Sort.bucketSort(arrays[2][ci], func i = i, null);
-          case ("radix") Sort.radixSort(arrays[3][ci], func i = i, null);
-          case ("var-array") VarArray.sortInPlace(arrays[4][ci], Nat32.compare);
+//          case ("merge16") for (a in arrays[1][ci].vals()) mergeSort16(a, func i = i);
+          case ("bucket") for (a in arrays[2][ci].vals()) Sort.bucketSort(a, func i = i, null);
+          case ("radix") for (a in arrays[3][ci].vals()) Sort.radixSort(a, func i = i, null);
+          case ("var-array") for (a in arrays[4][ci].vals()) VarArray.sortInPlace(a, Nat32.compare);
           case (_) Prim.trap("Unknown row");
         };
       }
