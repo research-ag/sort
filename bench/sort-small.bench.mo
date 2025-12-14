@@ -4,7 +4,7 @@ import Nat "mo:core/Nat";
 import Nat64 "mo:core/Nat64";
 import Nat32 "mo:core/Nat32";
 import VarArray "mo:core/VarArray";
-import BucketSortInternal "../src/private/bucketSortInternal";
+import Internals "../src/private/internals";
 
 module {
   func batcherSortSmall<T>(buffer : [var T], dest : [var T], key : T -> Nat32, from : Nat, len : Nat) {
@@ -719,19 +719,19 @@ module {
       func(row, col) {
         if (col == "8") {
           if (row == "insertion") {
-            for (i in Nat32.range(0, 1000)) BucketSortInternal.insertionSortSmall(a, a, func i = i, i * 8, 8 : Nat32);
+            for (i in Nat32.range(0, 1000)) Internals.insertionSortSmall(a, a, func i = i, i * 8, 8 : Nat32);
           } else {
             for (i in Nat.range(0, 1000)) batcherSortSmall(b, b, func i = i, i * 8, 8);
           };
         } else if (col == "worst") {
           if (row == "insertion") {
-            for (i in Nat32.range(0, 1000)) BucketSortInternal.insertionSortSmall(worst, worst, func i = i, i * 8, 8 : Nat32);
+            for (i in Nat32.range(0, 1000)) Internals.insertionSortSmall(worst, worst, func i = i, i * 8, 8 : Nat32);
           } else {
             for (i in Nat.range(0, 1000)) batcherSortSmall(worstClone, worstClone, func i = i, i * 8, 8);
           };
         } else {
           if (row == "insertion") {
-            for (i in Nat32.range(0, 1000)) BucketSortInternal.insertionSortSmall(best, best, func i = i, i * 8, 8 : Nat32);
+            for (i in Nat32.range(0, 1000)) Internals.insertionSortSmall(best, best, func i = i, i * 8, 8 : Nat32);
           } else {
             for (i in Nat.range(0, 1000)) batcherSortSmall(bestClone, bestClone, func i = i, i * 8, 8);
           };

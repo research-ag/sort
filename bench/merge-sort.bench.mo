@@ -9,7 +9,7 @@ import Option "mo:core/Option";
 import Text "mo:core/Text";
 import Prim "mo:prim";
 import Sort "../src/Nat32Key";
-import BucketSortInternal "../src/private/bucketSortInternal";
+import Internals "../src/private/internals";
 
 module {
   public func init() : Bench.Bench {
@@ -59,12 +59,12 @@ module {
       func(row, col) {
         let ?ci = Array.indexOf<Text>(cols, Text.equal, col) else Prim.trap("Unknown column");
         switch (row) {
-          case ("merge") BucketSortInternal.mergeSort(arrays[0][ci], func i = i);
+          case ("merge") Internals.mergeSort(arrays[0][ci], func i = i);
           case ("merge16") {
             let n = arrays[1][ci].size();
             if (8 < n and n <= 16) {
               let buffer = VarArray.repeat<Nat32>(0, n);
-              BucketSortInternal.mergeSort16<Nat32>(
+              Internals.mergeSort16<Nat32>(
                 arrays[1][ci],
                 buffer,
                 func i = i,
