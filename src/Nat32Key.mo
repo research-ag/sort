@@ -37,8 +37,12 @@ module {
   /// Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
   /// ```
   public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32) {
-    let radixBits : Nat32 -> Nat32 = func n = 31 - Nat32.bitcountLeadingZero(n);
-    BucketSortInternal.bucketSort(array, key, maxInclusive, radixBits);
+    BucketSortInternal.bucketSort(
+      array,
+      key,
+      maxInclusive,
+      func n = Nat32.max(1, 30 - Nat32.min(Nat32.bitcountLeadingZero(n), 30)),
+    );
   };
 
   /// Sorts an array in place using radix sort.

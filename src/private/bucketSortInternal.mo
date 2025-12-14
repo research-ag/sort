@@ -5,6 +5,7 @@ import Runtime "mo:core/Runtime";
 module {
   let nat = Nat32.toNat;
 
+  // should be 1 <= radixBits n <= 32 for all n
   public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32, radixBits : Nat32 -> Nat32) {
     let n = array.size();
     if (n <= 1) return;
