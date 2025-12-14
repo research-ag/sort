@@ -6,7 +6,10 @@ import VarArray "mo:core/VarArray";
 import Random "mo:core/Random";
 import Int "mo:core/Int";
 import Array "mo:core/Array";
-import Internals "../src/private/internals";
+
+import { bucketSort } "../src/private/bucket";
+import { insertionSortSmall } "../src/private/insertion";
+import { mergeSort; mergeSort16 } "../src/private/merge";
 
 func testOnArray(array : [var (Nat32, Nat)], f : [var (Nat32, Nat)] -> ()) {
   let a = VarArray.clone(array);
@@ -46,7 +49,7 @@ func testMergeSort16(n : Nat) {
     n,
     2 ** 32,
     func(buffer, _) {
-      Internals.mergeSort16(
+      mergeSort16(
         buffer,
         dest,
         func(x, _) = x,
@@ -113,7 +116,7 @@ func testInsertionSortSmall(n : Nat) {
   loop {
     do {
       let pp = VarArray.clone(p);
-      Internals.insertionSortSmall(pp, pp, func x = x, 0 : Nat32, Nat32.fromNat(n));
+      insertionSortSmall(pp, pp, func x = x, 0 : Nat32, Nat32.fromNat(n));
       if (Array.fromVarArray<Nat32>(pp) != id) Runtime.trap(debug_show pp);
     };
   } while (next_permutation(p));
@@ -154,7 +157,7 @@ func tests() {
   for (f in fs.vals()) {
     for (mod in mods.vals()) {
       for (n in ns.vals()) if (n <= 1000) {
-        testSort(n, mod, func(a, max) = Internals.bucketSort(a, func(x, y) = x, ?max, f));
+        testSort(n, mod, func(a, max) = bucketSort(a, func(x, y) = x, ?max, f));
       };
     };
   };
@@ -167,7 +170,7 @@ func tests() {
   };
 
   for (n in ns.vals()) {
-    testSort(n, 2 ** 32, func(a, max) = Internals.mergeSort(a, func(x, y) = x));
+    testSort(n, 2 ** 32, func(a, max) = mergeSort(a, func(x, y) = x));
   };
 
   let arrays : [[var (Nat32, Nat)]] = [
@@ -196,7 +199,7 @@ func tests() {
   for (a in arrays.vals()) {
     testOnArray(a, func a = Sort.radixSort(a, func x = x.0, null));
     testOnArray(a, func a = Sort.bucketSort(a, func x = x.0, null));
-    testOnArray(a, func a = Internals.mergeSort(a, func(x, y) = x));
+    testOnArray(a, func a = mergeSort(a, func(x, y) = x));
   };
 };
 

@@ -9,7 +9,7 @@ import Option "mo:core/Option";
 import Text "mo:core/Text";
 import Prim "mo:prim";
 import Sort "../src/Nat32Key";
-import Internals "../src/private/internals";
+import { mergeSort; mergeSort16 } "../src/private/merge";
 
 module {
   public func init() : Bench.Bench {
@@ -63,13 +63,13 @@ module {
         let ?ci = Array.indexOf<Text>(cols, Text.equal, col) else Prim.trap("Unknown column");
         let buffer = VarArray.repeat<Nat32>(0, 16);
         switch (row) {
-          case ("merge") for (a in arrays[0][ci].vals()) Internals.mergeSort(a, func i = i);
+          case ("merge") for (a in arrays[0][ci].vals()) mergeSort(a, func i = i);
           case ("merge16") {
             let input = arrays[1][ci]; 
             let n = input[0].size();
             if (8 < n and n <= 16) { 
               for (a in input.vals())
-              Internals.mergeSort16<Nat32>(
+              mergeSort16<Nat32>(
                 a,
                 buffer,
                 func i = i,
