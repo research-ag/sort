@@ -7,23 +7,23 @@ import { copy } "./utils";
 module {
   let nat = Nat32.toNat;
 
-  // should be 1 <= radixBits n <= 32 for all n
+  // should be 1 <= radixBits n <= 31 for all n
   public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32, radixBits : Nat32 -> Nat32) {
-    let n = array.size();
+    let n = Nat32.fromNat(array.size());
 
     // n <= 1 is already sorted
     if (n <= 1) return;
 
     // sort n <= 8 with insertion sort
     if (n <= 8) {
-      insertionSortSmall(array, array, key, 0 : Nat32, Nat32.fromNat(n));
+      insertionSortSmall(array, array, key, 0 : Nat32, n);
       return;
     };
 
     // sort 8 < n <= 16 with merge sort
-    let buffer = VarArray.repeat(array[0], n);
+    let buffer = VarArray.repeat(array[0], nat(n));
     if (n <= 16) {
-      mergeSort16(array, buffer, key, 0 : Nat32, Nat32.fromNat(n), false);
+      mergeSort16(array, buffer, key, 0 : Nat32, n, false);
       // TODO: with a different mergeSort16 the buffer could be smaller here
       return;
     };
@@ -36,7 +36,7 @@ module {
         Nat32.bitcountLeadingZero(x);
       };
     };
-    bucketSortRecursive(radixBits, array, buffer, key, 0 : Nat32, Nat32.fromNat(n), bits, false);
+    bucketSortRecursive(radixBits, array, buffer, key, 0 : Nat32, n, bits, false);
   };
 
   // Will only be called with n > 16
@@ -57,7 +57,9 @@ module {
 
     let fullLength = n == Nat32.fromNat(array.size());
 
-    let BITS_ADD = Nat32.min(radixBits(n), 32 - bits);
+    let rBits = radixBits(n);
+    debug assert 1 <= rBits and rBits <= 31;
+    let BITS_ADD = Nat32.min(rBits, 32 - bits);
     let SHIFT = 32 - BITS_ADD;
     let RADIX = nat(1 << BITS_ADD);
 
@@ -83,6 +85,7 @@ module {
       counts[i] := sum;
       sum +%= t;
     };
+    debug assert sum == to;
 
     if (fullLength) {
       if (bits == 0) {
