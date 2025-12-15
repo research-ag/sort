@@ -6,6 +6,7 @@ module {
 
   // Must have: len <= 8
   public func insertionSortSmall<T>(buffer : [var T], dest : [var T], key : T -> Nat32, newFrom : Nat32, len : Nat32) {
+    debug assert len > 0;
     switch (len) {
       case (1) {
         let index0 = nat(newFrom);
@@ -556,7 +557,6 @@ module {
         dest[index6] := t6;
         dest[index7] := t7;
       };
-      case (0) Runtime.trap("insertionSortSmall for len = 0 is disabled.");
       case (_) Runtime.trap("insertionSortSmall for len > 8 is not implemented.");
     };
   };

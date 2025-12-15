@@ -10,13 +10,25 @@ module {
   // should be 1 <= radixBits n <= 32 for all n
   public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32, radixBits : Nat32 -> Nat32) {
     let n = array.size();
+
+    // n <= 1 is already sorted
     if (n <= 1) return;
+
+    // sort n <= 8 with insertion sort
     if (n <= 8) {
       insertionSortSmall(array, array, key, 0 : Nat32, Nat32.fromNat(n));
       return;
     };
 
+    // sort 8 < n <= 16 with merge sort
     let buffer = VarArray.repeat(array[0], n);
+    if (n <= 16) {
+      mergeSort16(array, buffer, key, 0 : Nat32, Nat32.fromNat(n));
+      copy(buffer, array, 0 : Nat32, Nat32.fromNat(n));
+      return;
+    };
+
+    // sort n > 16 with bucket sort
     let bits : Nat32 = switch (maxInclusive) {
       case (null) 0;
       case (?x) {
@@ -24,10 +36,10 @@ module {
         Nat32.bitcountLeadingZero(x);
       };
     };
-
     bucketSortRecursive(radixBits, array, buffer, key, 0 : Nat32, Nat32.fromNat(n), bits, false);
   };
 
+  // Will only be called with n > 16
   func bucketSortRecursive<T>(
     radixBits : Nat32 -> Nat32,
     array : [var T],
@@ -39,16 +51,8 @@ module {
     odd : Bool,
   ) {
     let n = to - from;
+    debug assert n > 16;
     let dest = if (not odd) array else buffer;
-    if (n <= 16) {
-      if (n <= 8) {
-        insertionSortSmall(array, dest, key, from, n);
-      } else {
-        mergeSort16(array, buffer, key, from, to);
-        if (not odd) copy(buffer, array, from, to);
-      };
-      return;
-    };
     if (bits >= 32) {
       if (odd) copy(array, buffer, from, to);
       return;
@@ -664,8 +668,13 @@ module {
           dest[index6] := t6;
           dest[index7] := t7;
         };
-        case (_) {
-          bucketSortRecursive(radixBits, buffer, array, key, newFrom, newTo, bits + BITS_ADD, not odd);
+        case (len) {
+          if (len <= 16) {
+            mergeSort16(buffer, array, key, newFrom, newTo);
+            if (odd) copy(array, buffer, newFrom, newTo);
+          } else {
+            bucketSortRecursive(radixBits, buffer, array, key, newFrom, newTo, bits + BITS_ADD, not odd);
+          };
         };
       };
       newFrom := newTo;
