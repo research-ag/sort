@@ -18,16 +18,8 @@ module {
         buffer[nat(pos)] := iElem;
         i +%= 1;
         pos +%= 1;
-        if (i == mid) {
-          while (j < to) {
-            buffer[nat(pos)] := buffer[nat(j)];
-            j +%= 1;
-            pos +%= 1;
-          };
-          break L;
-        } else {
-          iElem := array[nat(i)];
-        };
+        if (i == mid) break L;
+        iElem := array[nat(i)];
       } else {
         buffer[nat(pos)] := jElem;
         j +%= 1;
@@ -39,9 +31,8 @@ module {
             pos +%= 1;
           };
           break L;
-        } else {
-          jElem := buffer[nat(j)];
         };
+        jElem := buffer[nat(j)];
       };
     };
   };
