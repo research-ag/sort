@@ -63,7 +63,7 @@ Sorts the given array in-place using a recursive bucket sort. This implementatio
 
 ### `mergeSort<T>(array : [var T], key : T -> Nat32)`
 
-Sorts the given array in-place using a recursive merge sort. This implementation is sligltly uses buffer of type `T` of `array.size() / 2`, not `array.size()`. The algorithm is **STABLE**.
+Sorts the given array in-place using a recursive merge sort. This implementation allocates buffer of type `T` of `array.size() / 2`, not `array.size()`. The algorithm is **STABLE**.
 
 *   `array`: The array to be sorted.
 *   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
