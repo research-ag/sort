@@ -1,8 +1,9 @@
 import Nat32 "mo:core/Nat32";
 import { insertionSortSmall } "./insertion";
+import Prim "mo:⛔";
 
 module {
-  let nat = Nat32.toNat;
+  let nat = Prim.nat32ToNat;
 
   func merge<T>(array : [var T], buffer : [var T], key : T -> Nat32, from : Nat32, mid : Nat32, to : Nat32) {
     debug assert from < mid;

@@ -1,8 +1,9 @@
 import Nat32 "mo:core/Nat32";
 import Runtime "mo:core/Runtime";
+import Prim "mo:⛔";
 
 module {
-  let nat = Nat32.toNat;
+  let nat = Prim.nat32ToNat;
 
   // Must have: len <= 8
   // Use dest = buffer when sorting in place

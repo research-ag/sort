@@ -1,9 +1,10 @@
 import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
 import { insertionSortSmall; insertionSortSmallMove } "./insertion";
+import Prim "mo:⛔";
 
 module {
-  let nat = Nat32.toNat;
+  let nat = Prim.nat32ToNat;
 
   public func mergeSort<T>(array : [var T], key : T -> Nat32) {
     let size = Nat32.fromNat(array.size());

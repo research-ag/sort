@@ -3,11 +3,12 @@ import Nat32 "mo:core/Nat32";
 import Bucket "private/bucket";
 import { insertionSortSmall } "private/insertion";
 import Merge "private/merge";
+import Prim "mo:⛔";
 
 /// This module provides implementations of radix sort and bucket sort for sorting arrays of elements.
 /// The sorts are based on a key function that maps elements to `Nat32` values.
 module {
-  let nat = Nat32.toNat;
+  let nat = Prim.nat32ToNat;
 
   /// Sorts an array in place using merge sort.
   ///
