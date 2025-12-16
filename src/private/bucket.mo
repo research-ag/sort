@@ -3,9 +3,10 @@ import Nat32 "mo:core/Nat32";
 import { insertionSortSmall } "./insertion";
 import { mergeSort16 } "./merge16";
 import { copy } "./utils";
+import Prim "mo:⛔";
 
 module {
-  let nat = Nat32.toNat;
+  let nat = Prim.nat32ToNat;
 
   // should be 1 <= radixBits n <= 31 for all n
   public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32, radixBits : Nat32 -> Nat32) {
