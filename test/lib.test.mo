@@ -1,11 +1,11 @@
-import Sort "../src/Nat32Key";
-import Nat32 "mo:core/Nat32";
-import Nat "mo:core/Nat";
-import Runtime "mo:core/Runtime";
-import VarArray "mo:core/VarArray";
-import Random "mo:core/Random";
-import Int "mo:core/Int";
 import Array "mo:core/Array";
+import Int "mo:core/Int";
+import Nat "mo:core/Nat";
+import Nat32 "mo:core/Nat32";
+import Random "mo:core/Random";
+import Runtime "mo:core/Runtime";
+import Sort "../src/Nat32Key";
+import VarArray "mo:core/VarArray";
 
 import { bucketSort } "../src/private/bucket";
 import { insertionSortSmall } "../src/private/insertion";

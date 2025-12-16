@@ -1,7 +1,8 @@
-import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
-import { insertionSortSmall; insertionSortSmallMove } "./insertion";
+import VarArray "mo:core/VarArray";
 import Prim "mo:⛔";
+
+import { insertionSortSmall; insertionSortSmallMove } "./insertion";
 
 module {
   let nat = Prim.nat32ToNat;

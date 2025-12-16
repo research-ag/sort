@@ -1,9 +1,10 @@
-import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
+import VarArray "mo:core/VarArray";
+import Prim "mo:⛔";
+
 import { insertionSortSmall } "./insertion";
 import { mergeSort16 } "./merge16";
 import { copy } "./utils";
-import Prim "mo:⛔";
 
 module {
   let nat = Prim.nat32ToNat;

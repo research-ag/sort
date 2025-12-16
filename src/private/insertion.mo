@@ -1,5 +1,3 @@
-import Nat32 "mo:core/Nat32";
-import Runtime "mo:core/Runtime";
 import Prim "mo:⛔";
 
 module {
@@ -559,7 +557,7 @@ module {
         dest[index6] := t6;
         dest[index7] := t7;
       };
-      case (_) Runtime.trap("insertionSortSmall for len > 8 is not implemented.");
+      case (_) Prim.trap("insertionSortSmall for len > 8 is not implemented.");
     };
   };
 
@@ -1080,7 +1078,7 @@ module {
         dest[nat(offset +% 6)] := t6;
         dest[nat(offset +% 7)] := t7;
       };
-      case (_) Runtime.trap("insertionSortSmall for len > 8 is not implemented.");
+      case (_) Prim.trap("insertionSortSmall for len > 8 is not implemented.");
     };
   };
 }

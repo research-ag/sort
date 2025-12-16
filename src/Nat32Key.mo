@@ -1,9 +1,10 @@
-import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
+import VarArray "mo:core/VarArray";
+import Prim "mo:⛔";
+
 import Bucket "private/bucket";
 import { insertionSortSmall } "private/insertion";
 import Merge "private/merge";
-import Prim "mo:⛔";
 
 /// This module provides implementations of radix sort and bucket sort for sorting arrays of elements.
 /// The sorts are based on a key function that maps elements to `Nat32` values.
