@@ -9,7 +9,7 @@ import Array "mo:core/Array";
 
 import { bucketSort } "../src/private/bucket";
 import { insertionSortSmall } "../src/private/insertion";
-import { mergeSort } "../src/private/merge";
+import { mergeSortCompare } "../src/private/mergeCompare";
 import { mergeSort16 } "../src/private/merge16";
 
 func testOnArray(array : [var (Nat32, Nat)], f : [var (Nat32, Nat)] -> ()) {
@@ -186,7 +186,8 @@ func tests() {
   };
 
   for (n in ns.vals()) {
-    testSort(n, 2 ** 32, func(a, max) = mergeSort(a, func(x, y) = x));
+    testSort(n, 2 ** 32, func(a, max) = Sort.mergeSort(a, func(x, y) = x));
+    testSort(n, 2 ** 32, func(a, max) = mergeSortCompare(a, func (x, y) = Nat32.compare(x.0, y.0)));
   };
 
   let arrays : [[var (Nat32, Nat)]] = [
@@ -215,7 +216,8 @@ func tests() {
   for (a in arrays.vals()) {
     testOnArray(a, func a = Sort.radixSort(a, func x = x.0, null));
     testOnArray(a, func a = Sort.bucketSort(a, func x = x.0, null));
-    testOnArray(a, func a = mergeSort(a, func(x, y) = x));
+    testOnArray(a, func a = Sort.mergeSort(a, func(x, y) = x));
+    testOnArray(a, func a = mergeSortCompare(a, func (x, y) = Nat32.compare(x.0, y.0)));
   };
 };
 

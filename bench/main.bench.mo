@@ -9,6 +9,7 @@ import VarArray "mo:core/VarArray";
 import Prim "mo:prim";
 import Sort "../src/Nat32Key";
 import Zhus "mo:zhus/sort";
+import { mergeSortCompare } "../src/private/mergeCompare";
 
 module {
   public func init() : Bench.Bench {
@@ -23,7 +24,8 @@ module {
       "radixSort",
       "Zhus",
       "mergeSort",
-      "VarArray"
+      "VarArray",
+      "mergeSortCompare",
     ];
     let cols = [
       "100",
@@ -40,7 +42,7 @@ module {
     let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
 
     let sourceArrays : [[Nat32]] = Array.tabulate(
-      6,
+      cols.size(),
       func(j) = Array.tabulate<Nat32>(
         [100, 1_000, 10_000, 12_000, 100_000, 1_000_000][j],
         func(i) = Nat64.toNat32(rng.nat64() % (2 ** 32)),
@@ -77,6 +79,10 @@ module {
           case (5) {
             let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
             func() = VarArray.sortInPlace<Nat32>(varSource, Nat32.compare);
+          };
+          case (6) {
+            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
+            func() = mergeSortCompare<Nat32>(varSource, Nat32.compare);
           };
           case (_) Prim.trap("Row not implemented");
         };

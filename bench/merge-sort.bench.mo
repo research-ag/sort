@@ -11,6 +11,7 @@ import Prim "mo:prim";
 import Sort "../src/Nat32Key";
 import { mergeSort } "../src/private/merge";
 import { mergeSort16 } "../src/private/merge16";
+import { mergeSortCompare } "../src/private/mergeCompare";
 
 module {
   public func init() : Bench.Bench {
@@ -21,6 +22,7 @@ module {
 
     let rows = [
       "merge",
+      "compare",
       "merge16",
       "bucket",
       "radix",
@@ -65,6 +67,7 @@ module {
         let buffer = VarArray.repeat<Nat32>(0, 16);
         switch (row) {
           case ("merge") for (a in arrays[0][ci].vals()) mergeSort(a, func i = i);
+          case ("compare") for (a in arrays[0][ci].vals()) mergeSortCompare(a, Nat32.compare);
           case ("merge16") {
             let input = arrays[1][ci]; 
             let n = input[0].size();
