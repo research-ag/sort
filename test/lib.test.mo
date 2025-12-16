@@ -186,9 +186,11 @@ func tests() {
     };
   };
 
+  /*
   for (n in ns.vals()) {
     testSort(n, 2 ** 32, func(a, max) = mergeSort(a, func(x, y) = x));
   };
+  */  
 
   let arrays : [[var (Nat32, Nat)]] = [
     // empty

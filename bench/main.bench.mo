@@ -22,6 +22,7 @@ module {
       "bucketSortWorstCase",
       "radixSort",
       "Zhus",
+      "mergeSort",
       "VarArray"
     ];
     let cols = [
@@ -70,6 +71,10 @@ module {
             func() = Zhus.sortNat32<Nat32>(varSource, func i = i);
           };
           case (4) {
+            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
+            func() = Sort.mergeSort<Nat32>(varSource, func i = i);
+          };
+          case (5) {
             let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
             func() = VarArray.sortInPlace<Nat32>(varSource, Nat32.compare);
           };

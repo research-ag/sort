@@ -2,12 +2,16 @@ import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
 import Bucket "private/bucket";
 import { insertionSortSmall } "private/insertion";
-import { mergeSort } "private/merge";
+import Merge "private/merge";
 
 /// This module provides implementations of radix sort and bucket sort for sorting arrays of elements.
 /// The sorts are based on a key function that maps elements to `Nat32` values.
 module {
   let nat = Nat32.toNat;
+
+  public func mergeSort<T>(array : [var T], key : T -> Nat32) {
+    Merge.mergeSort(array, key);
+  };
 
   /// Sorts an array in place using bucket sort.
   ///
@@ -98,7 +102,7 @@ module {
     let STEPS = (bits + NBITS - 1) / NBITS;
 
     if (STEPS > 3) {
-      mergeSort(array, key);
+      Merge.mergeSort(array, key);
       return;
     };
 

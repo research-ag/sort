@@ -4,7 +4,7 @@ import { insertionSortSmall } "./insertion";
 module {
   let nat = Nat32.toNat;
 
-  func merge<T>(array : [var T], buffer : [var T], key : T -> Nat32, from : Nat32, mid : Nat32, to : Nat32) {
+  public func merge<T>(array : [var T], buffer : [var T], key : T -> Nat32, from : Nat32, mid : Nat32, to : Nat32) {
     debug assert from < mid;
     debug assert mid < to;
     var pos = from;
