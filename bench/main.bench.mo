@@ -1,15 +1,16 @@
-import Bench "mo:bench";
 import Array "mo:core/Array";
-import Random "mo:core/Random";
 import Nat "mo:core/Nat";
-import Nat64 "mo:core/Nat64";
 import Nat32 "mo:core/Nat32";
+import Nat64 "mo:core/Nat64";
+import Random "mo:core/Random";
 import Text "mo:core/Text";
 import VarArray "mo:core/VarArray";
 import Prim "mo:prim";
-import Sort "../src/Nat32Key";
+import Bench "mo:bench";
 import Zhus "mo:zhus/sort";
 import { mergeSortCompare } "../src/private/mergeCompare";
+
+import Sort "../src/Nat32Key";
 
 module {
   public func init() : Bench.Bench {

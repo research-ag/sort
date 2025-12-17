@@ -1,12 +1,21 @@
-import VarArray "mo:core/VarArray";
 import Nat32 "mo:core/Nat32";
+import VarArray "mo:core/VarArray";
+import Prim "mo:⛔";
+
 import { insertionSortSmall } "./insertion";
 import { mergeSort16 } "./merge16";
-import { copy } "./utils";
-import Prim "mo:⛔";
 
 module {
   let nat = Prim.nat32ToNat;
+
+  func copy<T>(source : [var T], dest : [var T], from : Nat32, to : Nat32) {
+    var i = from;
+    while (i < to) {
+      let ii = Prim.nat32ToNat(i);
+      dest[ii] := source[ii];
+      i +%= 1;
+    };
+  };
 
   // should be 1 <= radixBits n <= 31 for all n
   public func bucketSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32, radixBits : Nat32 -> Nat32) {

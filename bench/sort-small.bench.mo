@@ -1,9 +1,10 @@
-import Bench "mo:bench";
-import Random "mo:core/Random";
 import Nat "mo:core/Nat";
-import Nat64 "mo:core/Nat64";
 import Nat32 "mo:core/Nat32";
+import Nat64 "mo:core/Nat64";
+import Random "mo:core/Random";
 import VarArray "mo:core/VarArray";
+import Bench "mo:bench";
+
 import { insertionSortSmall } "../src/private/insertion";
 
 module {

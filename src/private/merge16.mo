@@ -1,6 +1,6 @@
-import Nat32 "mo:core/Nat32";
-import { insertionSortSmall } "./insertion";
 import Prim "mo:⛔";
+
+import { insertionSortSmall } "./insertion";
 
 module {
   let nat = Prim.nat32ToNat;

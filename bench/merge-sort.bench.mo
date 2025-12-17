@@ -1,13 +1,14 @@
-import Bench "mo:bench";
 import Random "mo:core/Random";
-import Nat "mo:core/Nat";
-import Nat64 "mo:core/Nat64";
-import Nat32 "mo:core/Nat32";
 import Array "mo:core/Array";
-import VarArray "mo:core/VarArray";
+import Nat "mo:core/Nat";
+import Nat32 "mo:core/Nat32";
+import Nat64 "mo:core/Nat64";
 import Option "mo:core/Option";
 import Text "mo:core/Text";
+import VarArray "mo:core/VarArray";
 import Prim "mo:prim";
+import Bench "mo:bench";
+
 import Sort "../src/Nat32Key";
 import { mergeSort } "../src/private/merge";
 import { mergeSort16 } "../src/private/merge16";
