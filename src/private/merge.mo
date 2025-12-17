@@ -10,6 +10,14 @@ module {
   public func mergeSort<T>(array : [var T], key : T -> Nat32) {
     let size = Nat32.fromNat(array.size());
     if (size <= 1) return;
+    if (size <= 2) {
+      if (key(array[1]) < key(array[0])) {
+        let t0 = array[0];
+        array[0] := array[1];
+        array[1] := t0;
+      };
+      return;
+    };
     if (size <= 8) {
       insertionSortSmall(array, array, key, 0 : Nat32, size);
       return;

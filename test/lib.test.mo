@@ -138,7 +138,7 @@ func testInsertionSortSmall(n : Nat) {
 };
 
 func tests() {
-  for (n in Nat.range(2, 8)) {
+  for (n in Nat.range(3, 8)) {
     testInsertionSortSmall(n);
   };
 

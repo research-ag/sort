@@ -114,6 +114,14 @@ module {
   public func radixSort<T>(array : [var T], key : T -> Nat32, maxInclusive : ?Nat32) {
     let n = array.size();
     if (n <= 1) return;
+    if (n <= 2) {
+      if (key(array[1]) < key(array[0])) {
+        let t0 = array[0];
+        array[0] := array[1];
+        array[1] := t0;
+      };
+      return;
+    };
     if (n <= 8) {
       insertionSortSmall(array, array, key, 0 : Nat32, Nat32.fromNat(n));
       return;
