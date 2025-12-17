@@ -71,25 +71,28 @@ module {
     var iElem = buffer[nat(i)];
     var jElem = array[nat(j)];
     label L loop {
-      if (compare(jElem, iElem) == #less) {
-        array[nat(pos)] := jElem;
-        j +%= 1;
-        pos +%= 1;
-        if (j == to) {
-          while (i < len) {
-            array[nat(pos)] := buffer[nat(i)];
-            i +%= 1;
-            pos +%= 1;
+      switch (compare(jElem, iElem)) {
+        case (#less) {
+          array[nat(pos)] := jElem;
+          j +%= 1;
+          pos +%= 1;
+          if (j == to) {
+            while (i < len) {
+              array[nat(pos)] := buffer[nat(i)];
+              i +%= 1;
+              pos +%= 1;
+            };
+            break L;
           };
-          break L;
+          jElem := array[nat(j)];
         };
-        jElem := array[nat(j)];
-      } else {
-        array[nat(pos)] := iElem;
-        i +%= 1;
-        pos +%= 1;
-        if (i == len) break L;
-        iElem := buffer[nat(i)];
+        case (_) {
+          array[nat(pos)] := iElem;
+          i +%= 1;
+          pos +%= 1;
+          if (i == len) break L;
+          iElem := buffer[nat(i)];
+        };
       };
     };
   };
@@ -106,25 +109,28 @@ module {
     var iElem = array[nat(i)];
     var jElem = buffer[nat(j)];
     label L loop {
-      if (compare(jElem, iElem) == #less) {
-        buffer[nat(pos)] := jElem;
-        j +%= 1;
-        pos +%= 1;
-        if (j == j_max) {
-          while (i < mid) {
-            buffer[nat(pos)] := array[nat(i)];
-            i +%= 1;
-            pos +%= 1;
+      switch (compare(jElem, iElem)) {
+        case (#less) {
+          buffer[nat(pos)] := jElem;
+          j +%= 1;
+          pos +%= 1;
+          if (j == j_max) {
+            while (i < mid) {
+              buffer[nat(pos)] := array[nat(i)];
+              i +%= 1;
+              pos +%= 1;
+            };
+            break L;
           };
-          break L;
+          jElem := buffer[nat(j)];
         };
-        jElem := buffer[nat(j)];
-      } else {
-        buffer[nat(pos)] := iElem;
-        i +%= 1;
-        pos +%= 1;
-        if (i == mid) break L;
-        iElem := array[nat(i)];
+        case (_) {
+          buffer[nat(pos)] := iElem;
+          i +%= 1;
+          pos +%= 1;
+          if (i == mid) break L;
+          iElem := array[nat(i)];
+        };
       };
     };
   };

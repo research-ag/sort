@@ -16,12 +16,15 @@ module {
       case (2) {
         let t0 = buffer[nat(newFrom)];
         let t1 = buffer[nat(newFrom +% 1)];
-        if (compare(t1, t0) == #less) {
-          dest[nat(offset)] := t1;
-          dest[nat(offset +% 1)] := t0;
-        } else {
-          dest[nat(offset)] := t0;
-          dest[nat(offset +% 1)] := t1;
+        switch (compare(t1, t0)) {
+          case (#less) {
+            dest[nat(offset)] := t1;
+            dest[nat(offset +% 1)] := t0;
+          };
+          case (_) {
+            dest[nat(offset)] := t0;
+            dest[nat(offset +% 1)] := t1;
+          };
         };
       };
       case (3) {
@@ -29,26 +32,35 @@ module {
         var t1 = buffer[nat(newFrom +% 1)];
         let t2 = buffer[nat(newFrom +% 2)];
 
-        if (compare(t1, t0) == #less) {
-          let v = t1;
-          t1 := t0;
-          t0 := v;
+        switch (compare(t1, t0)) {
+          case (#less) {
+            let v = t1;
+            t1 := t0;
+            t0 := v;
+          };
+          case (_) {};
         };
 
-        if (compare(t2, t1) == #less) {
-          if (compare(t2, t0) == #less) {
-            dest[nat(offset)] := t2;
-            dest[nat(offset +% 1)] := t0;
-            dest[nat(offset +% 2)] := t1;
-          } else {
-            dest[nat(offset)] := t0;
-            dest[nat(offset +% 1)] := t2;
-            dest[nat(offset +% 2)] := t1;
+        switch (compare(t2, t1)) {
+          case (#less) {
+            switch (compare(t2, t0)) {
+              case (#less) {
+                dest[nat(offset)] := t2;
+                dest[nat(offset +% 1)] := t0;
+                dest[nat(offset +% 2)] := t1;
+              };
+              case (_) {
+                dest[nat(offset)] := t0;
+                dest[nat(offset +% 1)] := t2;
+                dest[nat(offset +% 2)] := t1;
+              };
+            };
           };
-        } else {
-          dest[nat(offset)] := t0;
-          dest[nat(offset +% 1)] := t1;
-          dest[nat(offset +% 2)] := t2;
+          case (_) {
+            dest[nat(offset)] := t0;
+            dest[nat(offset +% 1)] := t1;
+            dest[nat(offset +% 2)] := t2;
+          };
         };
       };
       case (4) {
@@ -57,29 +69,43 @@ module {
         var t2 = buffer[nat(newFrom +% 2)];
         var t3 = buffer[nat(newFrom +% 3)];
 
-        if (compare(t1, t0) == #less) {
-          let v = t1;
-          t1 := t0;
-          t0 := v;
+        switch (compare(t1, t0)) {
+          case (#less) {
+            let v = t1;
+            t1 := t0;
+            t0 := v;
+          };
+          case (_) {};
         };
 
         var tv = t2;
-        if (compare(tv, t1) == #less) {
-          t2 := t1;
-          if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-            t1 := tv;
+        switch (compare(tv, t1)) {
+          case (#less) {
+            t2 := t1;
+            switch (compare(tv, t0)) {
+              case (#less) { t1 := t0; t0 := tv };
+              case (_) { t1 := tv };
+            };
           };
+          case (_) {};
         };
 
-        if (compare(t3, t2) == #less) {
-          tv := t3;
-          t3 := t2;
-          if (compare(tv, t1) == #less) {
-            t2 := t1;
-            if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-              t1 := tv;
+        switch (compare(t3, t2)) {
+          case (#less) {
+            tv := t3;
+            t3 := t2;
+            switch (compare(tv, t1)) {
+              case (#less) {
+                t2 := t1;
+                switch (compare(tv, t0)) {
+                  case (#less) { t1 := t0; t0 := tv };
+                  case (_) { t1 := tv };
+                };
+              };
+              case (_) { t2 := tv };
             };
-          } else { t2 := tv };
+          };
+          case (_) {};
         };
 
         dest[nat(offset)] := t0;
@@ -94,40 +120,64 @@ module {
         var t3 = buffer[nat(newFrom +% 3)];
         var t4 = buffer[nat(newFrom +% 4)];
 
-        if (compare(t1, t0) == #less) {
-          let v = t1;
-          t1 := t0;
-          t0 := v;
+        switch (compare(t1, t0)) {
+          case (#less) {
+            let v = t1;
+            t1 := t0;
+            t0 := v;
+          };
+          case (_) {};
         };
         var tv = t2;
-        if (compare(tv, t1) == #less) {
-          t2 := t1;
-          if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-            t1 := tv;
+        switch (compare(tv, t1)) {
+          case (#less) {
+            t2 := t1;
+            switch (compare(tv, t0)) {
+              case (#less) { t1 := t0; t0 := tv };
+              case (_) { t1 := tv };
+            };
           };
+          case (_) {};
         };
         tv := t3;
-        if (compare(tv, t2) == #less) {
-          t3 := t2;
-          if (compare(tv, t1) == #less) {
-            t2 := t1;
-            if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-              t1 := tv;
+        switch (compare(tv, t2)) {
+          case (#less) {
+            t3 := t2;
+            switch (compare(tv, t1)) {
+              case (#less) {
+                t2 := t1;
+                switch (compare(tv, t0)) {
+                  case (#less) { t1 := t0; t0 := tv };
+                  case (_) { t1 := tv };
+                };
+              };
+              case (_) { t2 := tv };
             };
-          } else { t2 := tv };
+          };
+          case (_) {};
         };
         tv := t4;
-        if (compare(tv, t3) == #less) {
-          t4 := t3;
-          if (compare(tv, t2) == #less) {
-            t3 := t2;
-            if (compare(tv, t1) == #less) {
-              t2 := t1;
-              if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                t1 := tv;
+        switch (compare(tv, t3)) {
+          case (#less) {
+            t4 := t3;
+            switch (compare(tv, t2)) {
+              case (#less) {
+                t3 := t2;
+                switch (compare(tv, t1)) {
+                  case (#less) {
+                    t2 := t1;
+                    switch (compare(tv, t0)) {
+                      case (#less) { t1 := t0; t0 := tv };
+                      case (_) { t1 := tv };
+                    };
+                  };
+                  case (_) { t2 := tv };
+                };
               };
-            } else { t2 := tv };
-          } else { t3 := tv };
+              case (_) { t3 := tv };
+            };
+          };
+          case (_) {};
         };
 
         dest[nat(offset)] := t0;
@@ -144,56 +194,93 @@ module {
         var t4 = buffer[nat(newFrom +% 4)];
         var t5 = buffer[nat(newFrom +% 5)];
 
-        if (compare(t1, t0) == #less) {
-          let v = t1;
-          t1 := t0;
-          t0 := v;
+        switch (compare(t1, t0)) {
+          case (#less) {
+            let v = t1;
+            t1 := t0;
+            t0 := v;
+          };
+          case (_) {};
         };
         var tv = t2;
-        if (compare(tv, t1) == #less) {
-          t2 := t1;
-          if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-            t1 := tv;
+        switch (compare(tv, t1)) {
+          case (#less) {
+            t2 := t1;
+            switch (compare(tv, t0)) {
+              case (#less) { t1 := t0; t0 := tv };
+              case (_) { t1 := tv };
+            };
           };
+          case (_) {};
         };
         tv := t3;
-        if (compare(tv, t2) == #less) {
-          t3 := t2;
-          if (compare(tv, t1) == #less) {
-            t2 := t1;
-            if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-              t1 := tv;
+        switch (compare(tv, t2)) {
+          case (#less) {
+            t3 := t2;
+            switch (compare(tv, t1)) {
+              case (#less) {
+                t2 := t1;
+                switch (compare(tv, t0)) {
+                  case (#less) { t1 := t0; t0 := tv };
+                  case (_) { t1 := tv };
+                };
+              };
+              case (_) { t2 := tv };
             };
-          } else { t2 := tv };
+          };
+          case (_) {};
         };
         tv := t4;
-        if (compare(tv, t3) == #less) {
-          t4 := t3;
-          if (compare(tv, t2) == #less) {
-            t3 := t2;
-            if (compare(tv, t1) == #less) {
-              t2 := t1;
-              if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                t1 := tv;
+        switch (compare(tv, t3)) {
+          case (#less) {
+            t4 := t3;
+            switch (compare(tv, t2)) {
+              case (#less) {
+                t3 := t2;
+                switch (compare(tv, t1)) {
+                  case (#less) {
+                    t2 := t1;
+                    switch (compare(tv, t0)) {
+                      case (#less) { t1 := t0; t0 := tv };
+                      case (_) { t1 := tv };
+                    };
+                  };
+                  case (_) { t2 := tv };
+                };
               };
-            } else { t2 := tv };
-          } else { t3 := tv };
+              case (_) { t3 := tv };
+            };
+          };
+          case (_) {};
         };
         tv := t5;
-        if (compare(tv, t4) == #less) {
-          t5 := t4;
-          if (compare(tv, t3) == #less) {
-            t4 := t3;
-            if (compare(tv, t2) == #less) {
-              t3 := t2;
-              if (compare(tv, t1) == #less) {
-                t2 := t1;
-                if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                  t1 := tv;
+        switch (compare(tv, t4)) {
+          case (#less) {
+            t5 := t4;
+            switch (compare(tv, t3)) {
+              case (#less) {
+                t4 := t3;
+                switch (compare(tv, t2)) {
+                  case (#less) {
+                    t3 := t2;
+                    switch (compare(tv, t1)) {
+                      case (#less) {
+                        t2 := t1;
+                        switch (compare(tv, t0)) {
+                          case (#less) { t1 := t0; t0 := tv };
+                          case (_) { t1 := tv };
+                        };
+                      };
+                      case (_) { t2 := tv };
+                    };
+                  };
+                  case (_) { t3 := tv };
                 };
-              } else { t2 := tv };
-            } else { t3 := tv };
-          } else { t4 := tv };
+              };
+              case (_) { t4 := tv };
+            };
+          };
+          case (_) {};
         };
 
         dest[nat(offset)] := t0;
@@ -212,75 +299,128 @@ module {
         var t5 = buffer[nat(newFrom +% 5)];
         var t6 = buffer[nat(newFrom +% 6)];
 
-        if (compare(t1, t0) == #less) {
-          let v = t1;
-          t1 := t0;
-          t0 := v;
+        switch (compare(t1, t0)) {
+          case (#less) {
+            let v = t1;
+            t1 := t0;
+            t0 := v;
+          };
+          case (_) {};
         };
         var tv = t2;
-        if (compare(tv, t1) == #less) {
-          t2 := t1;
-          if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-            t1 := tv;
+        switch (compare(tv, t1)) {
+          case (#less) {
+            t2 := t1;
+            switch (compare(tv, t0)) {
+              case (#less) { t1 := t0; t0 := tv };
+              case (_) { t1 := tv };
+            };
           };
+          case (_) {};
         };
         tv := t3;
-        if (compare(tv, t2) == #less) {
-          t3 := t2;
-          if (compare(tv, t1) == #less) {
-            t2 := t1;
-            if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-              t1 := tv;
+        switch (compare(tv, t2)) {
+          case (#less) {
+            t3 := t2;
+            switch (compare(tv, t1)) {
+              case (#less) {
+                t2 := t1;
+                switch (compare(tv, t0)) {
+                  case (#less) { t1 := t0; t0 := tv };
+                  case (_) { t1 := tv };
+                };
+              };
+              case (_) { t2 := tv };
             };
-          } else { t2 := tv };
+          };
+          case (_) {};
         };
         tv := t4;
-        if (compare(tv, t3) == #less) {
-          t4 := t3;
-          if (compare(tv, t2) == #less) {
-            t3 := t2;
-            if (compare(tv, t1) == #less) {
-              t2 := t1;
-              if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                t1 := tv;
+        switch (compare(tv, t3)) {
+          case (#less) {
+            t4 := t3;
+            switch (compare(tv, t2)) {
+              case (#less) {
+                t3 := t2;
+                switch (compare(tv, t1)) {
+                  case (#less) {
+                    t2 := t1;
+                    switch (compare(tv, t0)) {
+                      case (#less) { t1 := t0; t0 := tv };
+                      case (_) { t1 := tv };
+                    };
+                  };
+                  case (_) { t2 := tv };
+                };
               };
-            } else { t2 := tv };
-          } else { t3 := tv };
+              case (_) { t3 := tv };
+            };
+          };
+          case (_) {};
         };
         tv := t5;
-        if (compare(tv, t4) == #less) {
-          t5 := t4;
-          if (compare(tv, t3) == #less) {
-            t4 := t3;
-            if (compare(tv, t2) == #less) {
-              t3 := t2;
-              if (compare(tv, t1) == #less) {
-                t2 := t1;
-                if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                  t1 := tv;
+        switch (compare(tv, t4)) {
+          case (#less) {
+            t5 := t4;
+            switch (compare(tv, t3)) {
+              case (#less) {
+                t4 := t3;
+                switch (compare(tv, t2)) {
+                  case (#less) {
+                    t3 := t2;
+                    switch (compare(tv, t1)) {
+                      case (#less) {
+                        t2 := t1;
+                        switch (compare(tv, t0)) {
+                          case (#less) { t1 := t0; t0 := tv };
+                          case (_) { t1 := tv };
+                        };
+                      };
+                      case (_) { t2 := tv };
+                    };
+                  };
+                  case (_) { t3 := tv };
                 };
-              } else { t2 := tv };
-            } else { t3 := tv };
-          } else { t4 := tv };
+              };
+              case (_) { t4 := tv };
+            };
+          };
+          case (_) {};
         };
         tv := t6;
-        if (compare(tv, t5) == #less) {
-          t6 := t5;
-          if (compare(tv, t4) == #less) {
-            t5 := t4;
-            if (compare(tv, t3) == #less) {
-              t4 := t3;
-              if (compare(tv, t2) == #less) {
-                t3 := t2;
-                if (compare(tv, t1) == #less) {
-                  t2 := t1;
-                  if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                    t1 := tv;
+        switch (compare(tv, t5)) {
+          case (#less) {
+            t6 := t5;
+            switch (compare(tv, t4)) {
+              case (#less) {
+                t5 := t4;
+                switch (compare(tv, t3)) {
+                  case (#less) {
+                    t4 := t3;
+                    switch (compare(tv, t2)) {
+                      case (#less) {
+                        t3 := t2;
+                        switch (compare(tv, t1)) {
+                          case (#less) {
+                            t2 := t1;
+                            switch (compare(tv, t0)) {
+                              case (#less) { t1 := t0; t0 := tv };
+                              case (_) { t1 := tv };
+                            };
+                          };
+                          case (_) { t2 := tv };
+                        };
+                      };
+                      case (_) { t3 := tv };
+                    };
                   };
-                } else { t2 := tv };
-              } else { t3 := tv };
-            } else { t4 := tv };
-          } else { t5 := tv };
+                  case (_) { t4 := tv };
+                };
+              };
+              case (_) { t5 := tv };
+            };
+          };
+          case (_) {};
         };
 
         dest[nat(offset)] := t0;
@@ -301,97 +441,169 @@ module {
         var t6 = buffer[nat(newFrom +% 6)];
         var t7 = buffer[nat(newFrom +% 7)];
 
-        if (compare(t1, t0) == #less) {
-          let v = t1;
-          t1 := t0;
-          t0 := v;
+        switch (compare(t1, t0)) {
+          case (#less) {
+            let v = t1;
+            t1 := t0;
+            t0 := v;
+          };
+          case (_) {};
         };
         var tv = t2;
-        if (compare(tv, t1) == #less) {
-          t2 := t1;
-          if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-            t1 := tv;
+        switch (compare(tv, t1)) {
+          case (#less) {
+            t2 := t1;
+            switch (compare(tv, t0)) {
+              case (#less) { t1 := t0; t0 := tv };
+              case (_) { t1 := tv };
+            };
           };
+          case (_) {};
         };
         tv := t3;
-        if (compare(tv, t2) == #less) {
-          t3 := t2;
-          if (compare(tv, t1) == #less) {
-            t2 := t1;
-            if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-              t1 := tv;
+        switch (compare(tv, t2)) {
+          case (#less) {
+            t3 := t2;
+            switch (compare(tv, t1)) {
+              case (#less) {
+                t2 := t1;
+                switch (compare(tv, t0)) {
+                  case (#less) { t1 := t0; t0 := tv };
+                  case (_) { t1 := tv };
+                };
+              };
+              case (_) { t2 := tv };
             };
-          } else { t2 := tv };
+          };
+          case (_) {};
         };
         tv := t4;
-        if (compare(tv, t3) == #less) {
-          t4 := t3;
-          if (compare(tv, t2) == #less) {
-            t3 := t2;
-            if (compare(tv, t1) == #less) {
-              t2 := t1;
-              if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                t1 := tv;
+        switch (compare(tv, t3)) {
+          case (#less) {
+            t4 := t3;
+            switch (compare(tv, t2)) {
+              case (#less) {
+                t3 := t2;
+                switch (compare(tv, t1)) {
+                  case (#less) {
+                    t2 := t1;
+                    switch (compare(tv, t0)) {
+                      case (#less) { t1 := t0; t0 := tv };
+                      case (_) { t1 := tv };
+                    };
+                  };
+                  case (_) { t2 := tv };
+                };
               };
-            } else { t2 := tv };
-          } else { t3 := tv };
+              case (_) { t3 := tv };
+            };
+          };
+          case (_) {};
         };
         tv := t5;
-        if (compare(tv, t4) == #less) {
-          t5 := t4;
-          if (compare(tv, t3) == #less) {
-            t4 := t3;
-            if (compare(tv, t2) == #less) {
-              t3 := t2;
-              if (compare(tv, t1) == #less) {
-                t2 := t1;
-                if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                  t1 := tv;
+        switch (compare(tv, t4)) {
+          case (#less) {
+            t5 := t4;
+            switch (compare(tv, t3)) {
+              case (#less) {
+                t4 := t3;
+                switch (compare(tv, t2)) {
+                  case (#less) {
+                    t3 := t2;
+                    switch (compare(tv, t1)) {
+                      case (#less) {
+                        t2 := t1;
+                        switch (compare(tv, t0)) {
+                          case (#less) { t1 := t0; t0 := tv };
+                          case (_) { t1 := tv };
+                        };
+                      };
+                      case (_) { t2 := tv };
+                    };
+                  };
+                  case (_) { t3 := tv };
                 };
-              } else { t2 := tv };
-            } else { t3 := tv };
-          } else { t4 := tv };
+              };
+              case (_) { t4 := tv };
+            };
+          };
+          case (_) {};
         };
         tv := t6;
-        if (compare(tv, t5) == #less) {
-          t6 := t5;
-          if (compare(tv, t4) == #less) {
-            t5 := t4;
-            if (compare(tv, t3) == #less) {
-              t4 := t3;
-              if (compare(tv, t2) == #less) {
-                t3 := t2;
-                if (compare(tv, t1) == #less) {
-                  t2 := t1;
-                  if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                    t1 := tv;
+        switch (compare(tv, t5)) {
+          case (#less) {
+            t6 := t5;
+            switch (compare(tv, t4)) {
+              case (#less) {
+                t5 := t4;
+                switch (compare(tv, t3)) {
+                  case (#less) {
+                    t4 := t3;
+                    switch (compare(tv, t2)) {
+                      case (#less) {
+                        t3 := t2;
+                        switch (compare(tv, t1)) {
+                          case (#less) {
+                            t2 := t1;
+                            switch (compare(tv, t0)) {
+                              case (#less) { t1 := t0; t0 := tv };
+                              case (_) { t1 := tv };
+                            };
+                          };
+                          case (_) { t2 := tv };
+                        };
+                      };
+                      case (_) { t3 := tv };
+                    };
                   };
-                } else { t2 := tv };
-              } else { t3 := tv };
-            } else { t4 := tv };
-          } else { t5 := tv };
+                  case (_) { t4 := tv };
+                };
+              };
+              case (_) { t5 := tv };
+            };
+          };
+          case (_) {};
         };
         tv := t7;
-        if (compare(tv, t6) == #less) {
-          t7 := t6;
-          if (compare(tv, t5) == #less) {
-            t6 := t5;
-            if (compare(tv, t4) == #less) {
-              t5 := t4;
-              if (compare(tv, t3) == #less) {
-                t4 := t3;
-                if (compare(tv, t2) == #less) {
-                  t3 := t2;
-                  if (compare(tv, t1) == #less) {
-                    t2 := t1;
-                    if (compare(tv, t0) == #less) { t1 := t0; t0 := tv } else {
-                      t1 := tv;
+        switch (compare(tv, t6)) {
+          case (#less) {
+            t7 := t6;
+            switch (compare(tv, t5)) {
+              case (#less) {
+                t6 := t5;
+                switch (compare(tv, t4)) {
+                  case (#less) {
+                    t5 := t4;
+                    switch (compare(tv, t3)) {
+                      case (#less) {
+                        t4 := t3;
+                        switch (compare(tv, t2)) {
+                          case (#less) {
+                            t3 := t2;
+                            switch (compare(tv, t1)) {
+                              case (#less) {
+                                t2 := t1;
+                                switch (compare(tv, t0)) {
+                                  case (#less) { t1 := t0; t0 := tv };
+                                  case (_) { t1 := tv };
+                                };
+                              };
+                              case (_) { t2 := tv };
+                            };
+                          };
+                          case (_) { t3 := tv };
+                        };
+                      };
+                      case (_) { t4 := tv };
                     };
-                  } else { t2 := tv };
-                } else { t3 := tv };
-              } else { t4 := tv };
-            } else { t5 := tv };
-          } else { t6 := tv };
+                  };
+                  case (_) { t5 := tv };
+                };
+              };
+              case (_) { t6 := tv };
+            };
+          };
+          case (_) {};
         };
 
         dest[nat(offset)] := t0;

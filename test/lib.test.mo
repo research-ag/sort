@@ -9,6 +9,7 @@ import VarArray "mo:core/VarArray";
 
 import { bucketSort } "../src/private/bucket";
 import { insertionSortSmall } "../src/private/insertion";
+import I "../src/private/insertionCompare";
 import { mergeSortCompare } "../src/private/mergeCompare";
 import { mergeSort16 } "../src/private/merge16";
 
@@ -132,6 +133,11 @@ func testInsertionSortSmall(n : Nat) {
     do {
       let pp = VarArray.clone(p);
       insertionSortSmall(pp, pp, func x = x, 0 : Nat32, Nat32.fromNat(n));
+      if (Array.fromVarArray<Nat32>(pp) != id) Runtime.trap(debug_show pp);
+    };
+    do {
+      let pp = VarArray.clone(p);
+      I.insertionSortSmall(pp, pp, Nat32.compare, 0 : Nat32, Nat32.fromNat(n));
       if (Array.fromVarArray<Nat32>(pp) != id) Runtime.trap(debug_show pp);
     };
   } while (next_permutation(p));
