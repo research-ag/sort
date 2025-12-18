@@ -18,8 +18,8 @@ module {
     var k1 = key(t1);
 
     if (k1 < k0) {
-      t0 |> (do { t0 := t1; t1 := _ });
-      k0 |> (do { k0 := k1; k1 := _ });
+      do { let t = t0; t0 := t1; t1 := t };
+      do { let k = k0; k0 := k1; k1 := k };
     };
 
     // new element
@@ -28,7 +28,7 @@ module {
     var k2 = key(t2);
 
     if (len == 3) {
-      // sort values without reassigning k's
+      // sort values without keys
       if (k2 < k1) {
         if (k2 < k0) {
           dest[index0] := t2;
@@ -47,36 +47,36 @@ module {
       return;
     };
 
-    var tv = t2;
-    var kv = k2;
-
-    // kv < k1 with reassigning k's
-    if (kv < k1) {
-      t2 := t1;
-      k2 := k1;
-      if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
-        t1 := tv;
-        k1 := kv;
+    // sort values and keys
+    if (k2 < k1) {
+      let k2_new = k1;
+      let t2_new = t1;
+      if (k2 < k0) {
+        do { t1 := t0; k1 := k0 };
+        do { t0 := t2; k0 := k2 };
+      } else {
+        do { t1 := t2; k1 := k2 };
       };
+      do { t2 := t2_new; k2 := k2_new };
     };
 
     // new element
     let index3 = nat(from +% 3);
     var t3 = buffer[index3];
     var k3 = key(t3);
-    tv := t3;
-    kv := k3;
 
     if (len == 4) {
-      // kv < k2 without reassigning k's
-      if (kv < k2) {
-        t3 := t2;
-        if (kv < k1) {
+      // sort values without keys
+      if (k3 < k2) {
+        let t3_new = t2;
+        if (k3 < k1) {
           t2 := t1;
-          if (kv < k0) { t1 := t0; t0 := tv } else {
-            t1 := tv;
-          };
-        } else { t2 := tv };
+          if (k3 < k0) {
+            t1 := t0;
+            t0 := t3;
+          } else t1 := t3;
+        } else t2 := t3;
+        t3 := t3_new;
       };
 
       dest[index0] := t0;
@@ -86,40 +86,42 @@ module {
       return;
     };
 
-    // kv < k2 with reassigning k's
-    if (kv < k2) {
-      t3 := t2;
-      k3 := k2;
-      if (kv < k1) {
-        t2 := t1;
-        k2 := k1;
-        if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
-          t1 := tv;
-          k1 := kv;
+    // sort values and keys
+    if (k3 < k2) {
+      let t3_new = t2;
+      let k3_new = k2;
+      if (k3 < k1) {
+        do { t2 := t1; k2 := k1 };
+        if (k3 < k0) {
+          do { t1 := t0; k1 := k0 };
+          do { t0 := t3; k0 := k3 };
+        } else {
+          do { t1 := t3; k1 := k3 };
         };
-      } else { t2 := tv; k2 := kv };
+      } else { t2 := t3; k2 := k3 };
+      do { t3 := t3_new; k3 := k3_new };
     };
 
     // new element
     let index4 = nat(from +% 4);
     var t4 = buffer[index4];
     var k4 = key(t4);
-    tv := t4;
-    kv := k4;
 
     if (len == 5) {
-      // kv < k3 without reassigning k's
-      if (kv < k3) {
-        t4 := t3;
-        if (kv < k2) {
+      // sort values without keys
+      if (k4 < k3) {
+        let t4_new = t3;
+        if (k4 < k2) {
           t3 := t2;
-          if (kv < k1) {
+          if (k4 < k1) {
             t2 := t1;
-            if (kv < k0) { t1 := t0; t0 := tv } else {
-              t1 := tv;
-            };
-          } else { t2 := tv };
-        } else { t3 := tv };
+            if (k4 < k0) {
+              t1 := t0;
+              t0 := t4;
+            } else t1 := t4;
+          } else t2 := t4;
+        } else t3 := t4;
+        t4 := t4_new;
       };
 
       dest[index0] := t0;
@@ -130,47 +132,48 @@ module {
       return;
     };
 
-    // kv < k3 with reassigning k's
-    if (kv < k3) {
-      t4 := t3;
-      k4 := k3;
-      if (kv < k2) {
-        t3 := t2;
-        k3 := k2;
-        if (kv < k1) {
-          t2 := t1;
-          k2 := k1;
-          if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
-            t1 := tv;
-            k1 := kv;
+    // sort values and keys
+    if (k4 < k3) {
+      let t4_new = t3;
+      let k4_new = k3;
+      if (k4 < k2) {
+        do { t3 := t2; k3 := k2 };
+        if (k4 < k1) {
+          do { t2 := t1; k2 := k1 };
+          if (k4 < k0) {
+            do { t1 := t0; k1 := k0 };
+            do { t0 := t4; k0 := k4 };
+          } else {
+            do { t1 := t4; k1 := k4 };
           };
-        } else { t2 := tv; k2 := kv };
-      } else { t3 := tv; k3 := kv };
+        } else { t2 := t4; k2 := k4 };
+      } else { t3 := t4; k3 := k4 };
+      do { t4 := t4_new; k4 := k4_new };
     };
 
     // new element
     let index5 = nat(from +% 5);
     var t5 = buffer[index5];
     var k5 = key(t5);
-    tv := t5;
-    kv := k5;
 
     if (len == 6) {
-      // kv < k4 without reassigning k's
-      if (kv < k4) {
-        t5 := t4;
-        if (kv < k3) {
+      // sort values without keys
+      if (k5 < k4) {
+        let t5_new = t4;
+        if (k5 < k3) {
           t4 := t3;
-          if (kv < k2) {
+          if (k5 < k2) {
             t3 := t2;
-            if (kv < k1) {
+            if (k5 < k1) {
               t2 := t1;
-              if (kv < k0) { t1 := t0; t0 := tv } else {
-                t1 := tv;
-              };
-            } else { t2 := tv };
-          } else { t3 := tv };
-        } else { t4 := tv };
+              if (k5 < k0) {
+                t1 := t0;
+                t0 := t5;
+              } else t1 := t5;
+            } else t2 := t5;
+          } else t3 := t5;
+        } else t4 := t5;
+        t5 := t5_new;
       };
 
       dest[index0] := t0;
@@ -182,54 +185,54 @@ module {
       return;
     };
 
-    // kv < k4 with reassigning k's
-    if (kv < k4) {
-      t5 := t4;
-      k5 := k4;
-      if (kv < k3) {
-        t4 := t3;
-        k4 := k3;
-        if (kv < k2) {
-          t3 := t2;
-          k3 := k2;
-          if (kv < k1) {
-            t2 := t1;
-            k2 := k1;
-            if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
-              t1 := tv;
-              k1 := kv;
+    // sort values and keys
+    if (k5 < k4) {
+      let t5_new = t4;
+      let k5_new = k4;
+      if (k5 < k3) {
+        do { t4 := t3; k4 := k3 };
+        if (k5 < k2) {
+          do { t3 := t2; k3 := k2 };
+          if (k5 < k1) {
+            do { t2 := t1; k2 := k1 };
+            if (k5 < k0) {
+              do { t1 := t0; k1 := k0 };
+              do { t0 := t5; k0 := k5 };
+            } else {
+              do { t1 := t5; k1 := k5 };
             };
-          } else { t2 := tv; k2 := kv };
-        } else { t3 := tv; k3 := kv };
-      } else { t4 := tv; k4 := kv };
+          } else { t2 := t5; k2 := k5 };
+        } else { t3 := t5; k3 := k5 };
+      } else { t4 := t5; k4 := k5 };
+      do { t5 := t5_new; k5 := k5_new };
     };
 
     // new element
     let index6 = nat(from +% 6);
     var t6 = buffer[index6];
     var k6 = key(t6);
-    tv := t6;
-    kv := k6;
 
     if (len == 7) {
-      // kv < k5 without reassigning k's
-      if (kv < k5) {
-        t6 := t5;
-        if (kv < k4) {
+      // sort values without keys
+      if (k6 < k5) {
+        let t6_new = t5;
+        if (k6 < k4) {
           t5 := t4;
-          if (kv < k3) {
+          if (k6 < k3) {
             t4 := t3;
-            if (kv < k2) {
+            if (k6 < k2) {
               t3 := t2;
-              if (kv < k1) {
+              if (k6 < k1) {
                 t2 := t1;
-                if (kv < k0) { t1 := t0; t0 := tv } else {
-                  t1 := tv;
-                };
-              } else { t2 := tv };
-            } else { t3 := tv };
-          } else { t4 := tv };
-        } else { t5 := tv };
+                if (k6 < k0) {
+                  t1 := t0;
+                  t0 := t6;
+                } else t1 := t6;
+              } else t2 := t6;
+            } else t3 := t6;
+          } else t4 := t6;
+        } else t5 := t6;
+        t6 := t6_new;
       };
 
       dest[index0] := t0;
@@ -242,61 +245,58 @@ module {
       return;
     };
 
-    // kv < k5 with reassigning k's
-    if (kv < k5) {
-      t6 := t5;
-      k6 := k5;
-      if (kv < k4) {
-        t5 := t4;
-        k5 := k4;
-        if (kv < k3) {
-          t4 := t3;
-          k4 := k3;
-          if (kv < k2) {
-            t3 := t2;
-            k3 := k2;
-            if (kv < k1) {
-              t2 := t1;
-              k2 := k1;
-              if (kv < k0) { t1 := t0; k1 := k0; t0 := tv; k0 := kv } else {
-                t1 := tv;
-                k1 := kv;
-              };
-            } else { t2 := tv; k2 := kv };
-          } else { t3 := tv; k3 := kv };
-        } else { t4 := tv; k4 := kv };
-      } else { t5 := tv; k5 := kv };
+    // sort values and keys
+    if (k6 < k5) {
+      let t6_new = t5;
+      let k6_new = k5;
+      if (k6 < k4) {
+        do { t5 := t4; k5 := k4 };
+        if (k6 < k3) {
+          do { t4 := t3; k4 := k3 };
+          if (k6 < k2) {
+            do { t3 := t2; k3 := k2 };
+            if (k6 < k1) {
+              do { t2 := t1; k2 := k1 };
+              if (k6 < k0) {
+                do { t1 := t0; k1 := k0 };
+                do { t0 := t6; k0 := k6 };
+              } else { t1 := t6; k1 := k6 };
+            } else { t2 := t6; k2 := k6 };
+          } else { t3 := t6; k3 := k6 };
+        } else { t4 := t6; k4 := k6 };
+      } else { t5 := t6; k5 := k6 };
+      do { t6 := t6_new; k6 := k6_new };
     };
 
     // new element
     let index7 = nat(from +% 7);
     var t7 = buffer[index7];
     var k7 = key(t7);
-    tv := t7;
-    kv := k7;
 
     if (len == 8) {
-      // kv < k6 without reassigning k's
-      if (kv < k6) {
-        t7 := t6;
-        if (kv < k5) {
+      // sort values without keys
+      if (k7 < k6) {
+        let t7_new = t6;
+        if (k7 < k5) {
           t6 := t5;
-          if (kv < k4) {
+          if (k7 < k4) {
             t5 := t4;
-            if (kv < k3) {
+            if (k7 < k3) {
               t4 := t3;
-              if (kv < k2) {
+              if (k7 < k2) {
                 t3 := t2;
-                if (kv < k1) {
+                if (k7 < k1) {
                   t2 := t1;
-                  if (kv < k0) { t1 := t0; t0 := tv } else {
-                    t1 := tv;
-                  };
-                } else { t2 := tv };
-              } else { t3 := tv };
-            } else { t4 := tv };
-          } else { t5 := tv };
-        } else { t6 := tv };
+                  if (k7 < k0) {
+                    t1 := t0;
+                    t0 := t7;
+                  } else t1 := t7;
+                } else t2 := t7;
+              } else t3 := t7;
+            } else t4 := t7;
+          } else t5 := t7;
+        } else t6 := t7;
+        t7 := t7_new;
       };
 
       dest[index0] := t0;
