@@ -30,20 +30,15 @@ module {
     if (len == 3) {
       // sort values without keys
       if (k2 < k1) {
+        dest[index2] := t1;
         if (k2 < k0) {
-          dest[index0] := t2;
-          dest[index1] := t0;
-          dest[index2] := t1;
-        } else {
-          dest[index0] := t0;
-          dest[index1] := t2;
-          dest[index2] := t1;
-        };
-      } else {
-        dest[index0] := t0;
-        dest[index1] := t1;
-        dest[index2] := t2;
-      };
+          t1 := t0;
+          t0 := t2;
+        } else t1 := t2;
+      } else dest[index2] := t2;
+
+      dest[index1] := t1;
+      dest[index0] := t0;
       return;
     };
 
@@ -68,7 +63,7 @@ module {
     if (len == 4) {
       // sort values without keys
       if (k3 < k2) {
-        let t3_new = t2;
+        dest[index3] := t2;
         if (k3 < k1) {
           t2 := t1;
           if (k3 < k0) {
@@ -76,13 +71,11 @@ module {
             t0 := t3;
           } else t1 := t3;
         } else t2 := t3;
-        t3 := t3_new;
-      };
+      } else dest[index3] := t3;
 
-      dest[index0] := t0;
-      dest[index1] := t1;
       dest[index2] := t2;
-      dest[index3] := t3;
+      dest[index1] := t1;
+      dest[index0] := t0;
       return;
     };
 
@@ -110,7 +103,7 @@ module {
     if (len == 5) {
       // sort values without keys
       if (k4 < k3) {
-        let t4_new = t3;
+        dest[index4] := t3;
         if (k4 < k2) {
           t3 := t2;
           if (k4 < k1) {
@@ -121,14 +114,12 @@ module {
             } else t1 := t4;
           } else t2 := t4;
         } else t3 := t4;
-        t4 := t4_new;
-      };
+      } else dest[index4] := t4;
 
-      dest[index0] := t0;
-      dest[index1] := t1;
-      dest[index2] := t2;
       dest[index3] := t3;
-      dest[index4] := t4;
+      dest[index2] := t2;
+      dest[index1] := t1;
+      dest[index0] := t0;
       return;
     };
 
@@ -159,7 +150,7 @@ module {
     if (len == 6) {
       // sort values without keys
       if (k5 < k4) {
-        let t5_new = t4;
+        dest[index5] := t4;
         if (k5 < k3) {
           t4 := t3;
           if (k5 < k2) {
@@ -173,15 +164,13 @@ module {
             } else t2 := t5;
           } else t3 := t5;
         } else t4 := t5;
-        t5 := t5_new;
-      };
+      } else dest[index5] := t5;
 
-      dest[index0] := t0;
-      dest[index1] := t1;
-      dest[index2] := t2;
-      dest[index3] := t3;
       dest[index4] := t4;
-      dest[index5] := t5;
+      dest[index3] := t3;
+      dest[index2] := t2;
+      dest[index1] := t1;
+      dest[index0] := t0;
       return;
     };
 
@@ -215,7 +204,7 @@ module {
     if (len == 7) {
       // sort values without keys
       if (k6 < k5) {
-        let t6_new = t5;
+        dest[index6] := t5;
         if (k6 < k4) {
           t5 := t4;
           if (k6 < k3) {
@@ -232,16 +221,14 @@ module {
             } else t3 := t6;
           } else t4 := t6;
         } else t5 := t6;
-        t6 := t6_new;
-      };
+      } else dest[index6] := t6;
 
-      dest[index0] := t0;
-      dest[index1] := t1;
-      dest[index2] := t2;
-      dest[index3] := t3;
-      dest[index4] := t4;
       dest[index5] := t5;
-      dest[index6] := t6;
+      dest[index4] := t4;
+      dest[index3] := t3;
+      dest[index2] := t2;
+      dest[index1] := t1;
+      dest[index0] := t0;
       return;
     };
 
@@ -276,7 +263,7 @@ module {
     if (len == 8) {
       // sort values without keys
       if (k7 < k6) {
-        let t7_new = t6;
+        dest[index7] := t6;
         if (k7 < k5) {
           t6 := t5;
           if (k7 < k4) {
@@ -296,17 +283,15 @@ module {
             } else t4 := t7;
           } else t5 := t7;
         } else t6 := t7;
-        t7 := t7_new;
-      };
+      } else dest[index7] := t7;
 
-      dest[index0] := t0;
-      dest[index1] := t1;
-      dest[index2] := t2;
-      dest[index3] := t3;
-      dest[index4] := t4;
-      dest[index5] := t5;
       dest[index6] := t6;
-      dest[index7] := t7;
+      dest[index5] := t5;
+      dest[index4] := t4;
+      dest[index3] := t3;
+      dest[index2] := t2;
+      dest[index1] := t1;
+      dest[index0] := t0;
       return;
     };
     Prim.trap("insertionSortSmall for len > 8 is not implemented.");
