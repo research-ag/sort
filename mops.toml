@@ -1,10 +1,10 @@
 [package]
 name = "sort"
-version = "1.0.0"
-description = "Radix sort"
-repository = ""
-keywords = [ ]
-license = "MIT"
+version = "0.0.1"
+description = "Optimized sort algorithms"
+repository = "https://github.com/research-ag/sort"
+keywords = ["sort", "bucket", "radix", "merge" ]
+license = "Apache-2.0"
 
 [dependencies]
 core = "2.0.0"
