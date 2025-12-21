@@ -1,6 +1,6 @@
 # sort
 
-A high-performance, merge sort, radix sort and bucket sort implementations for Motoko. Each algorithm is **stable**, i.e. for equal elements their relarive order is preserved.
+An optimized merge sort, radix sort and bucket sort implementations for Motoko. Each algorithm is **stable**, i.e. for equal elements their relarive order is preserved.
 
 ## What is Radix Sort and Bucket Sort?
 
@@ -71,3 +71,14 @@ Sorts the given array in-place using a recursive merge sort. This implementation
 ## Performance
 
 This library is heavily optimized for performance. The benchmarks in the `bench/` directory show that it significantly outperforms the standard library's `Array.sort` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using insertion sort-like networks to minimize recursion overhead.
+
+## Copyright
+
+MR Research AG, 2025
+## Authors
+
+Main author: Andrii Stepanov (AStepanov25)
+Contributor: Timo Hanke (timohanke)
+## License
+
+Apache-2.0
