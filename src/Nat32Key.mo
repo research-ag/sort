@@ -9,7 +9,7 @@ import Radix "private/radix";
 module {
   public type Settings = {
     #default;
-    #maxInclusive : Nat32;
+    #maxKeyValue : Nat32;
   };
 
   /// Sorts an array in place using merge sort.
@@ -80,7 +80,7 @@ module {
       key,
       switch (settings) {
         case (#default) null;
-        case (#maxInclusive x) ?x;
+        case (#maxKeyValue x) ?x;
       },
       func n = Nat32.max(1, 30 - Nat32.min(Nat32.bitcountLeadingZero(n), 30)),
     );
@@ -121,7 +121,7 @@ module {
       key,
       switch (settings) {
         case (#default) null;
-        case (#maxInclusive x) ?x;
+        case (#maxKeyValue x) ?x;
       },
     );
   };
