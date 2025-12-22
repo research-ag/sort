@@ -39,7 +39,7 @@ let users : [var User] = [var
 ];
 
 // Sort the users by their 'id' field
-users.radixSort<User>(func(user) = user.id, #);
+users.radixSort<User>(func(user) = user.id, #default);
 
 // The 'users' array is now sorted in-place
 Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
@@ -76,23 +76,23 @@ This library is heavily optimized for performance. The benchmarks in the `bench/
 
 ### Instructions
 
-|                     |     100 |      1000 |      10000 |      12000 |      100000 |       1000000 |
-| :------------------ | ------: | --------: | ---------: | ---------: | ----------: | ------------: |
-| bucketSort          |  43_872 |   417_375 |  4_166_215 |  4_949_439 |  41_198_139 |   410_992_567 |
-| bucketSortWorstCase | 222_150 | 1_190_243 |  9_652_639 | 11_384_755 |  94_272_975 |   564_592_363 |
-| radixSort           |  66_411 | 1_036_675 |  8_819_675 | 10_462_169 |  63_920_821 |   526_519_803 |
-| mergeSort           |  66_577 | 1_036_841 | 15_445_103 | 18_543_192 | 193_077_729 | 2_318_504_400 |
-| VarArray            | 206_451 | 2_682_815 | 35_811_320 | 43_068_823 | 442_388_549 | 5_046_583_599 |
+|                     |     100 |      1000 |      10000 |      100000 |       1000000 |
+| :------------------ | ------: | --------: | ---------: | ----------: | ------------: |
+| bucketSort          |  43_872 |   417_375 |  4_166_215 |  41_198_139 |   410_992_567 |
+| bucketSortWorstCase | 222_150 | 1_190_243 |  9_652_639 |  94_272_975 |   564_592_363 |
+| radixSort           |  66_411 | 1_036_675 |  8_819_675 |  63_920_821 |   526_519_803 |
+| mergeSort           |  66_577 | 1_036_841 | 15_445_103 | 193_077_729 | 2_318_504_400 |
+| VarArray            | 206_451 | 2_682_815 | 35_811_320 | 442_388_549 | 5_046_583_599 |
 
 ### Garbage Collection
 
-|                     |      100 |      1000 |      10000 |      12000 |     100000 |   1000000 |
-| :------------------ | -------: | --------: | ---------: | ---------: | ---------: | --------: |
-| bucketSort          |    872 B |  5.24 KiB |   55.4 KiB |  63.21 KiB | 518.96 KiB |  4.82 MiB |
-| bucketSortWorstCase | 1.54 KiB |  8.27 KiB |  72.41 KiB |  80.23 KiB | 646.99 KiB |  4.88 MiB |
-| radixSort           |    536 B |  2.28 KiB |  47.44 KiB |  55.25 KiB |    647 KiB |  4.07 MiB |
-| mergeSort           |    536 B |  2.28 KiB |  19.86 KiB |  23.77 KiB | 195.64 KiB |  1.91 MiB |
-| VarArray            |    736 B |  4.23 KiB |  39.39 KiB |   47.2 KiB | 390.95 KiB |  3.82 MiB |
+|                     |      100 |      1000 |      10000 |     100000 |   1000000 |
+| :------------------ | -------: | --------: | ---------: | ---------: | --------: |
+| bucketSort          |    872 B |  5.24 KiB |   55.4 KiB | 518.96 KiB |  4.82 MiB |
+| bucketSortWorstCase | 1.54 KiB |  8.27 KiB |  72.41 KiB | 646.99 KiB |  4.88 MiB |
+| radixSort           |    536 B |  2.28 KiB |  47.44 KiB |    647 KiB |  4.07 MiB |
+| mergeSort           |    536 B |  2.28 KiB |  19.86 KiB | 195.64 KiB |  1.91 MiB |
+| VarArray            |    736 B |  4.23 KiB |  39.39 KiB | 390.95 KiB |  3.82 MiB |
 
 ## Copyright
 
