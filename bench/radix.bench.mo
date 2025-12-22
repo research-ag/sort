@@ -18,17 +18,15 @@ module {
     bench.name("Shift");
     bench.description("Nat64 bit operations.");
 
-    let rows = [
-      "8",
-      "9",
-      "10",
-      "11",
-      "12",
-      "13",
-      "14",
-      "15",
-      "16",
-    ];
+    let rows = Array.tabulate(
+      17,
+      func i {
+        let j = i / 2;
+        let k = i % 2;
+        var n = 2 ** (8 + j) + k * (2 ** (7 + j));
+        Nat.toText(n);
+      },
+    );
     let cols = [
       "2",
       "3",
@@ -44,7 +42,7 @@ module {
     let sourceArrays : [[Nat32]] = Array.tabulate(
       rows.size(),
       func(j) = Array.tabulate<Nat32>(
-        2 ** Option.unwrap(Nat.fromText(rows[j])),
+        Option.unwrap(Nat.fromText(rows[j])),
         func(i) = Nat64.toNat32(rng.nat64() % (2 ** 32)),
       ),
     );
