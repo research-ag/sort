@@ -72,12 +72,12 @@ module {
   ) {
     let n = to - from;
     debug assert n > 16;
-    debug assert bits < 32;
+    debug assert bits <= 31;
 
     let fullLength = n == Nat32.fromNat(array.size());
 
     let rBits = radixBits(n);
-    debug assert 1 <= rBits and rBits <= 31;
+    debug assert 1 <= rBits and rBits <= 30;
     let BITS_ADD = Nat32.min(rBits, 32 - bits);
     let SHIFT = 32 - BITS_ADD;
     let RADIX = nat(1 << BITS_ADD);
