@@ -11,7 +11,7 @@ module {
   ///
   /// `#default` means the no upper bound on key assumed.
   ///
-  /// `#max` means maximal values inclusive of keys of the array.
+  /// `#max` means maximal value inclusive of keys of the array.
   public type Settings = {
     #default;
     #max : Nat32;

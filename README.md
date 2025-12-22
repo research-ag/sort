@@ -41,21 +41,24 @@ let users : [var User] = [var
 // Sort the users by their 'id' field
 users.radixSort<User>(func(user) = user.id, #default);
 
+// users.bucketSort<User>(func(user) = user.id, #default);
+// users.mergeSort<User>(func (user) = user.id);
+
 // The 'users' array is now sorted in-place
 Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
 ```
 
 ## API
 
-### `func radixSort<T>(self : [var T], key : (implicit : T -> Nat32), max : ?Nat32)`
+### `func radixSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)`
 
 Sorts the given array in-place using an iterative radix sort algorithm. The algorithm is **stable**.
 
 *   `self`: The array to be sorted.
 *   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
-*   `max`: An optional `Nat32` value representing the maximum possible value of the key. Providing this value can optimize the sorting process by tailoring the number of bits to consider. If `null` is passed, the sort will consider all 32 bits of the key.
+*   `settings`: see below.
 
-### `func bucketSort<T>(self : [var T], key : (implicit : T -> Nat32), max : ?Nat32)`
+### `func bucketSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)`
 
 Sorts the given array in-place using a recursive bucket sort. This implementation is highly optimized for random data but may be slightly slower than `radixSort` in the general case. The algorithm is **stable**.
 
@@ -68,7 +71,14 @@ Sorts the given array in-place using a recursive merge sort. This implementation
 *   `self`: The array to be sorted.
 *   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
 
-Note: max `self.size()` value is `2 ** 32 - 1` for all the algorithms.
+### `type Settings`
+
+Sorting algorithms options.
+
+* `#default` means the no upper bound on key assumed.
+* `#max` means maximal value inclusive of keys of the array.
+
+**Note**: max `self.size()` value is `2 ** 32 - 1` for all the algorithms.
 
 ## Performance
 
