@@ -87,7 +87,7 @@ module {
         case (#default) null;
         case (#max x) ?x;
       },
-      func n = Nat32.max(1, 30 - Nat32.min(Nat32.bitcountLeadingZero(n), 30)),
+      func n = 30 - Nat32.min(Nat32.bitcountLeadingZero(n), 29),
     );
   };
 
