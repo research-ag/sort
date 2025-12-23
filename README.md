@@ -1,20 +1,20 @@
 # sort
 
-An optimized merge sort, radix sort and bucket sort implementations for Motoko. Each algorithm is **stable**, i.e. for equal elements their relative order is preserved.
+Optimized merge sort, radix sort, and bucket sort implementations for Motoko. Each algorithm is **stable**, i.e., for equal elements their relative order is preserved.
 
-## What is Radix Sort, Bucket Sort and Merge Sort?
+## What are Radix Sort, Bucket Sort, and Merge Sort?
 
-Radix sort is a non-comparative sorting algorithm that sorts integers by processing individual digits. It has a time complexity of `O(d * (n + b))`, where `d` is the number of digits, `n` is the number of elements, and `b` is the base of the number system. This makes it significantly faster than comparison-based sorting algorithms (like quicksort or mergesort) for sorting by `Nat32` keys (or other finite non-negative integer).
+Radix sort is a non-comparative sorting algorithm that sorts integers by processing individual digits. It has a time complexity of `O(d * (n + b))`, where `d` is the number of digits, `n` is the number of elements, and `b` is the base of the number system. This makes it significantly faster than comparison-based sorting algorithms (like quicksort or mergesort) for sorting by `Nat32` keys (or other finite non-negative integers).
 
-Bucket sort implementation splits data into `2 ** m` buckets where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size <= 8. For uniformly random keys it works in `O(n)` expected time.
+Bucket sort splits data into `2 ** m` buckets, where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size <= 8. For uniformly random keys, it works in `O(n)` expected time.
 
 Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves by repeatedly taking the smaller front element from each; this yields `O(n log n)` time in best, average, and worst cases, is stable, and (for array-based implementations) requires `O(n)` extra space.
 
 ### How to choose?
 
-* radixSort: best default for Nat32 keys; eqaully fast on average and worst cases.
-* bucketSort: best for uniformly random keys; worst-case slower.
-* mergeSort: use when you need exactly merge sort.
+* `radixSort`: Best default for `Nat32` keys; equally fast on average and worst cases.
+* `bucketSort`: Best for uniformly random keys; worst-case is slower.
+* `mergeSort`: Use when you specifically need merge sort.
 
 ## Install
 
@@ -24,7 +24,7 @@ mops add sort
 
 ## Usage
 
-The library provides three sorting functions: `mergeSort`, `radixSort` and `bucketSort`. For most use cases, `radixSort` is the recommended choice.
+The library provides three sorting functions: `mergeSort`, `radixSort`, and `bucketSort`. For most use cases, `radixSort` is the recommended choice.
 
 ```motoko
 import Sort "mo:sort/Nat32Key";
@@ -48,7 +48,7 @@ let users : [var User] = [var
 users.radixSort<User>(func(user) = user.id, #default);
 
 // users.bucketSort<User>(func(user) = user.id, #default);
-// users.mergeSort<User>(func (user) = user.id);
+// users.mergeSort<User>(func(user) = user.id);
 
 // The 'users' array is now sorted in-place
 Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
@@ -62,7 +62,7 @@ Sorts the given array in-place using an iterative radix sort algorithm. The algo
 
 *   `self`: The array to be sorted.
 *   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
-*   `settings`: see below.
+*   `settings`: See below.
 
 ### `func bucketSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)`
 
@@ -72,7 +72,7 @@ Sorts the given array in-place using a recursive bucket sort. This implementatio
 
 ### `func mergeSort<T>(self : [var T], key : (implicit : T -> Nat32))`
 
-Sorts the given array in-place using a recursive merge sort. This implementation allocates buffer of type `T` of `self.size() / 2`, not `self.size()`. The algorithm is **stable**.
+Sorts the given array in-place using a recursive merge sort. This implementation allocates a buffer of type `T` of size `self.size() / 2`, not `self.size()`. The algorithm is **stable**.
 
 *   `self`: The array to be sorted.
 *   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
@@ -81,10 +81,10 @@ Sorts the given array in-place using a recursive merge sort. This implementation
 
 Sorting algorithms options.
 
-* `#default` means the no upper bound on key assumed.
+* `#default` means no upper bound on key is assumed.
 * `#max` means maximal value inclusive of keys of the array.
 
-**Note**: max `self.size()` value is `2 ** 32 - 1` for all the algorithms.
+**Note**: Max `self.size()` value is `2 ** 32 - 1` for all the algorithms.
 
 ## Performance
 
@@ -109,6 +109,10 @@ This library is heavily optimized for performance. The benchmarks in the `bench/
 | radixSort           |    536 B |  2.28 KiB |  47.44 KiB |    647 KiB |  4.07 MiB |
 | mergeSort           |    536 B |  2.28 KiB |  19.86 KiB | 195.64 KiB |  1.91 MiB |
 | VarArray            |    736 B |  4.23 KiB |  39.39 KiB | 390.95 KiB |  3.82 MiB |
+
+## Contributing
+
+Contributions, bug reports, and feature requests are welcome! Please open an issue or pull request on [GitHub](https://github.com/research-ag/sort).
 
 ## Copyright
 

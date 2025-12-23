@@ -9,7 +9,7 @@ import Radix "private/radix";
 module {
   /// Sorting algorithms options.
   ///
-  /// `#default` means the no upper bound on key assumed.
+  /// `#default` means no upper bound on key is assumed.
   ///
   /// `#max` means maximal value inclusive of keys of the array.
   public type Settings = {
