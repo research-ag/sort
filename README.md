@@ -10,6 +10,12 @@ Bucket sort implementation splits data into `2 ** m` buckets where `m` is the ma
 
 Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves by repeatedly taking the smaller front element from each; this yields `O(n log n)` time in best, average, and worst cases, is stable, and (for array-based implementations) requires `O(n)` extra space.
 
+### How to choose?
+
+* radixSort: best default for Nat32 keys; eqaully fast on average and worst cases.
+* bucketSort: best for uniformly random keys; worst-case slower.
+* mergeSort: use when you need exactly merge sort.
+
 ## Install
 
 ```bash
