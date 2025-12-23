@@ -2,6 +2,7 @@ import Array "mo:core/Array";
 import Nat "mo:core/Nat";
 import Nat32 "mo:core/Nat32";
 import Nat64 "mo:core/Nat64";
+import Option "mo:core/Option";
 import Random "mo:core/Random";
 import Text "mo:core/Text";
 import VarArray "mo:core/VarArray";
@@ -15,8 +16,8 @@ module {
   public func init() : Bench.Bench {
     let bench = Bench.Bench();
 
-    bench.name("Shift");
-    bench.description("Nat64 bit operations.");
+    bench.name("Main");
+    bench.description("All the algorithms");
 
     let rows = [
       "bucketSort",
@@ -24,7 +25,7 @@ module {
       "radixSort",
       "Zhus",
       "mergeSort",
-      "VarArray"
+      "VarArray",
     ];
     let cols = [
       "100",
@@ -41,9 +42,9 @@ module {
     let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
 
     let sourceArrays : [[Nat32]] = Array.tabulate(
-      6,
+      cols.size(),
       func(j) = Array.tabulate<Nat32>(
-        [100, 1_000, 10_000, 12_000, 100_000, 1_000_000][j],
+        Option.unwrap(Nat.fromText(cols[j])),
         func(i) = Nat64.toNat32(rng.nat64() % (2 ** 32)),
       ),
     );
