@@ -16,8 +16,8 @@ module {
   public func init() : Bench.Bench {
     let bench = Bench.Bench();
 
-    bench.name("Shift");
-    bench.description("Nat64 bit operations.");
+    bench.name("Main");
+    bench.description("All the algorithms");
 
     let rows = [
       "bucketSort",
@@ -25,17 +25,15 @@ module {
       "radixSort",
       "Zhus",
       "mergeSort",
-      "VarArray"
+      "VarArray",
     ];
     let cols = [
-      "64",
-      "128",
-      "256",
-      "512",
-      "1024",
-      "1536",
-      "2048",
-      "3072",
+      "100",
+      "1000",
+      "10000",
+      "12000",
+      "100000",
+      "1000000",
     ];
 
     bench.rows(rows);
