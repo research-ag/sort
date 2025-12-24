@@ -1,6 +1,6 @@
 import Bench "mo:bench";
-import Radix "../src/private/radix-bench-template";
+import Radix "radix32.bench";
 
 module {
-  public func init() : Bench.Bench = Radix.init(23, 5, 16);
+  public func init() : Bench.Bench = Radix.initParams(23, 5, 16);
 };
