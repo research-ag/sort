@@ -16,6 +16,8 @@ Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the 
 * `bucketSort`: Best for uniformly random keys; worst-case is slower.
 * `mergeSort`: Has the lowest memory waste; only buffer of size `array.size() / 2` of type `T`.
 
+Provide `max` parameter in `settings` if there is known upper bound on key values for radix and bucket sorts, this will speed up the code.
+
 See the performance section below.
 
 ## Install
