@@ -4,19 +4,25 @@ Optimized merge sort, radix sort, and bucket sort implementations for Motoko. Ea
 
 ## What are Radix Sort, Bucket Sort, and Merge Sort?
 
+### Radix sort
+
 Radix sort is a non-comparative sorting algorithm that sorts integers by processing individual digits. It has a time complexity of `O(d * (n + b))`, where `d` is the number of digits, `n` is the number of elements, and `b` is the base of the number system. This makes it significantly faster than comparison-based sorting algorithms (like quicksort or mergesort) for sorting by `Nat32` keys (or other finite non-negative integers).
 
+### Bucket sort
+
 Bucket sort splits data into `2 ** m` buckets, where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size <= 8. For uniformly random keys, it works in `O(n)` expected time.
+
+### Merge sort
 
 Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves by repeatedly taking the smaller front element from each; this yields `O(n log n)` time in best, average, and worst cases, is stable, and (for array-based implementations) requires `O(n)` extra space.
 
 ### How to choose?
 
-* `radixSort`: Best default for `Nat32` keys; equally fast on average and worst cases.
+* `radixSort`: Recommened choice for `Nat32` keys; equally fast on average and worst cases.
 * `bucketSort`: Best for uniformly random keys; worst-case is slower.
-* `mergeSort`: Has the lowest memory waste; only buffer of size `array.size() / 2` of type `T`.
+* `mergeSort`: Has the lowest memory overhead; only buffer of size `array.size() / 2` of type `T`.
 
-Provide `max` parameter in `settings` if there is known upper bound on key values for radix and bucket sorts, this will speed up the code.
+Provide the `max` parameter in `settings` if there is a known upper bound on key values for radix and bucket sorts, this will speed up the code.
 
 See the performance section below.
 
@@ -83,16 +89,16 @@ Sorts the given array in-place using a recursive merge sort. This implementation
 
 ### `type Settings`
 
-Sorting algorithms options.
+Sorting algorithm options.
 
 * `#default` means no upper bound on key is assumed.
-* `#max` means maximal value inclusive of keys of the array.
+* `#max v` means `v` is an upper bound (inclusive) for the value of all keys occuring in the input array.
 
-**Note**: Max `self.size()` value is `2 ** 32 - 1` for all the algorithms.
+**Note**: The maximum allowed input size (`self.size()`) is `2 ** 32 - 1` for all the algorithms.
 
 ## Performance
 
-This library is heavily optimized for performance. The benchmarks in the `bench/` directory show that it significantly outperforms the standard library's `Array.sort` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using insertion-sort networks to minimize recursion overhead.
+This library is heavily optimized for performance. The benchmarks in the `bench/` directory show that it significantly outperforms the standard library's `Array.sort` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using unrolled stack-based insertion-sort code to minimize recursion overhead.
 
 ### Instructions
 
