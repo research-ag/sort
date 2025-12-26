@@ -23,12 +23,10 @@ module {
 
       let SHIFT = step * radixBits;
 
-      if (step == 0) {
-        if (steps == 1) {
-          for (x in self.vals()) counts[nat(key(x))] +%= 1;
-        } else {
-          for (x in self.vals()) counts[nat(key(x) & MASK)] +%= 1;
-        };
+      if (steps == 1) {
+        for (x in self.vals()) counts[nat(key(x))] +%= 1;
+      } else if (step == 0) {
+        for (x in self.vals()) counts[nat(key(x) & MASK)] +%= 1;
       } else if (step < (steps - 1 : Nat32)) {
         for (x in self.vals()) counts[nat((key(x) >> SHIFT) & MASK)] +%= 1;
       } else {
@@ -46,7 +44,14 @@ module {
 
       let (from, to) = if (step % 2 == 0) (self, buffer) else (buffer, self);
 
-      if (step == 0) {
+      if (steps == 1) {
+        for (x in from.vals()) {
+          let digit = nat(key(x));
+          let pos = counts[digit];
+          to[nat(pos)] := x;
+          counts[digit] := pos +% 1;
+        };
+      } else if (step == 0) {
         for (x in from.vals()) {
           let digit = nat(key(x) & MASK);
           let pos = counts[digit];
