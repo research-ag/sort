@@ -64,8 +64,14 @@ let users : [var User] = [var
 ];
 
 // Sort the users by their 'id' field
+
 users.radixSort<User>(func(user) = user.id, #default);
+
+// users.radixSort<User>(func(user) = user.id, #max 101);
+
 // users.bucketSort<User>(func(user) = user.id, #default);
+// users.bucketSort<User>(func(user) = user.id, #max 101);
+
 // users.mergeSort<User>(func(user) = user.id);
 
 // Or with implicit key
@@ -74,6 +80,10 @@ func key(u : User) : Nat32 = u.id;
 
 // users.radixSort<User>(#default);
 // users.bucketSort<User>(#default);
+
+// users.radixSort<User>(#max 101);
+// users.bucketSort<User>(#max 101);
+
 // users.mergeSort<User>();
 
 // The 'users' array is now sorted in-place
