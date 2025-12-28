@@ -21,7 +21,7 @@ This makes it significantly faster than comparison-based sorting algorithms (lik
 
 ### Bucket sort
 
-Bucket sort splits data into `2 ** m` buckets, where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size <= 8. For uniformly random keys, it works in `O(n)` expected time and `O(n)` expected memory complexity. The worst-case time complexity as well as the worst-case memory complexity is `O(steps * n)`, where `steps` is calculated in the same way as in radix sort (see above). 
+Bucket sort splits data into `2 ** m` buckets, where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size less than or equal to 8. For uniformly random keys, it works in `O(n)` expected time and `O(n)` expected memory complexity. The worst-case time complexity as well as the worst-case memory complexity is `O(steps * n)`, where `steps` is calculated in the same way as in radix sort (see above). 
 
 ### Merge sort
 
