@@ -1,3 +1,5 @@
+[![mops](https://oknww-riaaa-aaaam-qaf6a-cai.raw.ic0.app/badge/mops/sort)](https://mops.one/sort)
+
 # sort
 
 Optimized merge sort, radix sort, and bucket sort implementations for Motoko. Each algorithm is **stable**, i.e., for equal elements, their relative order is preserved.
