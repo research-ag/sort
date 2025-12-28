@@ -105,6 +105,7 @@ module {
     );
 
     let NBITS = 31 - Nat32.bitcountLeadingZero(Nat32.fromNat(n));
+    debug assert NBITS > 0;
     let STEPS = (totalBits + NBITS - 1) / NBITS;
 
     if (STEPS > 3) {

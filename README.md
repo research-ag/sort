@@ -4,17 +4,26 @@ Optimized merge sort, radix sort, and bucket sort implementations for Motoko. Ea
 
 ## What are Radix Sort, Bucket Sort, and Merge Sort?
 
+Currently we provide only sorting by `Nat32` key, but different key types as well as different sorting algorithms can be added later to the package.
+
 ### Radix sort
 
-Radix sort is a non-comparative sorting algorithm that sorts integers by processing individual digits. It has a time complexity of `O(d * (n + b))`, where `d` is the number of digits, `n` is the number of elements, and `b` is the base of the number system. This makes it significantly faster than comparison-based sorting algorithms (like quicksort or mergesort) for sorting by `Nat32` keys (or other finite non-negative integers).
+Radix sort is a non-comparative sorting algorithm that sorts integers by processing individual digits.
+
+It has a time complexity of `O(steps * (n + radix))` and memory-complexity `O(radix + n)`, where `steps` is the number of digits, `n` is the number of elements, and `radix` is the base of the number system.
+
+* We choose `radix` equal to maximal power of 2 less than or equal to `n` (with some stipluations, look at the code).
+* We choose `steps` to be minimal so that `max >= radix ** steps`, where `max` is either value from `settings` or `2 ** 32`.
+
+This makes it significantly faster than comparison-based sorting algorithms (like quicksort or mergesort) for sorting by `Nat32` keys (or other finite non-negative integers).
 
 ### Bucket sort
 
-Bucket sort splits data into `2 ** m` buckets, where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size <= 8. For uniformly random keys, it works in `O(n)` expected time.
+Bucket sort splits data into `2 ** m` buckets, where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size <= 8. For uniformly random keys, it works in `O(n)` expected time and `O(n)` expected memory complexity. The worst case time complexity as well as the worst memory complexity is `O(steps * n)` where `steps` calculated in the same way as in radix sort, see above. 
 
 ### Merge sort
 
-Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves by repeatedly taking the smaller front element from each; this yields `O(n log n)` time in best, average, and worst cases, is stable, and (for array-based implementations) requires `O(n)` extra space.
+Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves by repeatedly taking the smaller front element from each; this yields `O(n log n)` time in best, average, and worst cases, is stable, and (for array-based implementations) requires `O(n / 2)` extra space.
 
 ### How to choose?
 
@@ -56,9 +65,16 @@ let users : [var User] = [var
 
 // Sort the users by their 'id' field
 users.radixSort<User>(func(user) = user.id, #default);
-
 // users.bucketSort<User>(func(user) = user.id, #default);
 // users.mergeSort<User>(func(user) = user.id);
+
+// Or with implicit key
+
+func key(u : User) : Nat32 = u.id;
+
+// users.radixSort<User>(#default);
+// users.bucketSort<User>(#default);
+// users.mergeSort<User>();
 
 // The 'users' array is now sorted in-place
 Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
