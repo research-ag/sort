@@ -2,36 +2,75 @@
 
 # sort
 
-Optimized merge sort, radix sort, and bucket sort implementations for Motoko. Each algorithm is **stable**, i.e., for equal elements, their relative order is preserved.
+Optimized merge sort, radix sort, and bucket sort implementations for Motoko.
+All algorithms are **stable**, i.e. equal elements have their relative order preserved during sorting.
 
 ## What are Radix Sort, Bucket Sort, and Merge Sort?
 
-Currently, we provide only sorting by `Nat32` key, but different key types as well as additional sorting algorithms can be added to the package in the future.
+Currently, we provide only sorting by `Nat32` key, but different key types can be added by request.
+Additional sorting algorithms may also be added over time.
+
+Radix sort and bucket sort are counting based (not comparison based) and have complexity `O(n)`.
+They are significantly faster than comparison-based sorting algorithms like quicksort or mergesort but are only possible for key types that have "digits".
+
+Merge sort is comparison based and has complexity `O(n * log(n))`.
+It is possible for all key types that allow comparison,
+though this package only implements it for `Nat32` keys.
 
 ### Radix sort
 
-Radix sort is a non-comparative sorting algorithm that sorts integers by processing individual digits.
+Radix sort is a non-comparative sorting algorithm that sorts integers by processing some bits at a time (the "radix bits").
+Starting at the lower bits,
+it does multiple iterations over the data (called "steps") until all bits are processed.
 
-It has a time complexity of `O(steps * (n + radix))` and memory complexity of `O(radix + n)`, where `steps` is the number of digits, `n` is the number of elements, and `radix` is the base of the number system.
+Our implementation automatically chooses radix bits and steps based on the input size. 
+The time complexity of our algorithm is `O(n * steps)`.
+Memory use for scratch space and counting array is expected to be `3/2 * n` 
+but, due to increase in discrete steps, can vary between `n` and `2*n` in practice.
 
-* We choose `radix` as the maximal power of 2 less than or equal to `n` (with some stipulations; see the code for details).
-* We choose `steps` to be minimal so that `max >= radix ** steps`, where `max` is either the value from `settings` or `2 ** 32`.
+The user can specify the maximal occurring key value in the `settings` argument.
+By default the algorithm will assume that the entire Nat32 key space can occur.
+A lower maximal key value can speed up the algorithm and reduce memory because less key bits have to be processed.
 
-This makes it significantly faster than comparison-based sorting algorithms (like quicksort or mergesort) for sorting by `Nat32` keys (or other finite non-negative integers).
+Since all bits are processed equally, the time complexity does not depend on the distribution of keys.
+This is why radix sort is the recommended algorithm choice in the general case.
 
 ### Bucket sort
 
-Bucket sort splits data into `2 ** m` buckets, where `m` is the maximal value such that `2 ** m <= array.size()`, and sorts buckets recursively, using an unrolled insertion sort for buckets of size less than or equal to 8. For uniformly random keys, it works in `O(n)` expected time and `O(n)` expected memory complexity. The worst-case time complexity as well as the worst-case memory complexity is `O(steps * n)`, where `steps` is calculated in the same way as in radix sort (see above). 
+Bucket sort is a non-comparative sorting algorithm that sorts integers by sorting them into "buckets" first, and then recursively sorting the buckets.
+The sorting into buckets is based on some of the key's bits.
+Unlike radix sort, bucket sort starts with the highest bits first.
+
+Our implementation automatically chooses the number of buckets based on the input size.
+The time complexity of our algorithm is `O(n)`.
+Memory use for scratch space and counting array is expected to be around `3/2 * n` without recursion. 
+If recursion happens, for example because of non-uniform key input,
+then the memory use can increase depending on the bucket sizes.
+
+Bucket sort can be faster than radix sort because sorting small buckets is highly optimised with inlined code.
+This is most noticeable on input with uniformly distributed keys.
+Hence, bucket sort is the recommended algorithm choice in the case of uniformly distributed keys.
+
+Bucket sort can be slower than radix sort on highly non-uniform input, for example if all keys fall in the same bucket.
+
+The user can specify the maximal occurring key value in the `settings` argument.
+This is useful if the keys are uniformly distributed in their range
+but the range is smaller than the entire `Nat32` key space.
+By default the algorithm will assume that the entire `Nat32` key space can occur.
 
 ### Merge sort
 
-Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves by repeatedly taking the smaller front element from each. This yields `O(n log n)` time in best, average, and worst cases, is stable, and (for array-based implementations) requires `O(n / 2)` extra space.
+Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves.
+
+Our implementation has time complexity of `O(n log n)`.
+Memory use for scratch space is `n / 2`. 
 
 ### How to choose?
 
-* `radixSort`: Recommended choice for `Nat32` keys; equally fast on average and worst cases.
-* `bucketSort`: Best for uniformly random keys; worst-case is slower.
-* `mergeSort`: Has the lowest memory overhead; only a buffer of size `array.size() / 2` of type `T` is needed.
+* `radixSort`: Recommended choice for the general case (arbitrary key distribution).
+Equally fast on average and worst cases.
+* `bucketSort`: Recommended choice for uniformly distributed random keys. Worst-case is slower than radix sort.
+* `mergeSort`: Recommended choice if absolute lowest memory overhead is desired. 
 
 Provide the `max` parameter in `settings` if there is a known upper bound on key values for radix and bucket sorts; this will speed up the code.
 
@@ -126,7 +165,7 @@ Sorting algorithm options.
 
 ## Performance
 
-This library is heavily optimized for performance. The benchmarks in the `bench/` directory show that it significantly outperforms the standard library's `Array.sort` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using unrolled stack-based insertion-sort code to minimize recursion overhead.
+This library is heavily optimised for performance. The benchmarks in the `bench/` directory show that it significantly outperforms the core library's `Array.sort` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using unrolled stack-based insertion-sort code to minimize recursion overhead.
 
 ### Instructions
 
