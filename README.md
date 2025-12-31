@@ -134,7 +134,11 @@ Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bo
 
 ## API
 
-### `func radixSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)`
+### radixSort
+
+```motoko
+func radixSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)
+```
 
 Sorts the given array in-place using an iterative radix sort algorithm. The algorithm is **stable**.
 
@@ -142,27 +146,42 @@ Sorts the given array in-place using an iterative radix sort algorithm. The algo
 *   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
 *   `settings`: See below.
 
-### `func bucketSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)`
+### bucketSort
+
+```motoko
+func bucketSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)
+```
 
 Sorts the given array in-place using a recursive bucket sort. This implementation is highly optimized for random data but may be slightly slower than `radixSort` in the general case. The algorithm is **stable**.
 
 *   Parameters are the same as `radixSort`.
 
-### `func mergeSort<T>(self : [var T], key : (implicit : T -> Nat32))`
+### mergeSort
+
+```motoko
+func mergeSort<T>(self : [var T], key : (implicit : T -> Nat32))
+```
 
 Sorts the given array in-place using a recursive merge sort. This implementation allocates a buffer of type `T` of size `self.size() / 2`, not `self.size()`. The algorithm is **stable**.
 
 *   `self`: The array to be sorted.
 *   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
 
-### `type Settings`
+### Settings
 
+```motoko
+public type Settings = {
+  #default;
+  #max : Nat32;
+};
+```
+  
 Sorting algorithm options.
 
 * `#default` means no upper bound on key is assumed.
 * `#max v` means `v` is an upper bound (inclusive) for the value of all keys occurring in the input array.
 
-**Note**: The maximum allowed input size (`self.size()`) is `2 ** 32 - 1` for all the algorithms.
+**Note**: The maximum allowed input size, `self.size()`, is `2 ** 32 - 1` for all the algorithms.
 
 ## Performance
 
