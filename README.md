@@ -105,27 +105,25 @@ let users : [var User] = [var
 ];
 
 // Sort the users by their 'id' field
-
 users.radixSort<User>(func(user) = user.id, #default);
 
-// users.radixSort<User>(func(user) = user.id, #max 101);
+// Same with specifying the max key value
+users.radixSort<User>(func(user) = user.id, #max 101);
 
-// users.bucketSort<User>(func(user) = user.id, #default);
-// users.bucketSort<User>(func(user) = user.id, #max 101);
+// Same with bucket sort 
+users.bucketSort<User>(func(user) = user.id, #default);
+users.bucketSort<User>(func(user) = user.id, #max 101);
 
-// users.mergeSort<User>(func(user) = user.id);
+// Same with merge sort
+users.mergeSort<User>(func(user) = user.id);
 
-// Or with implicit key
-
+// All of the above with implicit key definition
 func key(u : User) : Nat32 = u.id;
-
-// users.radixSort<User>(#default);
-// users.bucketSort<User>(#default);
-
-// users.radixSort<User>(#max 101);
-// users.bucketSort<User>(#max 101);
-
-// users.mergeSort<User>();
+users.radixSort<User>(#default);
+users.bucketSort<User>(#default);
+users.radixSort<User>(#max 101);
+users.bucketSort<User>(#max 101);
+users.mergeSort<User>();
 
 // The 'users' array is now sorted in-place
 Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
