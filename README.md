@@ -1,4 +1,5 @@
 [![mops](https://oknww-riaaa-aaaam-qaf6a-cai.raw.ic0.app/badge/mops/sort)](https://mops.one/sort)
+[![documentation](https://oknww-riaaa-aaaam-qaf6a-cai.raw.ic0.app/badge/documentation/sort)](https://mops.one/sort/docs)
 
 # sort
 
