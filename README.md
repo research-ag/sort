@@ -11,10 +11,11 @@ All algorithms are **stable**, i.e. equal elements have their relative order pre
 Currently, we provide only sorting by `Nat32` key, but different key types can be added by request.
 Additional sorting algorithms may also be added over time.
 
-Radix sort and bucket sort are counting based (not comparison based) and have complexity `O(n)`.
-They are significantly faster than comparison-based sorting algorithms like quicksort or mergesort but are only possible for key types that have "digits".
+Radix sort and bucket sort are counting based (not comparison based) and have complexity `O(n * d)`
+where `n` is the input size and `d` is the key length in bits.
+They are faster than comparison-based sorting algorithms like quicksort or mergesort but are only possible for key types that have "digits".
 
-Merge sort is comparison based and has complexity `O(n * log(n))`.
+Merge sort is comparison based and has complexity `O(n log n)`.
 It is possible for all key types that allow comparison,
 though this package only implements it for `Nat32` keys.
 
@@ -43,8 +44,9 @@ The sorting into buckets is based on some of the key's bits.
 Unlike radix sort, bucket sort starts with the highest bits first.
 
 Our implementation automatically chooses the number of buckets based on the input size.
-The time complexity of our algorithm is `O(n)`.
-Memory use for scratch space and counting array is expected to be around `3/2 * n` without recursion. 
+The time complexity is the same as for radix sort, `O(n * steps)`,
+where "steps" now refers to the number of recursion levels.
+Memory use for scratch space and counting array is expected to be around `3/2 * n`.
 If recursion happens, for example because of non-uniform key input,
 then the memory use can increase depending on the bucket sizes.
 
