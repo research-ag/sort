@@ -1,12 +1,12 @@
-# Sort changelog
+# Changelog
 
 ## [0.0.2] - 2026-05-01
 
 ### Changed
 
-- Bumped `core` from `2.0.0` to `2.5.0`.
+- Updated `core` from `2.0.0` to `2.5.0`.
 - Bumped `bench` from `1.0.0` to `2.0.1`.
-- Bumped `moc` requirement to `1.6.0`.
+- Adjusted `moc` requirement to `1.6.0`.
 
 ## 0.0.1
 
