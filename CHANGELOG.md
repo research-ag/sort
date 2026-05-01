@@ -6,7 +6,7 @@
 
 - Updated `core` from `2.0.0` to `2.5.0`.
 - Bumped `bench` from `1.0.0` to `2.0.1`.
-- Adjusted `moc` requirement to `1.6.0`.
+- Updated `moc` from `1.0.0` to `1.6.0`.
 
 ## 0.0.1
 
