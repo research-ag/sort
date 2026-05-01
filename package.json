@@ -1,0 +1,28 @@
+{
+  "name": "sort",
+  "version": "1.0.0",
+  "description": "[![mops](https://oknww-riaaa-aaaam-qaf6a-cai.raw.ic0.app/badge/mops/sort)](https://mops.one/sort) [![documentation](https://oknww-riaaa-aaaam-qaf6a-cai.raw.ic0.app/badge/documentation/sort)](https://mops.one/sort/docs)",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/research-ag/sort.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/research-ag/sort/issues"
+  },
+  "homepage": "https://github.com/research-ag/sort#readme",
+  "devDependencies": {
+    "prettier": "^3.8.3",
+    "prettier-plugin-motoko": "^0.13.0"
+  }
+}

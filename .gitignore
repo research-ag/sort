@@ -1,1 +1,7 @@
 .mops
+node_modules/
+.bench/
+.agents/
+.idea/
+.junie/
+skills-lock.json
