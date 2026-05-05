@@ -1,1 +1,10 @@
 .mops
+node_modules/
+build/
+.idea/
+.vscode/
+.agents/
+.junie/
+.claude/
+.copilot/
+skills-lock.json

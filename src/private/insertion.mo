@@ -257,8 +257,8 @@ module {
 
     // new element
     let index7 = nat(from +% 7);
-    var t7 = buffer[index7];
-    var k7 = key(t7);
+    let t7 = buffer[index7];
+    let k7 = key(t7);
 
     if (len == 8) {
       // sort values without keys
@@ -616,8 +616,8 @@ module {
 
     // new element
     let index8 = nat(from +% 8);
-    var t8 = buffer[index8];
-    var k8 = key(t8);
+    let t8 = buffer[index8];
+    let k8 = key(t8);
 
     if (len == 9) {
       // sort values without keys
