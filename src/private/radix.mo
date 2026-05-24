@@ -1,3 +1,5 @@
+/// Internal radix-sort implementation used by `Nat32Key.radixSort`.
+
 import Nat32 "mo:core/Nat32";
 import VarArray "mo:core/VarArray";
 import Merge "merge";
@@ -7,6 +9,9 @@ import Prim "mo:⛔";
 module {
   let nat = Prim.nat32ToNat;
 
+  /// Sorts `self` in place by `key` using exactly `steps` LSD radix passes of width
+  /// `radixBits`. Requires `(steps - 1) * radixBits < totalBits <= steps * radixBits`,
+  /// where `totalBits` is the number of significant key bits.
   public func withStepsRadix<T>(self : [var T], key : T -> Nat32, totalBits : Nat32, steps : Nat32, radixBits : Nat32) {
     debug assert totalBits > 0;
     debug assert steps * radixBits >= totalBits;
@@ -78,6 +83,9 @@ module {
     if (steps % 2 != 0) for (i in self.keys()) self[i] := buffer[i];
   };
 
+  /// Sorts `self` in place by `key`. `max` is an optional inclusive upper bound on
+  /// keys; when supplied it lets the algorithm choose a smaller number of passes.
+  /// Falls back to `Merge.mergeSort` if more than three passes would be required.
   public func radixSort<T>(self : [var T], key : (implicit : T -> Nat32), max : ?Nat32) {
     let n = self.size();
     if (n <= 1) return;
