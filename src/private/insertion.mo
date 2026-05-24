@@ -263,8 +263,8 @@ module {
 
     // new element
     let index7 = nat(from +% 7);
-    var t7 = buffer[index7];
-    var k7 = key(t7);
+    let t7 = buffer[index7];
+    let k7 = key(t7);
 
     if (len == 8) {
       // sort values without keys
@@ -310,13 +310,13 @@ module {
   // sort from buffer to dest array at the given offset
   public func insertionSortSmallMove<T>(buffer : [var T], dest : [var T], key : T -> Nat32, from : Nat32, len : Nat32, offset : Nat32) {
     debug assert len > 0;
-    
+
     if (len == 1) {
       dest[nat(offset)] := buffer[nat(from)];
       return;
     };
 
-    // first two elements  
+    // first two elements
     let index0 = nat(from);
     let index1 = nat(from +% 1);
     var t0 = buffer[index0];
@@ -365,7 +365,8 @@ module {
       } else {
         do { t1 := t2; k1 := k2 };
       };
-      t2 := t2_new; k2 := k2_new;
+      t2 := t2_new;
+      k2 := k2_new;
     };
 
     // new element
@@ -399,7 +400,8 @@ module {
       if (k3 < k1) {
         do { t2 := t1; k2 := k1 };
         if (k3 < k0) { t1 := t0; k1 := k0; t0 := t3; k0 := k3 } else {
-          t1 := t3; k1 := k3;
+          t1 := t3;
+          k1 := k3;
         };
       } else { t2 := t3; k2 := k3 };
       do { t3 := t3_new; k3 := k3_new };
@@ -442,7 +444,8 @@ module {
         if (k4 < k1) {
           do { t2 := t1; k2 := k1 };
           if (k4 < k0) { t1 := t0; k1 := k0; t0 := t4; k0 := k4 } else {
-            t1 := t4; k1 := k4;
+            t1 := t4;
+            k1 := k4;
           };
         } else { t2 := t4; k2 := k4 };
       } else { t3 := t4; k3 := k4 };
@@ -492,7 +495,8 @@ module {
           if (k5 < k1) {
             do { t2 := t1; k2 := k1 };
             if (k5 < k0) { t1 := t0; k1 := k0; t0 := t5; k0 := k5 } else {
-              t1 := t5; k1 := k5;
+              t1 := t5;
+              k1 := k5;
             };
           } else { t2 := t5; k2 := k5 };
         } else { t3 := t5; k3 := k5 };
@@ -614,7 +618,8 @@ module {
               if (k7 < k1) {
                 do { t2 := t1; k2 := k1 };
                 if (k7 < k0) { t1 := t0; k1 := k0; t0 := t7; k0 := k7 } else {
-                  t1 := t7; k1 := k7;
+                  t1 := t7;
+                  k1 := k7;
                 };
               } else { t2 := t7; k2 := k7 };
             } else { t3 := t7; k3 := k7 };
@@ -626,8 +631,8 @@ module {
 
     // new element
     let index8 = nat(from +% 8);
-    var t8 = buffer[index8];
-    var k8 = key(t8);
+    let t8 = buffer[index8];
+    let k8 = key(t8);
 
     if (len == 9) {
       // sort values without keys

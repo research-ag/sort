@@ -124,4 +124,4 @@ module {
     let RADIX_BITS = (totalBits + STEPS - 1) / STEPS;
     withStepsRadix(self, key, totalBits, STEPS, RADIX_BITS);
   };
-}
+};

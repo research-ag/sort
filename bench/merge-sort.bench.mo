@@ -37,7 +37,7 @@ module {
       "320",
       "640",
       "1280",
-      "2048"
+      "2048",
     ];
 
     bench.rows(rows);
@@ -68,17 +68,16 @@ module {
         switch (row) {
           case ("merge") for (a in arrays[0][ci].vals()) mergeSort(a, func i = i);
           case ("merge16") {
-            let input = arrays[1][ci]; 
+            let input = arrays[1][ci];
             let n = input[0].size();
-            if (8 < n and n <= 16) { 
-              for (a in input.vals())
-              mergeSort16<Nat32>(
+            if (8 < n and n <= 16) {
+              for (a in input.vals()) mergeSort16<Nat32>(
                 a,
                 buffer,
                 func i = i,
                 0 : Nat32,
                 Nat32.fromNat(n),
-                false
+                false,
               );
             };
           };

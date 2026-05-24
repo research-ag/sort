@@ -1,22 +1,20 @@
 [package]
 name = "sort"
-version = "0.0.1"
+version = "0.0.2"
 description = "Optimized sort algorithms"
 repository = "https://github.com/research-ag/sort"
-keywords = ["sort", "bucket", "radix", "merge" ]
+keywords = [ "sort", "bucket", "radix", "merge" ]
 license = "Apache-2.0"
 
 [dependencies]
-core = "2.0.0"
+core = "2.5.0"
 
 [dev-dependencies]
-bench = "1.0.0"
+bench = "2.0.1"
 zhus = "https://github.com/ZhenyaUsenko/motoko-sort#main@73128b8bc6fa35e57ee6a45ba4cd18be33df3834"
 
 [requirements]
-moc = "1.0.0"
+moc = "1.6.0"
 
 [toolchain]
-moc = "1.0.0"
-pocket-ic = "9.0.3"
-
+moc = "1.8.2"
