@@ -73,7 +73,7 @@ module {
     let fullLength = n == Nat32.fromNat(array.size());
 
     let r = radixBitsFunc(n);
-    debug assert 1 <= r and r <= 30;
+    debug assert 1 <= r and r <= 31;
     let radixBits = Nat32.min(r, bits);
     let radix = nat(1 << radixBits);
 
