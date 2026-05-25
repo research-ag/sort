@@ -1,3 +1,5 @@
+/// Internal merge sort specialised for ranges of size 9 to 16.
+
 import Prim "mo:⛔";
 
 import { insertionSortSmall } "./insertion";
@@ -38,6 +40,9 @@ module {
     };
   };
 
+  /// Sorts the slice `array[from..to]` by `key`, where `to - from` must be in `(8, 16]`.
+  /// If `move` is `true`, the sorted output is written to `buffer[from..to]`; otherwise it
+  /// is written back to `array[from..to]` in place. `array` and `buffer` must be distinct.
   // should be 8 < size <= 16
   // if move == true: sort from array to buffer
   // if move == false: sort in place in array

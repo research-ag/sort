@@ -4,95 +4,86 @@ import Nat32 "mo:core/Nat32";
 import Nat64 "mo:core/Nat64";
 import Option "mo:core/Option";
 import Random "mo:core/Random";
-import Text "mo:core/Text";
 import VarArray "mo:core/VarArray";
 import Prim "mo:prim";
-import Bench "mo:bench";
+import Bench "mo:bench-helper";
 import Zhus "mo:zhus/sort";
 
 import Sort "../src/Nat32Key";
 
 module {
-  public func init() : Bench.Bench {
-    let bench = Bench.Bench();
+  public func init() : Bench.V1 {
+    let schema : Bench.Schema = {
+      name = "Main";
+      description = "All the algorithms";
+      rows = [
+        "bucketSort",
+        "bucketSortWorstCase",
+        "radixSort",
+        "Zhus",
+        "mergeSort",
+        "VarArray",
+      ];
+      cols = [
+        "100",
+        "1000",
+        "10000",
+        "12000",
+        "100000",
+        "1000000",
+      ];
+    };
 
-    bench.name("Main");
-    bench.description("All the algorithms");
-
-    let rows = [
-      "bucketSort",
-      "bucketSortWorstCase",
-      "radixSort",
-      "Zhus",
-      "mergeSort",
-      "VarArray",
-    ];
-    let cols = [
-      "100",
-      "1000",
-      "10000",
-      "12000",
-      "100000",
-      "1000000",
-    ];
-
-    bench.rows(rows);
-    bench.cols(cols);
-
+    // Precompute one random `[Nat32]` per column size, used by every row
+    // except `bucketSortWorstCase` which sorts an all-zero array.
     let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
-
     let sourceArrays : [[Nat32]] = Array.tabulate(
-      cols.size(),
-      func(j) = Array.tabulate<Nat32>(
-        Option.unwrap(Nat.fromText(cols[j])),
-        func(i) = Nat64.toNat32(rng.nat64() % (2 ** 32)),
+      schema.cols.size(),
+      func(ci) = Array.tabulate<Nat32>(
+        Option.unwrap(Nat.fromText(schema.cols[ci])),
+        func(_) = Nat64.toNat32(rng.nat64() % (2 ** 32)),
       ),
     );
 
-    let routines : [() -> ()] = Array.tabulate<() -> ()>(
-      rows.size() * cols.size(),
-      func(i) {
-        let row : Nat = i % rows.size();
-        let col : Nat = i / rows.size();
-
-        switch (row) {
-          case (0) {
-            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
-            func() = Sort.bucketSort<Nat32>(varSource, func i = i, #default);
+    // routines[ri][ci] : a captured closure that performs exactly one sort.
+    // Each closure has its own mutable copy of the input so the surrounding
+    // benchmark runner can call it without worrying about cross-cell aliasing.
+    let routines : [[() -> ()]] = Array.tabulate<[() -> ()]>(
+      schema.rows.size(),
+      func(ri) = Array.tabulate<() -> ()>(
+        schema.cols.size(),
+        func(ci) {
+          switch (ri) {
+            case (0) {
+              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
+              func() = Sort.bucketSort<Nat32>(varSource, func i = i, #default);
+            };
+            case (1) {
+              let varSource = VarArray.repeat<Nat32>(0, sourceArrays[ci].size());
+              func() = Sort.bucketSort<Nat32>(varSource, func i = i, #default);
+            };
+            case (2) {
+              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
+              func() = Sort.radixSort<Nat32>(varSource, func i = i, #default);
+            };
+            case (3) {
+              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
+              func() = Zhus.sortNat32<Nat32>(varSource, func i = i);
+            };
+            case (4) {
+              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
+              func() = Sort.mergeSort<Nat32>(varSource, func i = i);
+            };
+            case (5) {
+              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
+              func() = VarArray.sortInPlace<Nat32>(varSource, Nat32.compare);
+            };
+            case (_) Prim.trap("Row not implemented");
           };
-          case (1) {
-            let varSource = VarArray.repeat<Nat32>(0, sourceArrays[col].size());
-            func() = Sort.bucketSort<Nat32>(varSource, func i = i, #default);
-          };
-          case (2) {
-            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
-            func() = Sort.radixSort<Nat32>(varSource, func i = i, #default);
-          };
-          case (3) {
-            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
-            func() = Zhus.sortNat32<Nat32>(varSource, func i = i);
-          };
-          case (4) {
-            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
-            func() = Sort.mergeSort<Nat32>(varSource, func i = i);
-          };
-          case (5) {
-            let varSource = Array.toVarArray<Nat32>(sourceArrays[col]);
-            func() = VarArray.sortInPlace<Nat32>(varSource, Nat32.compare);
-          };
-          case (_) Prim.trap("Row not implemented");
-        };
-      },
+        },
+      ),
     );
 
-    bench.runner(
-      func(row, col) {
-        let ?ri = Array.indexOf<Text>(rows, Text.equal, row) else Prim.trap("Unknown row");
-        let ?ci = Array.indexOf<Text>(cols, Text.equal, col) else Prim.trap("Unknown column");
-        routines[ci * rows.size() + ri]();
-      }
-    );
-
-    bench;
+    Bench.V1(schema, func(ri : Nat, ci : Nat) = routines[ri][ci]());
   };
 };

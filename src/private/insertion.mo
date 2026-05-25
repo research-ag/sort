@@ -1,8 +1,14 @@
+/// Internal hand-unrolled insertion sort for very small ranges (length 3 to 9),
+/// used as the bottom case of the merge / bucket / radix sorts.
+
 import Prim "mo:⛔";
 
 module {
   let nat = Prim.nat32ToNat;
 
+  /// Sorts the slice `buffer[from..from+len]` (where `3 <= len <= 8`) by `key`,
+  /// writing the result into `dest[from..from+len]`. Pass `dest = buffer` to sort
+  /// in place. Traps if `len > 8`.
   // Must have: 3 <= len <= 8
   // Use dest = buffer when sorting in place
 
@@ -297,6 +303,10 @@ module {
     Prim.trap("insertionSortSmall for len > 8 is not implemented.");
   };
 
+  /// Sorts the slice `buffer[from..from+len]` (where `1 <= len <= 9`) by `key`,
+  /// writing the result into `dest[offset..offset+len]`. `buffer` and `dest` may
+  /// alias as long as the source and destination ranges do not overlap. Traps if
+  /// `len > 9`.
   // sort from buffer to dest array at the given offset
   public func insertionSortSmallMove<T>(buffer : [var T], dest : [var T], key : T -> Nat32, from : Nat32, len : Nat32, offset : Nat32) {
     debug assert len > 0;

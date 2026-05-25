@@ -1,3 +1,5 @@
+/// Internal merge-sort implementation used by `Nat32Key.mergeSort`.
+
 import Nat32 "mo:core/Nat32";
 import VarArray "mo:core/VarArray";
 import Prim "mo:⛔";
@@ -7,6 +9,8 @@ import { insertionSortSmall; insertionSortSmallMove } "./insertion";
 module {
   let nat = Prim.nat32ToNat;
 
+  /// Sorts `array` in place by `key` using a top-down merge sort with an
+  /// auxiliary buffer of `array.size() / 2` elements.
   public func mergeSort<T>(array : [var T], key : T -> Nat32) {
     let size = Nat32.fromNat(array.size());
     if (size <= 1) return;

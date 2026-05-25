@@ -1,3 +1,5 @@
+/// Internal bucket-sort implementation used by `Nat32Key.bucketSort`.
+
 import Nat32 "mo:core/Nat32";
 import VarArray "mo:core/VarArray";
 import Prim "mo:⛔";
@@ -8,6 +10,8 @@ import { mergeSort16 } "./merge16";
 module {
   let nat = Prim.nat32ToNat;
 
+  /// Sorts `array` in place by `key`. `max` is an optional inclusive upper bound on keys;
+  /// `radixBitsFunc n` chooses the per-pass radix width (must satisfy `1 <= result <= 31`).
   // should be 1 <= radixBitsFunc n <= 31 for all n
   public func bucketSort<T>(array : [var T], key : T -> Nat32, max : ?Nat32, radixBitsFunc : Nat32 -> Nat32) {
     let n = Nat32.fromNat(array.size());
@@ -69,7 +73,7 @@ module {
     let fullLength = n == Nat32.fromNat(array.size());
 
     let r = radixBitsFunc(n);
-    debug assert 1 <= r and r <= 30;
+    debug assert 1 <= r and r <= 31;
     let radixBits = Nat32.min(r, bits);
     let radix = nat(1 << radixBits);
 

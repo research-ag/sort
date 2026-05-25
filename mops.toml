@@ -10,11 +10,11 @@ license = "Apache-2.0"
 core = "2.5.0"
 
 [dev-dependencies]
-bench = "2.0.1"
 zhus = "https://github.com/ZhenyaUsenko/motoko-sort#main@73128b8bc6fa35e57ee6a45ba4cd18be33df3834"
+bench-helper = "0.0.3"
 
 [requirements]
-moc = "1.6.0"
+moc = "1.0.0"
 
 [toolchain]
-moc = "1.7.0"
+moc = "1.8.2"
