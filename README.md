@@ -216,6 +216,16 @@ This library is heavily optimized for performance. The benchmarks in the `bench/
 
 Contributions, bug reports, and feature requests are welcome! Please open an issue or pull request on [GitHub](https://github.com/research-ag/sort).
 
+## Formatting
+
+This repository uses [Prettier](https://prettier.io/) with the [Motoko plugin](https://github.com/dfinity/prettier-plugin-motoko) for code formatting.
+
+To format the code, run:
+
+```bash
+npx -y prettier --plugin prettier-plugin-motoko --write '**/*.{mo,json,md}'
+```
+
 ## Copyright
 
 MR Research AG, 2025
