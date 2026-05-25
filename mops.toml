@@ -14,7 +14,7 @@ zhus = "https://github.com/ZhenyaUsenko/motoko-sort#main@73128b8bc6fa35e57ee6a45
 bench-helper = "0.0.3"
 
 [requirements]
-moc = "1.6.0"
+moc = "1.0.0"
 
 [toolchain]
 moc = "1.8.2"
