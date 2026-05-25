@@ -25,9 +25,9 @@ Radix sort is a non-comparative sorting algorithm that sorts integers by process
 Starting at the lower bits,
 it does multiple iterations over the data (called "steps") until all bits are processed.
 
-Our implementation automatically chooses radix bits and steps based on the input size. 
+Our implementation automatically chooses radix bits and steps based on the input size.
 The time complexity of our algorithm is `O(n * steps)`.
-Memory use for scratch space and counting array is expected to be `3/2 * n` 
+Memory use for scratch space and counting array is expected to be `3/2 * n`
 but, due to increase in discrete steps, can vary between `n` and `2*n` in practice.
 
 The user can specify the maximal occurring key value in the `settings` argument.
@@ -66,14 +66,14 @@ By default the algorithm will assume that the entire `Nat32` key space can occur
 Merge sort is a divide-and-conquer sorting algorithm that repeatedly splits the input into two halves, recursively sorts each half, and then merges the two sorted halves.
 
 Our implementation has time complexity of `O(n log n)`.
-Memory use for scratch space is `n / 2`. 
+Memory use for scratch space is `n / 2`.
 
 ### How to choose?
 
-* `radixSort`: Recommended choice for the general case (arbitrary key distribution).
-Equally fast on average and worst cases.
-* `bucketSort`: Recommended choice for uniformly distributed random keys. Worst-case is slower than radix sort.
-* `mergeSort`: Recommended choice if absolute lowest memory overhead is desired. 
+- `radixSort`: Recommended choice for the general case (arbitrary key distribution).
+  Equally fast on average and worst cases.
+- `bucketSort`: Recommended choice for uniformly distributed random keys. Worst-case is slower than radix sort.
+- `mergeSort`: Recommended choice if absolute lowest memory overhead is desired.
 
 Provide the `max` parameter in `settings` if there is a known upper bound on key values for radix and bucket sorts; this will speed up the code.
 
@@ -100,8 +100,8 @@ type User = {
   name : Text;
 };
 
-let users : [var User] = [var
-  { id = 101; name = "Alice" },
+let users : [var User] = [
+  var { id = 101; name = "Alice" },
   { id = 22; name = "Bob" },
   { id = 75; name = "Charlie" },
   { id = 5; name = "David" },
@@ -113,7 +113,7 @@ users.radixSort<User>(func(user) = user.id, #default);
 // Same with specifying the max key value
 users.radixSort<User>(func(user) = user.id, #max 101);
 
-// Same with bucket sort 
+// Same with bucket sort
 users.bucketSort<User>(func(user) = user.id, #default);
 users.bucketSort<User>(func(user) = user.id, #max 101);
 
@@ -129,7 +129,8 @@ users.bucketSort<User>(#max 101);
 users.mergeSort<User>();
 
 // The 'users' array is now sorted in-place
-Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"]
+Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bob", "Charlie", "Alice"];
+
 ```
 
 ## API
@@ -137,35 +138,38 @@ Array.fromVarArray(VarArray.map(users, func(user) = user.name)) == ["David", "Bo
 ### radixSort
 
 ```motoko
-func radixSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)
+func radixSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings);
+
 ```
 
 Sorts the given array in-place using an iterative radix sort algorithm. The algorithm is **stable**.
 
-*   `self`: The array to be sorted.
-*   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
-*   `settings`: See below.
+- `self`: The array to be sorted.
+- `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
+- `settings`: See below.
 
 ### bucketSort
 
 ```motoko
-func bucketSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings)
+func bucketSort<T>(self : [var T], key : (implicit : T -> Nat32), settings : Settings);
+
 ```
 
 Sorts the given array in-place using a recursive bucket sort. This implementation is highly optimized for random data but may be slightly slower than `radixSort` in the general case. The algorithm is **stable**.
 
-*   Parameters are the same as `radixSort`.
+- Parameters are the same as `radixSort`.
 
 ### mergeSort
 
 ```motoko
 func mergeSort<T>(self : [var T], key : (implicit : T -> Nat32))
+
 ```
 
 Sorts the given array in-place using a recursive merge sort. This implementation allocates a buffer of type `T` of size `self.size() / 2`, not `self.size()`. The algorithm is **stable**.
 
-*   `self`: The array to be sorted.
-*   `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
+- `self`: The array to be sorted.
+- `key`: A function that extracts a `Nat32` key from an element of the array. The array will be sorted based on this key.
 
 ### Settings
 
@@ -174,12 +178,13 @@ public type Settings = {
   #default;
   #max : Nat32;
 };
+
 ```
-  
+
 Sorting algorithm options.
 
-* `#default` means no upper bound on key is assumed.
-* `#max v` means `v` is an upper bound (inclusive) for the value of all keys occurring in the input array.
+- `#default` means no upper bound on key is assumed.
+- `#max v` means `v` is an upper bound (inclusive) for the value of all keys occurring in the input array.
 
 **Note**: The maximum allowed input size, `self.size()`, is `2 ** 32 - 1` for all the algorithms.
 
@@ -199,17 +204,27 @@ This library is heavily optimized for performance. The benchmarks in the `bench/
 
 ### Garbage Collection
 
-|                     |      100 |      1000 |      10000 |     100000 |   1000000 |
-| :------------------ | -------: | --------: | ---------: | ---------: | --------: |
-| bucketSort          |    872 B |  5.24 KiB |   55.4 KiB | 518.96 KiB |  4.82 MiB |
-| bucketSortWorstCase | 1.54 KiB |  8.27 KiB |  72.41 KiB | 646.99 KiB |  4.88 MiB |
-| radixSort           |    536 B |  2.28 KiB |  47.44 KiB |    647 KiB |  4.07 MiB |
-| mergeSort           |    536 B |  2.28 KiB |  19.86 KiB | 195.64 KiB |  1.91 MiB |
-| VarArray            |    736 B |  4.23 KiB |  39.39 KiB | 390.95 KiB |  3.82 MiB |
+|                     |      100 |     1000 |     10000 |     100000 |  1000000 |
+| :------------------ | -------: | -------: | --------: | ---------: | -------: |
+| bucketSort          |    872 B | 5.24 KiB |  55.4 KiB | 518.96 KiB | 4.82 MiB |
+| bucketSortWorstCase | 1.54 KiB | 8.27 KiB | 72.41 KiB | 646.99 KiB | 4.88 MiB |
+| radixSort           |    536 B | 2.28 KiB | 47.44 KiB |    647 KiB | 4.07 MiB |
+| mergeSort           |    536 B | 2.28 KiB | 19.86 KiB | 195.64 KiB | 1.91 MiB |
+| VarArray            |    736 B | 4.23 KiB | 39.39 KiB | 390.95 KiB | 3.82 MiB |
 
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome! Please open an issue or pull request on [GitHub](https://github.com/research-ag/sort).
+
+## Formatting
+
+This repository uses [Prettier](https://prettier.io/) with the [Motoko plugin](https://github.com/dfinity/prettier-plugin-motoko) for code formatting.
+
+To format the code, run:
+
+```bash
+npx -y prettier --plugin prettier-plugin-motoko --write '**/*.{mo,json,md}'
+```
 
 ## Copyright
 

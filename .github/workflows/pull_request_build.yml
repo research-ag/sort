@@ -20,3 +20,4 @@ jobs:
 
       - name: Run mops test
         run: mops test
+
