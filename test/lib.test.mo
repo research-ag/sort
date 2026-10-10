@@ -2,6 +2,7 @@ import Array "mo:core/Array";
 import Int "mo:core/Int";
 import Nat "mo:core/Nat";
 import Nat32 "mo:core/Nat32";
+import Nat64 "mo:core/Nat64";
 import Random "mo:core/Random";
 import Runtime "mo:core/Runtime";
 import Sort "../src/Nat32Key";
@@ -13,11 +14,11 @@ import { insertionSortSmall } "../src/private/insertion";
 import { mergeSort16 } "../src/private/merge16";
 
 func testOnArray(array : [var (Nat32, Nat)], f : [var (Nat32, Nat)] -> ()) {
-  let a = VarArray.clone(array);
-  let b = VarArray.clone(array);
+  let a = array.clone();
+  let b = array.clone();
 
   f(a);
-  VarArray.sortInPlace(b, func(x, y) = Nat32.compare(x.0, y.0));
+  b.sortInPlace(func(x, y) = Nat32.compare(x.0, y.0));
 
   for (i in a.keys()) {
     if (a[i] != b[i]) {
@@ -31,13 +32,13 @@ func key(value : (Nat32, Nat)) : Nat32 = value.0;
 func testSort(n : Nat, mod : Nat64, sort : ([var (Nat32, Nat)], Nat32) -> ()) {
   let rng : Random.Random = Random.seed(0x5f5f5f5f5f5f5f5f);
 
-  let a = VarArray.tabulate<(Nat32, Nat)>(n, func(i) = (Nat32.fromNat64(rng.nat64Range(0, mod)), i));
+  let a = VarArray.tabulate<(Nat32, Nat)>(n, func(i) = (rng.nat64Range(0, mod).toNat32(), i));
   var max : Nat32 = 0;
-  for (x in a.vals()) max := Nat32.max(max, x.0);
-  let b = VarArray.clone(a);
+  for (x in a.values()) max := Nat32.max(max, x.0);
+  let b = a.clone();
 
   sort(a, max);
-  VarArray.sortInPlace(b, func(x, y) = Nat32.compare(x.0, y.0));
+  b.sortInPlace(func(x, y) = Nat32.compare(x.0, y.0));
 
   for (i in Nat.range(0, n)) {
     if (a[i] != b[i]) {
@@ -57,7 +58,7 @@ func testMergeSort16(n : Nat) {
         buffer,
         func(x, _) = x,
         0 : Nat32,
-        Nat32.fromNat(n),
+        n.toNat32(),
         false,
       );
     },
@@ -72,7 +73,7 @@ func testMergeSort16(n : Nat) {
         bufferLong,
         func(x, _) = x,
         0 : Nat32,
-        Nat32.fromNat(n),
+        n.toNat32(),
         true,
       );
       for (i in array.keys()) array[i] := bufferLong[i];
@@ -128,13 +129,13 @@ func next_permutation(p : [var Nat32]) : Bool {
 };
 
 func testInsertionSortSmall(n : Nat) {
-  let p = VarArray.tabulate<Nat32>(n, func i = Nat32.fromNat(i));
-  let id = Array.tabulate<Nat32>(n, func i = Nat32.fromNat(i));
+  let p = VarArray.tabulate<Nat32>(n, func i = i.toNat32());
+  let id = Array.tabulate<Nat32>(n, func i = i.toNat32());
   loop {
     do {
-      let pp = VarArray.clone(p);
-      insertionSortSmall(pp, pp, func x = x, 0 : Nat32, Nat32.fromNat(n));
-      if (Array.fromVarArray<Nat32>(pp) != id) Runtime.trap(debug_show pp);
+      let pp = p.clone();
+      insertionSortSmall(pp, pp, func x = x, 0 : Nat32, n.toNat32());
+      if (pp.toArray() != id) Runtime.trap(debug_show pp);
     };
   } while (next_permutation(p));
 };
@@ -172,17 +173,17 @@ func tests() {
   ];
   let radixBits : [Nat32] = [1, 2, 3, 16];
 
-  for (f in fs.vals()) {
-    for (mod in mods.vals()) {
-      for (n in ns.vals()) if (n <= 1000) {
+  for (f in fs.values()) {
+    for (mod in mods.values()) {
+      for (n in ns.values()) if (n <= 1000) {
         testSort(n, mod, func(a, max) = bucketSort(a, func(x, y) = x, ?max, f));
       };
     };
   };
 
-  for (radixBit in radixBits.vals()) {
-    for (mod in mods.vals()) {
-      for (n in ns.vals()) if (n <= 1000) {
+  for (radixBit in radixBits.values()) {
+    for (mod in mods.values()) {
+      for (n in ns.values()) if (n <= 1000) {
         testSort(
           n,
           mod,
@@ -196,14 +197,14 @@ func tests() {
     };
   };
 
-  for (n in ns.vals()) {
-    for (mod in mods.vals()) {
+  for (n in ns.values()) {
+    for (mod in mods.values()) {
       testSort(n, mod, func(a, max) = a.radixSort(#max max));
       testSort(n, mod, func(a, max) = a.bucketSort(#max max));
     };
   };
 
-  for (n in ns.vals()) {
+  for (n in ns.values()) {
     testSort(n, 2 ** 32, func(a, max) = a.mergeSort());
   };
 
@@ -230,7 +231,7 @@ func tests() {
     [var (3, 0), (1, 1), (4, 2), (1, 3), (5, 4), (2, 5), (3, 6), (0, 7)],
   ];
 
-  for (a in arrays.vals()) {
+  for (a in arrays.values()) {
     testOnArray(a, func a = a.radixSort(#default));
     testOnArray(a, func a = a.bucketSort(#default));
     testOnArray(a, func a = a.mergeSort());

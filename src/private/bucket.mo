@@ -1,5 +1,6 @@
 /// Internal bucket-sort implementation used by `Nat32Key.bucketSort`.
 
+import Nat "mo:core/Nat";
 import Nat32 "mo:core/Nat32";
 import VarArray "mo:core/VarArray";
 import Prim "mo:⛔";
@@ -14,7 +15,7 @@ module {
   /// `radixBitsFunc n` chooses the per-pass radix width (must satisfy `1 <= result <= 30`).
   // should be 1 <= radixBitsFunc n <= 30 for all n
   public func bucketSort<T>(array : [var T], key : T -> Nat32, max : ?Nat32, radixBitsFunc : Nat32 -> Nat32) {
-    let n = Nat32.fromNat(array.size());
+    let n = array.size().toNat32();
 
     // n <= 1 is already sorted
     if (n <= 1) return;
@@ -70,7 +71,7 @@ module {
     debug assert n > 16;
     debug assert bits >= 1;
 
-    let fullLength = n == Nat32.fromNat(array.size());
+    let fullLength = n == array.size().toNat32();
 
     let r = radixBitsFunc(n);
     debug assert 1 <= r and r <= 30;
@@ -82,9 +83,9 @@ module {
     let shift = 32 - radixBits;
     if (fullLength) {
       if (irrelevantBits == 0) {
-        for (x in array.vals()) counts[nat(key(x) >> shift)] +%= 1;
+        for (x in array.values()) counts[nat(key(x) >> shift)] +%= 1;
       } else {
-        for (x in array.vals()) counts[nat((key(x) << irrelevantBits) >> shift)] +%= 1;
+        for (x in array.values()) counts[nat((key(x) << irrelevantBits) >> shift)] +%= 1;
       };
     } else {
       var i = from;
@@ -105,14 +106,14 @@ module {
 
     if (fullLength) {
       if (irrelevantBits == 0) {
-        for (x in array.vals()) {
+        for (x in array.values()) {
           let digit = nat(key(x) >> shift);
           let pos = counts[digit];
           buffer[nat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       } else {
-        for (x in array.vals()) {
+        for (x in array.values()) {
           let digit = nat((key(x) << irrelevantBits) >> shift);
           let pos = counts[digit];
           buffer[nat(pos)] := x;
@@ -132,7 +133,7 @@ module {
     };
 
     var newFrom : Nat32 = from;
-    label L for (newTo in counts.vals()) {
+    label L for (newTo in counts.values()) {
       if (newTo == newFrom) continue L;
       let len = newTo -% newFrom;
       if (len == 1) {

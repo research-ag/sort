@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    name: Tests
+    name: Tests and Benchmarks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -16,10 +16,13 @@ jobs:
         with:
           node-version: latest
       - uses: caffeinelabs/setup-mops@v1
-      - run: |
-          mops toolchain init
-          mops install
+      - run: mops install
       - run: mops test
+      - name: Make sure pocket-ic is installed
+        run: mops toolchain bin pocket-ic
+      - name: Make sure wasm-opt is installed
+        run: mops toolchain bin wasm-opt
+      - run: mops bench
 
   fmt:
     name: Formatting Check

@@ -1,5 +1,6 @@
 /// Internal radix-sort implementation used by `Nat32Key.radixSort`.
 
+import Nat "mo:core/Nat";
 import Nat32 "mo:core/Nat32";
 import VarArray "mo:core/VarArray";
 import Merge "merge";
@@ -29,13 +30,13 @@ module {
       let SHIFT = step * radixBits;
 
       if (steps == 1) {
-        for (x in self.vals()) counts[nat(key(x))] +%= 1;
+        for (x in self.values()) counts[nat(key(x))] +%= 1;
       } else if (step == 0) {
-        for (x in self.vals()) counts[nat(key(x) & MASK)] +%= 1;
+        for (x in self.values()) counts[nat(key(x) & MASK)] +%= 1;
       } else if (step < (steps - 1 : Nat32)) {
-        for (x in self.vals()) counts[nat((key(x) >> SHIFT) & MASK)] +%= 1;
+        for (x in self.values()) counts[nat((key(x) >> SHIFT) & MASK)] +%= 1;
       } else {
-        for (x in self.vals()) counts[nat(key(x) >> SHIFT)] +%= 1;
+        for (x in self.values()) counts[nat(key(x) >> SHIFT)] +%= 1;
       };
 
       var sum : Nat32 = 0;
@@ -50,28 +51,28 @@ module {
       let (from, to) = if (step % 2 == 0) (self, buffer) else (buffer, self);
 
       if (steps == 1) {
-        for (x in from.vals()) {
+        for (x in from.values()) {
           let digit = nat(key(x));
           let pos = counts[digit];
           to[nat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       } else if (step == 0) {
-        for (x in from.vals()) {
+        for (x in from.values()) {
           let digit = nat(key(x) & MASK);
           let pos = counts[digit];
           to[nat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       } else if (step < (steps - 1 : Nat32)) {
-        for (x in from.vals()) {
+        for (x in from.values()) {
           let digit = nat((key(x) >> SHIFT) & MASK);
           let pos = counts[digit];
           to[nat(pos)] := x;
           counts[digit] := pos +% 1;
         };
       } else {
-        for (x in from.vals()) {
+        for (x in from.values()) {
           let digit = nat(key(x) >> SHIFT);
           let pos = counts[digit];
           to[nat(pos)] := x;
@@ -98,7 +99,7 @@ module {
       return;
     };
     if (n <= 8) {
-      Insertion.insertionSortSmall(self, self, key, 0 : Nat32, Nat32.fromNat(n));
+      Insertion.insertionSortSmall(self, self, key, 0 : Nat32, n.toNat32());
       return;
     };
 
@@ -112,7 +113,7 @@ module {
       }
     );
 
-    let NBITS = 31 - Nat32.bitcountLeadingZero(Nat32.fromNat(n));
+    let NBITS = 31 - Nat32.bitcountLeadingZero(n.toNat32());
     debug assert NBITS > 0;
     let STEPS = (totalBits + NBITS - 1) / NBITS;
 
