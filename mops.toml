@@ -11,7 +11,7 @@ core = "2.6.2"
 
 [dev-dependencies]
 zhus = "https://github.com/ZhenyaUsenko/motoko-sort#main@73128b8bc6fa35e57ee6a45ba4cd18be33df3834"
-bench-helper = "0.0.3"
+bench-helper = "0.0.4"
 
 [requirements]
 moc = "1.0.0"
