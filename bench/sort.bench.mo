@@ -40,7 +40,7 @@ module {
     let sourceArrays : [[Nat32]] = Array.tabulate(
       schema.cols.size(),
       func(ci) = Array.tabulate<Nat32>(
-        Option.unwrap(Nat.fromText(schema.cols[ci])),
+        Nat.fromText(schema.cols[ci]).unwrap(),
         func(_) = Nat64.toNat32(rng.nat64() % (2 ** 32)),
       ),
     );
@@ -55,28 +55,28 @@ module {
         func(ci) {
           switch (ri) {
             case (0) {
-              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
-              func() = Sort.bucketSort<Nat32>(varSource, func i = i, #default);
+              let varSource = sourceArrays[ci].toVarArray<Nat32>();
+              func() = varSource.bucketSort<Nat32>(func i = i, #default);
             };
             case (1) {
               let varSource = VarArray.repeat<Nat32>(0, sourceArrays[ci].size());
-              func() = Sort.bucketSort<Nat32>(varSource, func i = i, #default);
+              func() = varSource.bucketSort<Nat32>(func i = i, #default);
             };
             case (2) {
-              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
-              func() = Sort.radixSort<Nat32>(varSource, func i = i, #default);
+              let varSource = sourceArrays[ci].toVarArray<Nat32>();
+              func() = varSource.radixSort<Nat32>(func i = i, #default);
             };
             case (3) {
-              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
+              let varSource = sourceArrays[ci].toVarArray<Nat32>();
               func() = Zhus.sortNat32<Nat32>(varSource, func i = i);
             };
             case (4) {
-              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
-              func() = Sort.mergeSort<Nat32>(varSource, func i = i);
+              let varSource = sourceArrays[ci].toVarArray<Nat32>();
+              func() = varSource.mergeSort<Nat32>(func i = i);
             };
             case (5) {
-              let varSource = Array.toVarArray<Nat32>(sourceArrays[ci]);
-              func() = VarArray.sortInPlace<Nat32>(varSource, Nat32.compare);
+              let varSource = sourceArrays[ci].toVarArray<Nat32>();
+              func() = varSource.sortInPlace<Nat32>(Nat32.compare);
             };
             case (_) Prim.trap("Row not implemented");
           };
