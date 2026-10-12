@@ -190,7 +190,7 @@ Sorting algorithm options.
 
 ## Performance
 
-This library is heavily optimized for performance. The benchmarks in the `bench/` directory show that it significantly outperforms the core library's `Array.sort` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using unrolled stack-based insertion-sort code to minimize recursion overhead.
+This library is heavily optimized for performance. The benchmarks in the [`bench/`](https://github.com/research-ag/sort/tree/main/bench) directory show that it significantly outperforms the core library's `VarArray.sortInPlace` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using unrolled stack-based insertion-sort code to minimize recursion overhead.
 
 ## Contributing
 
