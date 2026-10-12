@@ -213,6 +213,9 @@ Allocation doubles, consistent with words and pointers taking 8 bytes on the
 0.0.3 on, the Heap table shows each cell's allocation and the Garbage
 Collection table is 0.
 
+The benchmark file was renamed from `bench/main.bench.mo` to
+`bench/sort.bench.mo` in 0.0.3, so mops.one does not compare 0.0.3 with 0.0.2.
+
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome! Please open an issue or pull request on [GitHub](https://github.com/research-ag/sort).
