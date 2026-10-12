@@ -4,6 +4,7 @@
 
 - Bumped `core` dependency from `2.5.0` to `2.6.2`
 - Replaced deprecated `Nat32.fromNat` with `Nat.toNat32` and `.vals()` with `.values()`
+- Benchmarks: +8–18% instructions and 2× allocation on large inputs, due to the compiler switch to the 64-bit heap.
 
 ## 0.0.2
 

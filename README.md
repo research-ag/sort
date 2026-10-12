@@ -192,6 +192,27 @@ Sorting algorithm options.
 
 This library is heavily optimized for performance. The benchmarks in the [`bench/`](https://github.com/research-ag/sort/tree/main/bench) directory show that it significantly outperforms the core library's `VarArray.sortInPlace` for large arrays of integers. The `bucketSort` implementation includes specific optimizations for small buckets, using unrolled stack-based insertion-sort code to minimize recursion overhead.
 
+### Benchmark history
+
+From 0.0.2 to 0.0.3 the benchmark numbers on mops.one changed because the
+measurement setup changed, not the code: moc 1.8.2 with legacy persistence
+(32-bit heap, copying GC) became moc 2.0.0 with enhanced orthogonal
+persistence (64-bit heap, incremental GC), measured on PocketIC with wasm-opt.
+
+| Routine                | Instructions | Allocation at 1M elements |
+| ---------------------- | ------------ | ------------------------- |
+| bucketSort             | +14%         | 4.8 MiB → 9.6 MiB         |
+| bucketSortWorstCase    | +17–18%      | 4.9 MiB → 9.8 MiB         |
+| radixSort              | +8–17%       | 4.1 MiB → 8.1 MiB         |
+| Zhus                   | +12%         | 11.4 MiB → 22.9 MiB       |
+| mergeSort              | +8–10%       | 1.9 MiB → 3.8 MiB         |
+| `VarArray.sortInPlace` | +14–15%      | 1.9 MiB → 3.8 MiB         |
+
+Allocation doubles, consistent with words and pointers taking 8 bytes on the
+64-bit heap instead of 4. In 0.0.2 it appears in the Garbage Collection table; from
+0.0.3 on, the Heap table shows each cell's allocation and the Garbage
+Collection table is 0.
+
 ## Contributing
 
 Contributions, bug reports, and feature requests are welcome! Please open an issue or pull request on [GitHub](https://github.com/research-ag/sort).
